@@ -1,0 +1,5 @@
+- Project: Gradle - Groovy
+- Language: Java
+- Spring Boot version: 2.7.7
+- Packaging: Jar
+- Java: 11

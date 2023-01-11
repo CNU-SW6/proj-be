@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.postgresql:postgresql:42.5.0'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'

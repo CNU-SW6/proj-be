@@ -1,9 +1,9 @@
-package cnu.swabe.domain;
+package cnu.swabe.v0.dto;
 
 import lombok.Data;
 
 @Data
-public class User {
+public class UserDTO {
     private String id;
     private String pw;
     private String nickname;

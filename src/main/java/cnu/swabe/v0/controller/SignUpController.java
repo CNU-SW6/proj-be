@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class SignUpController {
     private final UserService userService;
 

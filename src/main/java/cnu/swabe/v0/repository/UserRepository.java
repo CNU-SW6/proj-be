@@ -6,12 +6,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 @Slf4j
+@Repository
 public class UserRepository {
     private final JdbcTemplate template;
 
@@ -27,11 +29,11 @@ public class UserRepository {
             preparedStatement.setString(1, userDTO.getId());
             preparedStatement.setString(2, userDTO.getPw());
             preparedStatement.setString(3, userDTO.getNickname());
-            preparedStatement.setString(4, String.valueOf(userDTO.isMale()));
+            preparedStatement.setBoolean(4, userDTO.isMale());
             return preparedStatement;
         };
 
         template.update(preparedStatementCreator, keyHolder);
-        return keyHolder.getKey().intValue();
+        return (int) keyHolder.getKeys().get("user_no");
     }
 }

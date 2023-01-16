@@ -1,16 +1,10 @@
 package cnu.swabe.v0.controller;
 
 import cnu.swabe.v0.dto.UserDTO;
-import cnu.swabe.v0.repository.UserRepository;
 import cnu.swabe.v0.service.UserService;
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -24,5 +18,13 @@ public class SignUpController {
         log.info("id={}, pw={}, nickname={}, isMale={}", userDTO.getId(), userDTO.getPw(), userDTO.getNickname(), userDTO.isMale());
         int addedUserNo = userService.addUser(userDTO);
         return String.valueOf(addedUserNo);
+    }
+
+    @ResponseBody
+    @GetMapping("/v0/users/nickname/{nickname}")
+    public boolean requestCheckDuplicateNickName(@PathVariable String nickname) {
+        log.info("nickname={}", nickname);
+        boolean isExist = userService.checkDuplicateNickName(nickname);
+        return isExist;
     }
 }

@@ -1,9 +1,11 @@
 package cnu.swabe.v0.repository;
 
+import cnu.swabe.v0.domain.User;
 import cnu.swabe.v0.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -35,5 +37,26 @@ public class UserRepository {
 
         template.update(preparedStatementCreator, keyHolder);
         return (int) keyHolder.getKeys().get("user_no");
+    }
+
+    public boolean findByNickName(String nickname) {
+        String sql = "select * from USERS_TB where USER_NM = ?";
+        User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), nickname);
+        if(user == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private RowMapper<User> userExcludedPasswordRowMapper() {
+        return (rs, rowNum) -> {
+            User user = new User();
+            user.setNo(Integer.parseInt(rs.getString("USER_NO")));
+            user.setId(rs.getString("USER_ID"));
+            user.setNickname(rs.getString("USER_NM"));
+            user.setMale(rs.getBoolean("USER_ISMALE"));
+            return user;
+        };
     }
 }

@@ -15,10 +15,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
 
-
+    /**
+     * 여기서도 중복체크를 해야할까?
+     * 비즈니스 로직이 필요할까?
+     * */
     @Transactional
     public int addUser(UserDTO userDTO) {
         int addedUserNo = userRepository.save(userDTO);
         return addedUserNo;
+    }
+
+    /**
+     * 여기서도 중복체크를 해야할까?
+     * 비즈니스 로직이 필요할까?
+     * */
+    public boolean checkDuplicateNickName(String nickname) {
+        boolean isExist = userRepository.findByNickName(nickname);
+        return isExist;
     }
 }

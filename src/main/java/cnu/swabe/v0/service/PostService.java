@@ -2,6 +2,7 @@ package cnu.swabe.v0.service;
 
 import cnu.swabe.v0.domain.Post;
 import cnu.swabe.v0.dto.ImageInfoDTO;
+import cnu.swabe.v0.dto.PostDTO;
 import cnu.swabe.v0.dto.StyleDTO;
 import cnu.swabe.v0.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
 
-    public List<Post> getPostItems(StyleDTO styleDTO) {
+    public List<PostDTO> getPostItems(StyleDTO styleDTO) {
         List<ImageInfoDTO> imageInfoDTO = imageService.getImageInfo(styleDTO);
         return postRepository.findByImageInfo(imageInfoDTO);
     }

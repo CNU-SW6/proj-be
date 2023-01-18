@@ -1,6 +1,7 @@
 package cnu.swabe.v0.controller;
 
 import cnu.swabe.v0.domain.Post;
+import cnu.swabe.v0.dto.PostDTO;
 import cnu.swabe.v0.dto.StyleDTO;
 import cnu.swabe.v0.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class SearchController {
 
     @ResponseBody
     @GetMapping("/search")
-    public List<Post> requestSearchStyle(@ModelAttribute StyleDTO styleDTO) {
+    public List<PostDTO> requestSearchStyle(@ModelAttribute StyleDTO styleDTO) {
         log.info("hat={}, top={}, pants={}, shoes={}", styleDTO.getHat(), styleDTO.getTop(), styleDTO.getPants(), styleDTO.getShoes());
         return postService.getPostItems(styleDTO);
     }

@@ -1,9 +1,11 @@
-package cnu.swabe.domain;
+package cnu.swabe.v0.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter @Getter
 public class User {
+    private int no;
     private String id;
     private String pw;
     private String nickname;

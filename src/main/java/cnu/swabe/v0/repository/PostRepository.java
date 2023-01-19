@@ -38,6 +38,12 @@ public class PostRepository {
         return postDTOItems;
     }
 
+    public void deleteByPostNo(int postNo) {
+        String sql = "delete from POSTS_TB where POST_NO = ?";
+        template.update(sql, postNo);
+        return;
+    }
+
     private RowMapper<PostDTO> postDTORowMapper() {
         return (rs, rowNum) -> {
             PostDTO postDTO = new PostDTO();

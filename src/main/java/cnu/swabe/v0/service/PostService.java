@@ -23,4 +23,9 @@ public class PostService {
         List<ImageInfoDTO> imageInfoDTO = imageService.getImageInfo(styleDTO);
         return postRepository.findByImageInfo(imageInfoDTO);
     }
+
+    public void deletePost(int postNo) {
+        postRepository.deleteByPostNo(postNo);
+        return;
+    }
 }

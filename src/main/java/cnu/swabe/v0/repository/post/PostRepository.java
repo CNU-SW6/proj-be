@@ -1,4 +1,4 @@
-package cnu.swabe.v0.repository;
+package cnu.swabe.v0.repository.post;
 
 import cnu.swabe.v0.domain.Post;
 import cnu.swabe.v0.dto.ImageInfoDTO;

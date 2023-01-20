@@ -1,15 +1,13 @@
 package cnu.swabe.v0.service;
 
-import cnu.swabe.v0.domain.Post;
 import cnu.swabe.v0.dto.ImageInfoDTO;
 import cnu.swabe.v0.dto.PostDTO;
 import cnu.swabe.v0.dto.StyleDTO;
-import cnu.swabe.v0.repository.PostRepository;
+import cnu.swabe.v0.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j

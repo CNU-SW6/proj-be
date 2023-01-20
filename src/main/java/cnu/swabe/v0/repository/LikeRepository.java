@@ -1,7 +1,6 @@
 package cnu.swabe.v0.repository;
 
-import cnu.swabe.v0.domain.Like;
-import cnu.swabe.v0.dto.LikeDTO;
+import cnu.swabe.v0.domain.like.dto.LikeBusinessDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,15 +16,14 @@ public class LikeRepository {
         this.template = new JdbcTemplate(dataSource);
     }
 
-    public Like save(LikeDTO likeDTO) {
+    public String save(LikeBusinessDTO likeBusinessDTO) {
         StringBuilder sb = new StringBuilder();
         String sql = "insert into LIKES_TB(USER_LIKE_POST, USER_NO, POST_NO) values (?, ?, ?)";
-        sb.append(likeDTO.getUserNo());
+        sb.append(likeBusinessDTO.getUserNo());
         sb.append("_LIKE_");
-        sb.append(likeDTO.getPostNo());
+        sb.append(likeBusinessDTO.getPostNo());
         String pk = sb.toString();
-        template.update(sql, pk, likeDTO.getUserNo(), likeDTO.getPostNo());
-        Like like = new Like(pk, likeDTO.getPostNo(), likeDTO.getUserNo());
-        return like;
+        template.update(sql, pk, likeBusinessDTO.getUserNo(), likeBusinessDTO.getPostNo());
+        return pk;
     }
 }

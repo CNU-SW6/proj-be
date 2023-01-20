@@ -1,11 +1,10 @@
 package cnu.swabe.v0.controller;
 
-import cnu.swabe.v0.domain.Like;
-import cnu.swabe.v0.domain.Post;
-import cnu.swabe.v0.dto.LikeDTO;
+import cnu.swabe.v0.domain.like.Like;
+import cnu.swabe.v0.domain.like.dto.LikeBusinessDTO;
 import cnu.swabe.v0.dto.PostDTO;
 import cnu.swabe.v0.dto.StyleDTO;
-import cnu.swabe.v0.dto.presentation.postLikeRequestBodyDTO;
+import cnu.swabe.v0.domain.like.dto.LikePresentationDTO;
 import cnu.swabe.v0.service.LikeService;
 import cnu.swabe.v0.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +27,17 @@ public class SearchController {
         return postService.getPostItems(styleDTO);
     }
 
+    /**
+     * postNo도 그냥 messageBody로 주면 안되는걸까?
+     * */
     @PatchMapping("/v0/likes/posts/{postNo}")
-    public Like requestPostLike(@PathVariable int postNo, @RequestBody postLikeRequestBodyDTO postLikeRequestBodyDTO) {
-        int userNo = postLikeRequestBodyDTO.getUserNo();
-        LikeDTO likeDTO = new LikeDTO(postNo, userNo);
-        Like like = likeService.addLike(likeDTO);
+    public Like requestPostLike(@PathVariable int postNo, @RequestBody LikePresentationDTO likePresentationDTO) {
+        LikeBusinessDTO likeBusinessDTO = new LikeBusinessDTO(
+                postNo,
+                likePresentationDTO.getUserNo(),
+                likePresentationDTO.getLikeNum()
+        );
+        Like like = likeService.clikeLike(likeBusinessDTO);
         return like;
     }
 }

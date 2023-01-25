@@ -1,5 +1,6 @@
 package cnu.swabe.v0.service;
 
+import cnu.swabe.v0.domain.Post;
 import cnu.swabe.v0.dto.ImageInfoDTO;
 import cnu.swabe.v0.dto.PostDTO;
 import cnu.swabe.v0.dto.StyleDTO;
@@ -17,6 +18,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
 
+    public int savePostInfo(Post post) {
+        int pk = postRepository.save(post);
+        return pk;
+    }
+
     public List<PostDTO> getPostItems(StyleDTO styleDTO) {
         List<ImageInfoDTO> imageInfoDTO = imageService.getImageInfo(styleDTO);
         return postRepository.findByImageInfo(imageInfoDTO);
@@ -27,3 +33,4 @@ public class PostService {
         return;
     }
 }
+

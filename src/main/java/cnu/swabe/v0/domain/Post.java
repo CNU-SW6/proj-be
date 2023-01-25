@@ -9,7 +9,7 @@ public class Post {
     private int userNo;
     private int imageNo;
     private String description;
-    private int likeNum;
     private boolean isSell;
+    private int likeNum;
     private String sellUrl;
 }

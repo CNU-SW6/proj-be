@@ -49,6 +49,18 @@ public class UserRepository {
         }
     }
 
+    public User findById(String id) {
+        String sql = "select * from USERS_TB where USER_NM = ?";
+        User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), id);
+        return user;
+    }
+
+    public User findByPw(String Pw) {
+        String sql = "select * from USERS_TB where USER_NM = ?";
+        User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), Pw);
+        return user;
+    }
+
     private RowMapper<User> userExcludedPasswordRowMapper() {
         return (rs, rowNum) -> {
             User user = new User();

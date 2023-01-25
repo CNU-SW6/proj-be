@@ -1,11 +1,10 @@
 package cnu.swabe.v0.service;
 
+import cnu.swabe.v0.domain.User;
 import cnu.swabe.v0.dto.UserDTO;
 import cnu.swabe.v0.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,5 +31,17 @@ public class UserService {
     public boolean checkDuplicateNickName(String nickname) {
         boolean isExist = userRepository.findByNickName(nickname);
         return isExist;
+    }
+
+    public User login(UserDTO userDTO) {
+        User userbyId = userRepository.findById(userDTO.getId());
+        User userbyPw = userRepository.findByPw(userDTO.getPw());
+
+        if (userbyId == userbyPw) {
+            return userbyPw;
+        }
+        else {
+            return null;
+        }
     }
 }

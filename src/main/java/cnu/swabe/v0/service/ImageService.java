@@ -1,5 +1,6 @@
 package cnu.swabe.v0.service;
 
+import cnu.swabe.v0.domain.Image;
 import cnu.swabe.v0.dto.ImageInfoDTO;
 import cnu.swabe.v0.dto.StyleDTO;
 import cnu.swabe.v0.repository.ImageRepository;
@@ -21,5 +22,10 @@ public class ImageService {
     public List<ImageInfoDTO> getImageInfo(StyleDTO styleDTO) {
         List<ImageInfoDTO> imageInfoDTO = imageRepository.findByStyle(styleDTO);
         return imageInfoDTO;
+    }
+
+    public int saveImageInfo(Image image) {
+        int pk = imageRepository.save(image);
+        return pk;
     }
 }

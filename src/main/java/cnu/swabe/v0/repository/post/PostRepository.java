@@ -6,10 +6,15 @@ import cnu.swabe.v0.dto.PostDTO;
 import cnu.swabe.v0.dto.StyleDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +27,22 @@ public class PostRepository {
         this.template = new JdbcTemplate(dataSource);
     }
 
+    public int save(Post post) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, SELL_URL, USER_NO, IMAGE_NO) values (?, ?, ?, ?, ?)";
+        PreparedStatementCreator preparedStatementCreator = (connection) -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, post.getDescription());
+            preparedStatement.setBoolean(2, post.isSell());
+            preparedStatement.setString(3, post.getSellUrl());
+            preparedStatement.setInt(4, post.getUserNo());
+            preparedStatement.setInt(5, post.getImageNo());
+            return preparedStatement;
+        };
+
+        template.update(preparedStatementCreator, keyHolder);
+        return (int) keyHolder.getKeys().get("post_no");
+    }
 
     /**
      * 동적쿼리 필요 .. MyBatis에서 처리

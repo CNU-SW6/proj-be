@@ -27,4 +27,12 @@ public class SignUpController {
         boolean isExist = userService.checkDuplicateNickName(nickname);
         return isExist;
     }
+
+    @ResponseBody
+    @GetMapping("/v0/users/id/{id}")
+    public boolean requestCheckDuplicateId(@PathVariable String id){
+        log.info("id={}", id);
+        boolean isExist = userService.checkDuplicateId(id);
+        return isExist;
+    }
 }

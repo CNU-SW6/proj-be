@@ -44,4 +44,13 @@ public class UserService {
             return null;
         }
     }
+
+    public boolean checkDuplicateId(String id) {
+        User user = userRepository.findById(id);
+        if(user == null){
+            return false;
+        }else{
+            return true;
+        }
+    }
 }

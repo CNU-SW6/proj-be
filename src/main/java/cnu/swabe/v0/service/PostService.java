@@ -32,5 +32,9 @@ public class PostService {
         postRepository.deleteByPostNo(postNo);
         return;
     }
+
+    public Post getPostInfo (int postNo) {
+        return postRepository.findByPostNo(postNo);
+    }
 }
 

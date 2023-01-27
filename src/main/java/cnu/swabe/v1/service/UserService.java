@@ -2,7 +2,7 @@ package cnu.swabe.v1.service;
 
 import cnu.swabe.v1.domain.User;
 import cnu.swabe.v1.dto.UserDTO;
-import cnu.swabe.v1.exception.ErrorCode;
+import cnu.swabe.v1.exception.ExceptionCode;
 import cnu.swabe.v1.exception.custom.NicknameDuplicatedException;
 import cnu.swabe.v1.exception.custom.WrongLengthUserInfoException;
 import cnu.swabe.v1.repository.UserRepository;
@@ -21,24 +21,25 @@ public class UserService {
      * version - v1
      * */
     public User addUser(UserDTO userDTO) {
-        if(!checkInputLength(userDTO.getId())) throw new WrongLengthUserInfoException(ErrorCode.WRONG_LENGTH_USER_ID);
-        if(!checkInputLength(userDTO.getPw())) throw new WrongLengthUserInfoException(ErrorCode.WRONG_LENGTH_USER_PW);
-        if(!checkInputLength(userDTO.getNickname())) throw new WrongLengthUserInfoException(ErrorCode.WRONG_LENGTH_USER_NICKNAME);
-
+        if(!checkInputLength(userDTO.getId())) throw new WrongLengthUserInfoException(ExceptionCode.WRONG_LENGTH_USER_ID);
+        if(!checkInputLength(userDTO.getPw())) throw new WrongLengthUserInfoException(ExceptionCode.WRONG_LENGTH_USER_PW);
+        if(!checkInputLength(userDTO.getNickname())) throw new WrongLengthUserInfoException(ExceptionCode.WRONG_LENGTH_USER_NICKNAME);
+        checkDuplicateNickName(userDTO.getNickname());
+        // checkDuplicatedId 구현 후 체크
+        
         User user = userRepository.save(userDTO);
         return user;
     }
 
     /**
      * version - v1
+     * refactoring 필요해 보임
      * */
-    public User checkDuplicateNickName(String nickname) {
+    public void checkDuplicateNickName(String nickname) {
         User user = userRepository.findByNickName(nickname);
-        if(user == null) {
+        if(user != null) {
             throw new NicknameDuplicatedException();
         }
-
-        return user;
     }
 
     public User login(UserDTO userDTO) {

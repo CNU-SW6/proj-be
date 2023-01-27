@@ -1,9 +1,9 @@
 package cnu.swabe.v1.exception.custom;
 
-import cnu.swabe.v1.exception.ErrorCode;
+import cnu.swabe.v1.exception.ExceptionCode;
 
 public class WrongLengthUserInfoException extends RuntimeException {
-    ErrorCode errorCode;
+    ExceptionCode errorCode;
 
     public WrongLengthUserInfoException() {
     }
@@ -12,11 +12,11 @@ public class WrongLengthUserInfoException extends RuntimeException {
         super(message);
     }
 
-    public WrongLengthUserInfoException(ErrorCode errorCode) {
+    public WrongLengthUserInfoException(ExceptionCode errorCode) {
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode() {
+    public ExceptionCode getErrorCode() {
         return errorCode;
     }
 }

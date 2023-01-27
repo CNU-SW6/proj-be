@@ -3,7 +3,6 @@ package cnu.swabe.v1.repository;
 import cnu.swabe.v1.domain.User;
 import cnu.swabe.v1.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;

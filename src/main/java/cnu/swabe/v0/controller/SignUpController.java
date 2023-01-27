@@ -1,5 +1,6 @@
 package cnu.swabe.v0.controller;
 
+import cnu.swabe.v0.domain.User;
 import cnu.swabe.v0.dto.UserDTO;
 import cnu.swabe.v0.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,11 @@ public class SignUpController {
     }
 
     @ResponseBody
-    @GetMapping("/v0/users/nickname/{nickname}")
-    public boolean requestCheckDuplicateNickName(@PathVariable String nickname) {
-        log.info("nickname={}", nickname);
-        boolean isExist = userService.checkDuplicateNickName(nickname);
-        return isExist;
+    @GetMapping("/v1/users/nickname/{nickname}")
+    public User requestCheckDuplicateNickName(@PathVariable String nickname) {
+        log.info("???nickname={}", nickname);
+        User user = userService.checkDuplicateNickName(nickname);
+        return user;
     }
 
     @ResponseBody

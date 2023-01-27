@@ -3,6 +3,7 @@ package cnu.swabe.v0.repository;
 import cnu.swabe.v0.domain.User;
 import cnu.swabe.v0.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,7 +26,7 @@ public class UserRepository {
 
     public int save(UserDTO userDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into USERS_TB(USER_ID, USER_PW, USER_NM, USER_ISMALE) values(?, ?, ?, ?)";
+        String sql = "insert into USERS_TB(USER_ID, USER_PW, USER_NICKNAME, USER_ISMALE) values(?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, userDTO.getId());
@@ -39,24 +40,26 @@ public class UserRepository {
         return (int) keyHolder.getKeys().get("user_no");
     }
 
-    public boolean findByNickName(String nickname) {
-        String sql = "select * from USERS_TB where USER_NM = ?";
-        User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), nickname);
-        if(user == null) {
-            return false;
-        } else {
-            return true;
+    public User findByNickName(String nickname) {
+        User user = null;
+        String sql = "select * from USERS_TB where USER_NICKNAME = ?";
+        try {
+            user = template.queryForObject(sql, userExcludedPasswordRowMapper(), nickname);
+        } catch(EmptyResultDataAccessException e) {
+            return null;
         }
+
+        return user;
     }
 
     public User findById(String id) {
-        String sql = "select * from USERS_TB where USER_NM = ?";
+        String sql = "select * from USERS_TB where USER_NICKNAME = ?";
         User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), id);
         return user;
     }
 
     public User findByPw(String Pw) {
-        String sql = "select * from USERS_TB where USER_NM = ?";
+        String sql = "select * from USERS_TB where USER_NICKNAME = ?";
         User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), Pw);
         return user;
     }
@@ -66,7 +69,19 @@ public class UserRepository {
             User user = new User();
             user.setNo(Integer.parseInt(rs.getString("USER_NO")));
             user.setId(rs.getString("USER_ID"));
-            user.setNickname(rs.getString("USER_NM"));
+            user.setNickname(rs.getString("USER_NICKNAME"));
+            user.setMale(rs.getBoolean("USER_ISMALE"));
+            return user;
+        };
+    }
+
+    private RowMapper<User> userRowMapper() {
+        return (rs, rowNum) -> {
+            User user = new User();
+            user.setNo(Integer.parseInt(rs.getString("USER_NO")));
+            user.setId(rs.getString("USER_ID"));
+            user.setId(rs.getString("USER_PW"));
+            user.setNickname(rs.getString("USER_NICKNAME"));
             user.setMale(rs.getBoolean("USER_ISMALE"));
             return user;
         };

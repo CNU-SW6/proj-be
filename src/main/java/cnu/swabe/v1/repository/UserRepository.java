@@ -1,6 +1,6 @@
 package cnu.swabe.v1.repository;
 
-import cnu.swabe.v1.domain.User;
+import cnu.swabe.v1.domain.user.User;
 import cnu.swabe.v1.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;

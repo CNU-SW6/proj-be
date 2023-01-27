@@ -1,13 +1,12 @@
 package cnu.swabe.v1.controller;
 
-import cnu.swabe.v1.domain.User;
+import cnu.swabe.v1.domain.user.User;
 import cnu.swabe.v1.dto.UserDTO;
 import cnu.swabe.v1.response.SuccessResponse;
 import cnu.swabe.v1.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -19,10 +18,10 @@ public class SignUpController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/v1/users/signup")
-    public User requestSignUp(@RequestBody UserDTO userDTO) {
+    public SuccessResponse requestSignUp(@RequestBody UserDTO userDTO) {
         log.info("??? id={}, pw={}, nickname={}, isMale={}", userDTO.getId(), userDTO.getPw(), userDTO.getNickname(), userDTO.isMale());
         User user = userService.addUser(userDTO);
-        return user;
+        return new SuccessResponse(user);
     }
 
     @ResponseBody

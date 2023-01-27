@@ -1,6 +1,6 @@
 package cnu.swabe.v1.controller;
 
-import cnu.swabe.v1.domain.User;
+import cnu.swabe.v1.domain.user.User;
 import cnu.swabe.v1.dto.UserDTO;
 import cnu.swabe.v1.service.UserService;
 import lombok.RequiredArgsConstructor;

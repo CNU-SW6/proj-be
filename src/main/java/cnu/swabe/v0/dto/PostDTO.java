@@ -6,4 +6,5 @@ import lombok.Data;
 public class PostDTO {
     private int postNo;
     private boolean isSell;
+    private int userNo;
 }

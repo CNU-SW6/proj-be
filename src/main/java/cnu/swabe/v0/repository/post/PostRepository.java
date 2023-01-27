@@ -65,6 +65,12 @@ public class PostRepository {
         return;
     }
 
+    public Post findByPostNo(int postNo) {
+        String sql = "select * from POST_TB where POST_NO = ?";
+        Post post = template.queryForObject(sql, postRowMapper(), postNo);
+        return post;
+    }
+
     private RowMapper<PostDTO> postDTORowMapper() {
         return (rs, rowNum) -> {
             PostDTO postDTO = new PostDTO();

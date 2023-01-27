@@ -1,5 +1,6 @@
 package cnu.swabe.v0.controller;
 
+import cnu.swabe.v0.domain.Post;
 import cnu.swabe.v0.domain.like.Like;
 import cnu.swabe.v0.domain.like.dto.LikeBusinessDTO;
 import cnu.swabe.v0.dto.PostDTO;
@@ -39,5 +40,11 @@ public class SearchController {
         );
         Like like = likeService.clikeLike(likeBusinessDTO);
         return like;
+    }
+
+    // 게시물 선택
+    @GetMapping("v0/posts/{postNo}")
+    public Post selectPost(@PathVariable int postNo){
+        return postService.getPostInfo(postNo);
     }
 }

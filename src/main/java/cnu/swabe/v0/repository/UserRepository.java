@@ -24,6 +24,10 @@ public class UserRepository {
         this.template = new JdbcTemplate(dataSource);
     }
 
+    /**
+     * version - v1
+     * 여기서 중복 exception
+     * */
     public int save(UserDTO userDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into USERS_TB(USER_ID, USER_PW, USER_NICKNAME, USER_ISMALE) values(?, ?, ?, ?)";
@@ -40,6 +44,10 @@ public class UserRepository {
         return (int) keyHolder.getKeys().get("user_no");
     }
 
+
+    /**
+     * version - v1
+     * */
     public User findByNickName(String nickname) {
         User user = null;
         String sql = "select * from USERS_TB where USER_NICKNAME = ?";

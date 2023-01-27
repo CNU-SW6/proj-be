@@ -14,17 +14,17 @@ public class SignUpController {
     private final UserService userService;
 
     @ResponseBody
-    @PostMapping("/v0/users/signup")
-    public String requestSignUp(@RequestBody UserDTO userDTO) {
-        log.info("id={}, pw={}, nickname={}, isMale={}", userDTO.getId(), userDTO.getPw(), userDTO.getNickname(), userDTO.isMale());
-        int addedUserNo = userService.addUser(userDTO);
-        return String.valueOf(addedUserNo);
+    @PostMapping("/v1/users/signup")
+    public User requestSignUp(@RequestBody UserDTO userDTO) {
+        log.info("??? id={}, pw={}, nickname={}, isMale={}", userDTO.getId(), userDTO.getPw(), userDTO.getNickname(), userDTO.isMale());
+        User user = userService.addUser(userDTO);
+        return user;
     }
 
     @ResponseBody
     @GetMapping("/v1/users/nickname/{nickname}")
     public User requestCheckDuplicateNickName(@PathVariable String nickname) {
-        log.info("???nickname={}", nickname);
+        log.info("??? nickname={}", nickname);
         User user = userService.checkDuplicateNickName(nickname);
         return user;
     }

@@ -2,12 +2,15 @@ package cnu.swabe.v0.service;
 
 import cnu.swabe.v0.domain.User;
 import cnu.swabe.v0.dto.UserDTO;
+import cnu.swabe.v0.exception.ErrorCode;
 import cnu.swabe.v0.exception.custom.NicknameDuplicatedException;
+import cnu.swabe.v0.exception.custom.WrongLengthUserInfoException;
 import cnu.swabe.v0.repository.UserRepository;
+import cnu.swabe.v0.service.util.UserServiceUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static cnu.swabe.v0.service.util.UserServiceUtil.*;
 
 @Slf4j
 @Service
@@ -16,15 +19,30 @@ public class UserService {
     private final UserRepository userRepository;
 
     /**
-     * 여기서도 중복체크를 해야할까?
-     * 비즈니스 로직이 필요할까?
+     * version - v1
      * */
-    @Transactional
-    public int addUser(UserDTO userDTO) {
-        int addedUserNo = userRepository.save(userDTO);
-        return addedUserNo;
+    public User addUser(UserDTO userDTO) {
+        if(!checkInputLength(userDTO.getId())) {
+            throw new WrongLengthUserInfoException(ErrorCode.WRONG_LENGTH_USER_ID);
+        }
+
+        if(!checkInputLength(userDTO.getPw())) {
+            throw new WrongLengthUserInfoException(ErrorCode.WRONG_LENGTH_USER_PW);
+        }
+
+        if(!checkInputLength(userDTO.getNickname())) {
+            throw new WrongLengthUserInfoException(ErrorCode.WRONG_LENGTH_USER_NICKNAME);
+        }
+
+
+
+        //int addedUserNo = userRepository.save(userDTO);
+        return null;
     }
 
+    /**
+     * version - v1
+     * */
     public User checkDuplicateNickName(String nickname) {
         User user = userRepository.findByNickName(nickname);
         if(user == null) {

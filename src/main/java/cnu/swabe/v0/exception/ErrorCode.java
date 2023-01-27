@@ -3,8 +3,10 @@ package cnu.swabe.v0.exception;
 import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
-    WRONG_LENGTH_USER_VALUE(400, "잘못된 입력값"),
-    EXIST_VALUE(400, "존재하는 값");
+    WRONG_LENGTH_USER_ID(400, "잘못된 아이디 양식"),
+    WRONG_LENGTH_USER_NICKNAME(400, "잘못된 닉네임 양식"),
+    WRONG_LENGTH_USER_PW(400, "잘못된 비밀번호 양식"),
+    EXIST_VALUE(400, "존재하는 값.");
 
     private int statusCode;
     private String message;

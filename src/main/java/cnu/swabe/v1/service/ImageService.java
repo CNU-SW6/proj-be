@@ -17,7 +17,7 @@ public class ImageService {
     private final ImageRepository imageRepository;
 
     /**
-     * 체크해야할것
+     * version - v1
      * */
     public List<ImageInfoDTO> getImageInfo(StyleDTO styleDTO) {
         List<ImageInfoDTO> imageInfoDTO = imageRepository.findByStyle(styleDTO);

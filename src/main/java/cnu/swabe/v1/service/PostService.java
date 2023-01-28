@@ -23,9 +23,18 @@ public class PostService {
         return pk;
     }
 
+    /**
+     * version - v1
+     * 예외를 만들어 던질 필요가 있을까?
+     * */
     public List<PostDTO> getPostItems(StyleDTO styleDTO) {
         List<ImageInfoDTO> imageInfoDTO = imageService.getImageInfo(styleDTO);
-        return postRepository.findByImageInfo(imageInfoDTO);
+        if(imageInfoDTO == null) {
+            return null;
+        }
+
+        List<PostDTO> posts = postRepository.findByImageInfo(imageInfoDTO);
+        return posts;
     }
 
     public void deletePost(int postNo) {

@@ -4,6 +4,7 @@ import cnu.swabe.v1.domain.Post;
 import cnu.swabe.v1.dto.ImageInfoDTO;
 import cnu.swabe.v1.dto.PostDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -44,15 +45,21 @@ public class PostRepository {
     }
 
     /**
-     * 동적쿼리 필요 .. MyBatis에서 처리
+     * version - v1
+     * 동적쿼리 MyBatis
      * */
     public List<PostDTO> findByImageInfo(List<ImageInfoDTO> imageInfoDTO) {
         String sql = "select * from POSTS_TB where IMAGE_NO = ?";
         List<PostDTO> postDTOItems = new ArrayList<>();
-        // stream 으로 처리
-        for(ImageInfoDTO imageInfo : imageInfoDTO) {
-            PostDTO postDTO = template.queryForObject(sql, postDTORowMapper(), imageInfo.getImageNo());
-            postDTOItems.add(postDTO);
+
+        try {
+            for (ImageInfoDTO imageInfo : imageInfoDTO) {
+                PostDTO postDTO = template.queryForObject(sql, postDTORowMapper(imageInfo.getLocation()), imageInfo.getImageNo());
+                postDTOItems.add(postDTO);
+            }
+        } catch(EmptyResultDataAccessException e) {
+            // 이미지는 있는데, 게시물 정보는 없다?
+            return null;
         }
 
         return postDTOItems;
@@ -70,11 +77,12 @@ public class PostRepository {
         return post;
     }
 
-    private RowMapper<PostDTO> postDTORowMapper() {
+    private RowMapper<PostDTO> postDTORowMapper(String imageLocation) {
         return (rs, rowNum) -> {
             PostDTO postDTO = new PostDTO();
             postDTO.setPostNo(rs.getInt("POST_NO"));
             postDTO.setSell(rs.getBoolean("IS_SELL"));
+            postDTO.setLocation(imageLocation);
             return postDTO;
         };
     }

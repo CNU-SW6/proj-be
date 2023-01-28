@@ -23,7 +23,6 @@ public class SearchController {
     private final PostService postService;
     private final LikeService likeService;
 
-    @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/v1/posts")
     public SuccessResponse requestSearchStyle(@ModelAttribute StyleDTO styleDTO) {

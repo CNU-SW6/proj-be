@@ -17,7 +17,6 @@ public class LoginController {
 
     private final UserService userService;
 
-    @ResponseBody
     @PostMapping("/v0/users/signin")
     public User requestLogin(@RequestBody UserDTO userDTO) {
         return userService.login(userDTO);

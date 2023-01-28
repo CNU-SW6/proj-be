@@ -32,21 +32,22 @@ public class SearchController {
         return new SuccessResponse(posts);
     }
 
-
-    @PatchMapping("/v0/likes/posts/{postNo}")
-    public Like requestPostLike(@PathVariable int postNo, @RequestBody LikePresentationDTO likePresentationDTO) {
-        LikeBusinessDTO likeBusinessDTO = new LikeBusinessDTO(
-                postNo,
-                likePresentationDTO.getUserNo(),
-                likePresentationDTO.getLikeNum()
-        );
-        Like like = likeService.clikeLike(likeBusinessDTO);
-        return like;
-    }
-
     // 게시물 선택
     @GetMapping("v0/posts/{postNo}")
     public Post selectPost(@PathVariable int postNo){
         return postService.getPostInfo(postNo);
+    }
+
+
+    // 게시물 좋아요
+    @PatchMapping("/v0/likes/posts/{postNo}")
+    public boolean requestLike(@PathVariable int postNo, @RequestBody LikePresentationDTO likePresentationDTO) {
+        LikeBusinessDTO likeBusinessDTO = new LikeBusinessDTO(
+                postNo,
+                likePresentationDTO.getUserNo(),
+                likePresentationDTO.getLikeNum(),
+                likePresentationDTO.isChecked()
+        );
+        return likeService.clickLike(likeBusinessDTO);
     }
 }

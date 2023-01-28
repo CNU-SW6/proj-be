@@ -74,9 +74,25 @@ public class PostRepository {
     }
 
     public Post findByPostNo(int postNo) {
-        String sql = "select * from POST_TB where POST_NO = ?";
+        String sql = "select * from POSTS_TB where POST_NO = ?";
         Post post = template.queryForObject(sql, postRowMapper(), postNo);
         return post;
+    }
+
+    public List<PostDTO> findById(int userNo){
+        String sql = "select * from POSTS_TB where USER_NO = ?";
+        List<PostDTO> postDTOList = template.query(sql, postDTORowMapper(), userNo);
+        return postDTOList;
+    }
+
+    private RowMapper<PostDTO> postDTORowMapper() {
+        return (rs, rowNum) -> {
+            PostDTO postDTO = new PostDTO();
+            postDTO.setUserNo(rs.getInt("USER_NO"));
+            postDTO.setPostNo(rs.getInt("POST_NO"));
+            postDTO.setSell(rs.getBoolean("IS_SELL"));
+            return postDTO;
+        };
     }
 
     private RowMapper<PostDTO> postDTORowMapper(String imageLocation) {

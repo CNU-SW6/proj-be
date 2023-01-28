@@ -37,8 +37,18 @@ public class ShareController {
         return new SuccessResponse(image);
     }
 
-    @PostMapping("/v0/posts")
-    public int RequestPostInfo(@RequestBody Post post) {
-        return postService.savePostInfo(post);
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/v1/posts")
+    public SuccessResponse RequestPostInfo(@RequestBody Post postDTO) {
+        log.info("??? userNo={}, imageNo={}, description={}, isSell={}, setUrl={}",
+                postDTO.getUserNo(),
+                postDTO.getImageNo(),
+                postDTO.getDescription(),
+                postDTO.isSell(),
+                postDTO.isSell()
+        );
+
+        Post post = postService.savePostInfo(postDTO);
+        return new SuccessResponse(post);
     }
 }

@@ -28,21 +28,32 @@ public class PostRepository {
         this.template = new JdbcTemplate(dataSource);
     }
 
-    public int save(Post post) {
+    public Post save(Post postDTO) {
+        Post post = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, SELL_URL, USER_NO, IMAGE_NO) values (?, ?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, post.getDescription());
-            preparedStatement.setBoolean(2, post.isSell());
-            preparedStatement.setString(3, post.getSellUrl());
-            preparedStatement.setInt(4, post.getUserNo());
-            preparedStatement.setInt(5, post.getImageNo());
+            preparedStatement.setString(1, postDTO.getDescription());
+            preparedStatement.setBoolean(2, postDTO.isSell());
+            preparedStatement.setString(3, postDTO.getSellUrl());
+            preparedStatement.setInt(4, postDTO.getUserNo());
+            preparedStatement.setInt(5, postDTO.getImageNo());
             return preparedStatement;
         };
 
         template.update(preparedStatementCreator, keyHolder);
-        return (int) keyHolder.getKeys().get("post_no");
+        post = new Post(
+                (Integer) keyHolder.getKeys().get("post_no"),
+                postDTO.getUserNo(),
+                postDTO.getImageNo(),
+                postDTO.getDescription(),
+                postDTO.isSell(),
+                postDTO.getLikeNum(),
+                postDTO.getSellUrl()
+                );
+
+        return post;
     }
 
     /**

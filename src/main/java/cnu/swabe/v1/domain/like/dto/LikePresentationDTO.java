@@ -6,4 +6,5 @@ import lombok.Data;
 public class LikePresentationDTO {
     private int userNo;
     private int likeNum;
+    private boolean checked;
 }

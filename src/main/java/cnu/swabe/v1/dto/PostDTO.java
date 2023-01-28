@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class PostDTO implements Comparable<PostDTO>{
+    private int userNo;
     private int postNo;
     private boolean isSell;
     private String location;

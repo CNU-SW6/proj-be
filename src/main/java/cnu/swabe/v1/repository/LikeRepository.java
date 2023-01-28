@@ -47,4 +47,13 @@ public class LikeRepository {
         String sql = "delete from LIKES_TB where USER_NO = ? AND POST_NO = ?";
         template.update(sql, likeBusinessDTO.getUserNo(), likeBusinessDTO.getPostNo());
     }
+
+
+    /**
+     * version - v1
+     * */
+    public void deleteByPostNo(int postNo) {
+        String sql = "delete from LIKES_TB where POST_NO = ?";
+        template.update(sql, postNo);
+    }
 }

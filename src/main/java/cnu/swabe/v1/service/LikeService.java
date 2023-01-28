@@ -22,11 +22,11 @@ public class LikeService {
      * */
     public boolean clickLike(LikeBusinessDTO likeBusinessDTO) {
         boolean checked = likeBusinessDTO.isChecked();
-        if(checked == false){ // 체크 X -> O
+        if(checked == false) { // 체크 X -> O
             LikeCount(likeBusinessDTO.getPostNo(), likeBusinessDTO.getLikeNum());
             addLikeRelation(likeBusinessDTO);
             return true;
-        }else{ // 체크 O -> X
+        } else { // 체크 O -> X
             LikeDiscount(likeBusinessDTO.getPostNo(), likeBusinessDTO.getLikeNum());
             removeLikeRelation(likeBusinessDTO);
             return false;
@@ -54,5 +54,9 @@ public class LikeService {
 
     public List<LikeBusinessDTO> getLikePosts(int userNo) {
         return likeRepository.findLikePost(userNo);
+    }
+
+    public void removeLikeRelationByPostNo(int postNo) {
+        likeRepository.deleteByPostNo(postNo);
     }
 }

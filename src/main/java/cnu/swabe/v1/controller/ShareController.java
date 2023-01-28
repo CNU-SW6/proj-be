@@ -1,6 +1,6 @@
 package cnu.swabe.v1.controller;
 
-import cnu.swabe.v1.domain.Image;
+import cnu.swabe.v1.domain.image.Image;
 import cnu.swabe.v1.domain.Post;
 import cnu.swabe.v1.response.SuccessResponse;
 import cnu.swabe.v1.service.ImageService;

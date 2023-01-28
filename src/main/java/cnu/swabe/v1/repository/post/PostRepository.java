@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -62,6 +63,7 @@ public class PostRepository {
             return null;
         }
 
+        Collections.sort(postDTOItems);
         return postDTOItems;
     }
 
@@ -83,6 +85,7 @@ public class PostRepository {
             postDTO.setPostNo(rs.getInt("POST_NO"));
             postDTO.setSell(rs.getBoolean("IS_SELL"));
             postDTO.setLocation(imageLocation);
+            postDTO.setLikeNum(rs.getInt("LIKE_NUM"));
             return postDTO;
         };
     }

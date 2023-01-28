@@ -1,14 +1,18 @@
 package cnu.swabe.v1.controller;
 
+import cnu.swabe.v1.domain.Post;
+import cnu.swabe.v1.response.SuccessResponse;
 import cnu.swabe.v1.domain.like.dto.LikeBusinessDTO;
 import cnu.swabe.v1.dto.PostDTO;
 import cnu.swabe.v1.service.LikeService;
 import cnu.swabe.v1.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -20,10 +24,11 @@ public class MyPageController {
     private final PostService postService;
     private final LikeService likeService;
 
-    @DeleteMapping("/v0/posts/{postNo}")
-    public String requestDeletePost(@PathVariable int postNo) {
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/v1/posts/{postNo}")
+    public SuccessResponse requestDeletePost(@PathVariable int postNo) {
         postService.deletePost(postNo);
-        return "ok";
+        return new SuccessResponse();
     }
 
     // 마이페이지 내 게시물 가져오기

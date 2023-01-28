@@ -2,6 +2,7 @@ package cnu.swabe.v1.service;
 
 import cnu.swabe.v1.domain.user.User;
 import cnu.swabe.v1.dto.UserDTO;
+import cnu.swabe.v1.dto.UserLoginDTO;
 import cnu.swabe.v1.exception.ExceptionCode;
 import cnu.swabe.v1.exception.custom.NicknameDuplicatedException;
 import cnu.swabe.v1.exception.custom.WrongLengthUserInfoException;
@@ -42,16 +43,13 @@ public class UserService {
         }
     }
 
-    public User login(UserDTO userDTO) {
-        User userbyId = userRepository.findById(userDTO.getId());
-        User userbyPw = userRepository.findByPw(userDTO.getPw());
-
-        // 객체 비교 이렇게 노노
-        if (userbyId == userbyPw) {
-            return userbyPw;
-        }
-        else {
-            return null;
+    public boolean login(UserLoginDTO userLoginDTO) {
+        User user = userRepository.findUser(userLoginDTO.getId(), userLoginDTO.getPw());
+        log.info("idDTO = {}, pwDTO= {}, id = {}, pw= {}", userLoginDTO.getId(), userLoginDTO.getPw(), user.getId(), user.getPw());
+        if (user.getId().equals(userLoginDTO.getId()) && user.getPw().equals(userLoginDTO.getPw())) {
+            return true;
+        }else{
+            return false;
         }
     }
 

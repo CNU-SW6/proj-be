@@ -24,4 +24,16 @@ public class PostDetailRepository {
         template.update(sql, likeNum+1, postNo);
         return likeNum+1;
     }
+
+    public int plusLikeNumByPostNo(int postNo, int likeNum) {
+        String sql = "update POSTS_TB set LIKE_NUM=? where POST_NO=?";
+        template.update(sql, likeNum+1, postNo);
+        return likeNum+1;
+    }
+
+    public int minusLikeNumByPostNo(int postNo, int likeNum) {
+        String sql = "update POSTS_TB set LIKE_NUM=? where POST_NO=?";
+        template.update(sql, likeNum-1, postNo);
+        return likeNum-1;
+    }
 }

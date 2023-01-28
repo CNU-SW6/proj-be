@@ -64,15 +64,25 @@ public class UserRepository {
     }
 
     public User findById(String id) {
-        String sql = "select * from USERS_TB where USER_NICKNAME = ?";
+        String sql = "select * from USERS_TB where USER_ID = ?";
         User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), id);
         return user;
     }
 
-    public User findByPw(String Pw) {
-        String sql = "select * from USERS_TB where USER_NICKNAME = ?";
-        User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), Pw);
-        return user;
+//    public User findByPw(String Pw) {
+//        String sql = "select * from USERS_TB where USER_NICKNAME = ?";
+//        User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), Pw);
+//        return user;
+//    }
+
+    public User findUser(String id, String pw) {
+        String sql = "select * from USERS_TB where USER_ID = ? AND USER_PW = ?";
+//        try {
+//            return template.queryForObject(sql, userRowMapper(), id, pw);
+//        }catch (EmptyResultDataAccessException e){
+//            return null;
+//        }
+        return template.queryForObject(sql, userRowMapper(), id, pw);
     }
 
     private RowMapper<User> userExcludedPasswordRowMapper() {
@@ -91,7 +101,7 @@ public class UserRepository {
             User user = new User();
             user.setNo(Integer.parseInt(rs.getString("USER_NO")));
             user.setId(rs.getString("USER_ID"));
-            user.setId(rs.getString("USER_PW"));
+            user.setPw(rs.getString("USER_PW"));
             user.setNickname(rs.getString("USER_NICKNAME"));
             user.setMale(rs.getBoolean("USER_ISMALE"));
             return user;

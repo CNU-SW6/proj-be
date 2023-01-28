@@ -2,6 +2,7 @@ package cnu.swabe.v1.controller;
 
 import cnu.swabe.v1.domain.user.User;
 import cnu.swabe.v1.dto.UserDTO;
+import cnu.swabe.v1.dto.UserLoginDTO;
 import cnu.swabe.v1.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,8 @@ public class LoginController {
     private final UserService userService;
 
     @PostMapping("/v0/users/signin")
-    public User requestLogin(@RequestBody UserDTO userDTO) {
-        return userService.login(userDTO);
+    public boolean requestLogin(@RequestBody UserLoginDTO userLoginDTO) {
+        log.info("id = {}, pw= {}", userLoginDTO.getId(), userLoginDTO.getPw());
+        return userService.login(userLoginDTO);
     }
 }

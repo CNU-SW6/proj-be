@@ -27,26 +27,36 @@ public class ImageRepository {
     }
 
     /**
-     * 동적쿼리 필요
-     * MyBatis 사용 이전(jdbcTemplate)에서는
+     * version - v1
+     * 동적쿼리 MyBatis
      * 모든 옵션 다 선택 후 저장 가정
      * */
-    public int save(Image image) {
+    public Image save(Image imageDTO) {
+        Image image = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into IMAGES_TB(USER_NO, LOCATION, HAT_COLOR, TOP_COLOR, PANTS_COLOR, SHOES_COLOR) values (?, ?, ?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, image.getUserNo());
-            preparedStatement.setString(2, image.getLocation());
-            preparedStatement.setString(3, image.getHatColor());
-            preparedStatement.setString(4, image.getTopColor());
-            preparedStatement.setString(5, image.getPantsColor());
-            preparedStatement.setString(6, image.getShoesColor());
+            preparedStatement.setInt(1, imageDTO.getUserNo());
+            preparedStatement.setString(2, imageDTO.getLocation());
+            preparedStatement.setString(3, imageDTO.getHatColor());
+            preparedStatement.setString(4, imageDTO.getTopColor());
+            preparedStatement.setString(5, imageDTO.getPantsColor());
+            preparedStatement.setString(6, imageDTO.getShoesColor());
             return preparedStatement;
         };
 
         template.update(preparedStatementCreator, keyHolder);
-        return (int) keyHolder.getKeys().get("image_no");
+        image = new Image(
+                (Integer) keyHolder.getKeys().get("IMAGE_NO"),
+                imageDTO.getUserNo(),
+                imageDTO.getLocation(),
+                imageDTO.getHatColor(),
+                imageDTO.getTopColor(),
+                imageDTO.getPantsColor(),
+                imageDTO.getShoesColor()
+        );
+        return image;
     }
 
     /**

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class ImageService {
     private final ImageRepository imageRepository;
 
@@ -24,8 +24,13 @@ public class ImageService {
         return imageInfoDTO;
     }
 
-    public int saveImageInfo(Image image) {
-        int pk = imageRepository.save(image);
-        return pk;
+
+    /**
+     * version - v1
+     * 색 코드가 하나도 없으면 exception?
+     * */
+    public Image saveImageInfo(Image imageDTO) {
+        Image image = imageRepository.save(imageDTO);
+        return image;
     }
 }

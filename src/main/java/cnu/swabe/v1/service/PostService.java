@@ -18,9 +18,12 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
 
-    public int savePostInfo(Post post) {
-        int pk = postRepository.save(post);
-        return pk;
+    /**
+     *
+     * */
+    public Post savePostInfo(Post postDTO) {
+        Post post = postRepository.save(postDTO);
+        return post;
     }
 
     /**

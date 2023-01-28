@@ -19,7 +19,7 @@ public class PostService {
     private final ImageService imageService;
 
     /**
-     *
+     * version - v1
      * */
     public Post savePostInfo(Post postDTO) {
         Post post = postRepository.save(postDTO);
@@ -40,9 +40,11 @@ public class PostService {
         return posts;
     }
 
+    /**
+     * version - v1
+     * */
     public void deletePost(int postNo) {
         postRepository.deleteByPostNo(postNo);
-        return;
     }
 
     public Post getPostInfo (int postNo) {

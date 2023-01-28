@@ -28,6 +28,9 @@ public class PostRepository {
         this.template = new JdbcTemplate(dataSource);
     }
 
+    /**
+     * version - v1
+     * */
     public Post save(Post postDTO) {
         Post post = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -78,10 +81,13 @@ public class PostRepository {
         return postDTOItems;
     }
 
+
+    /**
+     * version - v1
+     * */
     public void deleteByPostNo(int postNo) {
         String sql = "delete from POSTS_TB where POST_NO = ?";
         template.update(sql, postNo);
-        return;
     }
 
     public Post findByPostNo(int postNo) {

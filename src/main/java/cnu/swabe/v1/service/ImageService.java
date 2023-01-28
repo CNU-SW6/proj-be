@@ -1,6 +1,6 @@
 package cnu.swabe.v1.service;
 
-import cnu.swabe.v1.domain.Image;
+import cnu.swabe.v1.domain.image.Image;
 import cnu.swabe.v1.dto.ImageInfoDTO;
 import cnu.swabe.v1.dto.StyleDTO;
 import cnu.swabe.v1.repository.ImageRepository;
@@ -32,5 +32,12 @@ public class ImageService {
     public Image saveImageInfo(Image imageDTO) {
         Image image = imageRepository.save(imageDTO);
         return image;
+    }
+
+    /**
+     * version - v1
+     * */
+    public void deleteImageInfo(int imageNo) {
+        imageRepository.deleteByImageNo(imageNo);
     }
 }

@@ -1,6 +1,6 @@
 package cnu.swabe.v1.repository;
 
-import cnu.swabe.v1.domain.Image;
+import cnu.swabe.v1.domain.image.Image;
 import cnu.swabe.v1.dto.ImageInfoDTO;
 import cnu.swabe.v1.dto.StyleDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -74,11 +74,16 @@ public class ImageRepository {
                     styleDTO.getPants(),
                     styleDTO.getShoes()
             );
-        } catch(EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
 
         return imageInfoDTO;
+    }
+
+    public void deleteByImageNo(int imageNo) {
+        String sql = "delete from IMAGES_TB where IMAGE_NO = ?";
+        template.update(sql, imageNo);
     }
 
     private RowMapper<ImageInfoDTO> imageInfoDTORowMapper() {

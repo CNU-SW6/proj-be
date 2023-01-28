@@ -1,4 +1,4 @@
-package cnu.swabe.v1.domain;
+package cnu.swabe.v1.domain.image;
 
 import lombok.Getter;
 import lombok.Setter;

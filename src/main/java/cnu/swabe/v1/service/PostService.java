@@ -17,6 +17,7 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
+    private final LikeService likeService;
 
     /**
      * version - v1
@@ -42,9 +43,12 @@ public class PostService {
 
     /**
      * version - v1
+     * 해당 유저가 맞는지 확인해야 할듯?
      * */
-    public void deletePost(int postNo) {
+    public void deletePost(int postNo, int imageNo) {
+        likeService.removeLikeRelationByPostNo(postNo);
         postRepository.deleteByPostNo(postNo);
+        imageService.deleteImageInfo(imageNo);
     }
 
     public Post getPostInfo (int postNo) {

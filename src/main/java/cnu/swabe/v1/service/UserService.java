@@ -4,6 +4,7 @@ import cnu.swabe.v1.domain.user.User;
 import cnu.swabe.v1.dto.UserDTO;
 import cnu.swabe.v1.dto.UserLoginDTO;
 import cnu.swabe.v1.exception.ExceptionCode;
+import cnu.swabe.v1.exception.custom.IdDuplicatedException;
 import cnu.swabe.v1.exception.custom.NicknameDuplicatedException;
 import cnu.swabe.v1.exception.custom.WrongLengthUserInfoException;
 import cnu.swabe.v1.repository.UserRepository;
@@ -27,6 +28,7 @@ public class UserService {
         if(!checkInputLength(userDTO.getNickname())) throw new WrongLengthUserInfoException(ExceptionCode.WRONG_LENGTH_USER_NICKNAME);
         checkDuplicateNickName(userDTO.getNickname());
         // checkDuplicatedId 구현 후 체크
+        checkDuplicateId(userDTO.getId());
         
         User user = userRepository.save(userDTO);
         return user;
@@ -53,12 +55,10 @@ public class UserService {
         }
     }
 
-    public boolean checkDuplicateId(String id) {
+    public void checkDuplicateId(String id) {
         User user = userRepository.findById(id);
-        if(user == null){
-            return false;
-        }else{
-            return true;
+        if(user != null){
+            throw new IdDuplicatedException();
         }
     }
 }

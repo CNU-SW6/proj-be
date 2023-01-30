@@ -64,8 +64,13 @@ public class UserRepository {
     }
 
     public User findById(String id) {
+        User user = null;
         String sql = "select * from USERS_TB where USER_ID = ?";
-        User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), id);
+        try{
+            user = template.queryForObject(sql, userExcludedPasswordRowMapper(), id);
+        }catch(EmptyResultDataAccessException e){
+            return null;
+        }
         return user;
     }
 

@@ -3,13 +3,12 @@ package cnu.swabe.v1.controller;
 import cnu.swabe.v1.domain.user.User;
 import cnu.swabe.v1.dto.UserDTO;
 import cnu.swabe.v1.dto.UserLoginDTO;
+import cnu.swabe.v1.response.SuccessResponse;
 import cnu.swabe.v1.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -18,9 +17,11 @@ public class LoginController {
 
     private final UserService userService;
 
-    @PostMapping("/v0/users/signin")
-    public boolean requestLogin(@RequestBody UserLoginDTO userLoginDTO) {
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/v1/users/signin")
+    public SuccessResponse requestLogin(@RequestBody UserLoginDTO userLoginDTO) {
         log.info("id = {}, pw= {}", userLoginDTO.getId(), userLoginDTO.getPw());
-        return userService.login(userLoginDTO);
+        userService.login(userLoginDTO);
+        return new SuccessResponse(userLoginDTO);
     }
 }

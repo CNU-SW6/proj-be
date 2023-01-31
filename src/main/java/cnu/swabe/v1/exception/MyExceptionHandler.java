@@ -2,6 +2,7 @@ package cnu.swabe.v1.exception;
 
 import cnu.swabe.v1.exception.custom.IdDuplicatedException;
 import cnu.swabe.v1.exception.custom.NicknameDuplicatedException;
+import cnu.swabe.v1.exception.custom.WrongInfoAccessException;
 import cnu.swabe.v1.exception.custom.WrongLengthUserInfoException;
 import cnu.swabe.v1.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -33,5 +34,11 @@ public class MyExceptionHandler {
     protected ErrorResponse handleIdDuplicatedException(){
         log.error("!!! error log=()", ExceptionCode.EXIST_VALUE.getMessage());
         return new ErrorResponse(ExceptionCode.EXIST_VALUE);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(WrongInfoAccessException.class)
+    protected ErrorResponse handlerWrongInfoAccessException(WrongInfoAccessException ex){
+        return new ErrorResponse(ex.getErrorCode());
     }
 }

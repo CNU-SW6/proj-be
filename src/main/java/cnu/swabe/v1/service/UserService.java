@@ -5,6 +5,7 @@ import cnu.swabe.v1.dto.UserDTO;
 import cnu.swabe.v1.dto.UserLoginDTO;
 import cnu.swabe.v1.exception.ExceptionCode;
 import cnu.swabe.v1.exception.custom.NicknameDuplicatedException;
+import cnu.swabe.v1.exception.custom.WrongInfoAccessException;
 import cnu.swabe.v1.exception.custom.WrongLengthUserInfoException;
 import cnu.swabe.v1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,13 +44,10 @@ public class UserService {
         }
     }
 
-    public boolean login(UserLoginDTO userLoginDTO) {
+    public void login(UserLoginDTO userLoginDTO) {
         User user = userRepository.findUser(userLoginDTO.getId(), userLoginDTO.getPw());
-        log.info("idDTO = {}, pwDTO= {}, id = {}, pw= {}", userLoginDTO.getId(), userLoginDTO.getPw(), user.getId(), user.getPw());
-        if (user.getId().equals(userLoginDTO.getId()) && user.getPw().equals(userLoginDTO.getPw())) {
-            return true;
-        }else{
-            return false;
+        if(user == null){
+            throw new WrongInfoAccessException(ExceptionCode.WRONG_INFO_USER_ACCESS);
         }
     }
 

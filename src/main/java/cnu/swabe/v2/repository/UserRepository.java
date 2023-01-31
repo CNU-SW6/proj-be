@@ -1,7 +1,7 @@
 package cnu.swabe.v2.repository;
 
 import cnu.swabe.v2.domain.user.UserEntity;
-import cnu.swabe.v2.domain.user.dto.UserDTO;
+import cnu.swabe.v2.domain.user.dto.UserRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,24 +26,29 @@ public class UserRepository {
 
     /**
      * version - v1
-     * 동적쿼리 MyBatis
-     * DTO 필요
+     * jdbcTemplate
      * */
-    public UserEntity save(UserDTO userDTO) {
+    public UserEntity save(UserRequestDTO userRequestDTO) {
         UserEntity userEntity = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into USERS_TB(USER_ID, USER_PW, USER_NICKNAME, USER_ISMALE) values(?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, userDTO.getId());
-            preparedStatement.setString(2, userDTO.getPw());
-            preparedStatement.setString(3, userDTO.getNickname());
-            preparedStatement.setBoolean(4, userDTO.isMale());
+            preparedStatement.setString(1, userRequestDTO.getId());
+            preparedStatement.setString(2, userRequestDTO.getPw());
+            preparedStatement.setString(3, userRequestDTO.getNickname());
+            preparedStatement.setBoolean(4, userRequestDTO.isMale());
             return preparedStatement;
         };
 
         template.update(preparedStatementCreator, keyHolder);
-        userEntity = new UserEntity((Integer) keyHolder.getKeys().get("USER_NO"), userDTO.getId(), userDTO.getPw(), userDTO.getNickname(), userDTO.isMale());
+        userEntity = new UserEntity(
+                (Integer) keyHolder.getKeys().get("USER_NO"),
+                userRequestDTO.getId(),
+                userRequestDTO.getPw(),
+                userRequestDTO.getNickname(),
+                userRequestDTO.isMale()
+        );
 
         return userEntity;
     }

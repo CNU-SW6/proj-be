@@ -56,7 +56,8 @@ public class PostService {
     }
 
     public List<PostDTO> getMyPosts(int userNo){
-        return postRepository.findById(userNo);
+        List<PostDTO> postDTOList = postRepository.findById(userNo);
+        return postDTOList;
     }
 }
 

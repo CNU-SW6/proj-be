@@ -25,14 +25,14 @@ public class SignUpController {
                 userRequestDTO.getNickname(),
                 userRequestDTO.isMale()
         );
-        UserEntity userEntity = userService.register(userRequestDTO);
-        UserResponseDTO userResponseDTO = new UserResponseDTO(
-                userEntity.getId(),
-                userEntity.getNickname(),
-                userEntity.isMale()
+        UserEntity user = userService.register(userRequestDTO);
+        UserResponseDTO userResponse = new UserResponseDTO(
+                user.getId(),
+                user.getNickname(),
+                user.isMale()
         );
 
-        return new SuccessResponse(userResponseDTO);
+        return new SuccessResponse(userResponse);
     }
 
     @ResponseStatus(HttpStatus.OK)

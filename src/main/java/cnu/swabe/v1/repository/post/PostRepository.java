@@ -92,7 +92,12 @@ public class PostRepository {
 
     public Post findByPostNo(int postNo) {
         String sql = "select * from POSTS_TB where POST_NO = ?";
-        Post post = template.queryForObject(sql, postRowMapper(), postNo);
+        Post post = null;
+        try {
+            post = template.queryForObject(sql, postRowMapper(), postNo);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
         return post;
     }
 

@@ -1,6 +1,7 @@
 package cnu.swabe.v1.exception;
 
 import cnu.swabe.v1.exception.custom.NicknameDuplicatedException;
+import cnu.swabe.v1.exception.custom.PostNotExistException;
 import cnu.swabe.v1.exception.custom.WrongLengthUserInfoException;
 import cnu.swabe.v1.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,12 @@ public class MyExceptionHandler {
     @ExceptionHandler(WrongLengthUserInfoException.class)
     protected ErrorResponse handleWrongLengthUserInfoException(WrongLengthUserInfoException ex) {
         log.error("!!! error log={}", ex.getErrorCode().getMessage());
+        return new ErrorResponse(ex.getErrorCode());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(PostNotExistException.class)
+    protected ErrorResponse handlePostNotExistException(PostNotExistException ex) {
         return new ErrorResponse(ex.getErrorCode());
     }
 }

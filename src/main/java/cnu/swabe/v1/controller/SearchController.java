@@ -32,9 +32,9 @@ public class SearchController {
     }
 
     // 게시물 선택
-    @GetMapping("v0/posts/{postNo}")
-    public Post selectPost(@PathVariable int postNo){
-        return postService.getPostInfo(postNo);
+    @GetMapping("v1/posts/{postNo}")
+    public SuccessResponse selectPost(@PathVariable int postNo){
+        return new SuccessResponse(postService.getPostInfo(postNo));
     }
 
 

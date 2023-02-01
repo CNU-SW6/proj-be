@@ -29,15 +29,17 @@ public class MyPageController {
     }
 
     // 마이페이지 내 게시물 가져오기
-    @GetMapping("/v0/posts/users/{userNo}")
-    public List<PostDTO> requestMyPosts(@PathVariable int userNo) {
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/v1/posts/users/{userNo}")
+    public SuccessResponse requestMyPosts(@PathVariable int userNo) {
         // Posts_TB -> 내가 업로드한 이미지 select
-        return postService.getMyPosts(userNo);
+        return new SuccessResponse(postService.getMyPosts(userNo));
     }
 
     // 마이페이지 좋아요 게시물 가져오기
-    @GetMapping("/v0/posts/likes/users/{userNo}")
-    public List<LikeBusinessDTO> requestLikePosts(@PathVariable int userNo) {
-        return likeService.getLikePosts(userNo);
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/v1/posts/likes/users/{userNo}")
+    public SuccessResponse requestLikePosts(@PathVariable int userNo) {
+        return new SuccessResponse(likeService.getLikePosts(userNo));
     }
 }

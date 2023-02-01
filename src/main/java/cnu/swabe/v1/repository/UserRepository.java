@@ -64,8 +64,13 @@ public class UserRepository {
     }
 
     public User findById(String id) {
+        User user = null;
         String sql = "select * from USERS_TB where USER_ID = ?";
-        User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), id);
+        try{
+            user = template.queryForObject(sql, userExcludedPasswordRowMapper(), id);
+        }catch(EmptyResultDataAccessException e){
+            return null;
+        }
         return user;
     }
 
@@ -76,13 +81,13 @@ public class UserRepository {
 //    }
 
     public User findUser(String id, String pw) {
+        User user = null;
         String sql = "select * from USERS_TB where USER_ID = ? AND USER_PW = ?";
-//        try {
-//            return template.queryForObject(sql, userRowMapper(), id, pw);
-//        }catch (EmptyResultDataAccessException e){
-//            return null;
-//        }
-        return template.queryForObject(sql, userRowMapper(), id, pw);
+        try {
+            return template.queryForObject(sql, userRowMapper(), id, pw);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
     private RowMapper<User> userExcludedPasswordRowMapper() {

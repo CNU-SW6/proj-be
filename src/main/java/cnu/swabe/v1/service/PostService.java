@@ -4,6 +4,8 @@ import cnu.swabe.v1.domain.Post;
 import cnu.swabe.v1.dto.ImageInfoDTO;
 import cnu.swabe.v1.dto.PostDTO;
 import cnu.swabe.v1.dto.StyleDTO;
+import cnu.swabe.v1.exception.ExceptionCode;
+import cnu.swabe.v1.exception.custom.PostNotExistException;
 import cnu.swabe.v1.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,11 +54,15 @@ public class PostService {
     }
 
     public Post getPostInfo (int postNo) {
-        return postRepository.findByPostNo(postNo);
+        Post byPostNo = postRepository.findByPostNo(postNo);
+        if(byPostNo == null) throw new PostNotExistException(ExceptionCode.No_Exist_Post);
+
+        return byPostNo;
     }
 
     public List<PostDTO> getMyPosts(int userNo){
-        return postRepository.findById(userNo);
+        List<PostDTO> postDTOList = postRepository.findById(userNo);
+        return postDTOList;
     }
 }
 

@@ -31,10 +31,11 @@ public class SignUpController {
         return new SuccessResponse();
     }
 
-    @GetMapping("/v0/users/id/{id}")
-    public boolean requestCheckDuplicateId(@PathVariable String id){
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/v1/users/id/{id}")
+    public SuccessResponse requestCheckDuplicateId(@PathVariable String id){
         log.info("id={}", id);
-        boolean isExist = userService.checkDuplicateId(id);
-        return isExist;
+        userService.checkDuplicateId(id);
+        return new SuccessResponse();
     }
 }

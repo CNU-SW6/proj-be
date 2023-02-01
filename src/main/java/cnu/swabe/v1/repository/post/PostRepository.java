@@ -92,13 +92,25 @@ public class PostRepository {
 
     public Post findByPostNo(int postNo) {
         String sql = "select * from POSTS_TB where POST_NO = ?";
-        Post post = template.queryForObject(sql, postRowMapper(), postNo);
+        Post post = null;
+        try {
+            post = template.queryForObject(sql, postRowMapper(), postNo);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
         return post;
     }
 
     public List<PostDTO> findById(int userNo){
         String sql = "select * from POSTS_TB where USER_NO = ?";
-        List<PostDTO> postDTOList = template.query(sql, postDTORowMapper(), userNo);
+        List<PostDTO> postDTOList = new ArrayList<>();
+        try {
+            postDTOList = template.query(sql, postDTORowMapper(), userNo);
+        }catch(EmptyResultDataAccessException e){
+            return null;
+        }
+
+        Collections.sort(postDTOList);
         return postDTOList;
     }
 

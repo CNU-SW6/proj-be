@@ -29,7 +29,7 @@ public class UserRepository {
      * jdbcTemplate
      * */
     public UserEntity save(UserRequestDTO userRequestDTO) {
-        UserEntity userEntity = null;
+        UserEntity user = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into USERS_TB(USER_ID, USER_PW, USER_NICKNAME, USER_ISMALE) values(?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
@@ -42,7 +42,7 @@ public class UserRepository {
         };
 
         template.update(preparedStatementCreator, keyHolder);
-        userEntity = new UserEntity(
+        user = new UserEntity(
                 (Integer) keyHolder.getKeys().get("USER_NO"),
                 userRequestDTO.getId(),
                 userRequestDTO.getPw(),
@@ -50,7 +50,7 @@ public class UserRepository {
                 userRequestDTO.isMale()
         );
 
-        return userEntity;
+        return user;
     }
 
     /**
@@ -58,15 +58,15 @@ public class UserRepository {
      * nickname이 중복으로 있을 경우
      * */
     public UserEntity findByNickName(String nickname) {
-        UserEntity userEntity = null;
+        UserEntity user = null;
         String sql = "select * from USERS_TB where USER_NICKNAME = ?";
         try {
-            userEntity = template.queryForObject(sql, userRowMapper(), nickname);
+            user = template.queryForObject(sql, userRowMapper(), nickname);
         } catch(EmptyResultDataAccessException e) {
             return null;
         }
 
-        return userEntity;
+        return user;
     }
 
     public UserEntity findById(String id) {

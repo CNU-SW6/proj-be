@@ -33,16 +33,16 @@ public class UserService {
         if(checkDuplicateNickName(userRequestDTO.getNickname())) throw new DuplicatedInfoException(ExceptionCode.EXIST_USER_NICKNAME);
         // checkDuplicatedId 구현 후 체크
         
-        UserEntity userEntity = userRepository.save(userRequestDTO);
-        return userEntity;
+        UserEntity user = userRepository.save(userRequestDTO);
+        return user;
     }
 
     /**
      * version - v2
      * */
     public boolean checkDuplicateNickName(String nickname) {
-        UserEntity userEntity = userRepository.findByNickName(nickname);
-        if(userEntity != null) {
+        UserEntity user = userRepository.findByNickName(nickname);
+        if(user != null) {
             return true;
         }
         return false;

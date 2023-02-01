@@ -2,10 +2,13 @@ package cnu.swabe.v1.repository;
 
 import cnu.swabe.v1.domain.like.dto.LikeBusinessDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -31,7 +34,14 @@ public class LikeRepository {
 
     public List<LikeBusinessDTO> findLikePost(int userNo) {
         String sql = "select * from LIKES_TB where USER_NO = ?";
-        return template.query(sql, LikeBusinessDTORowMapper(), userNo);
+        List<LikeBusinessDTO> likeBusinessDTOList = new ArrayList<>();
+        try {
+            likeBusinessDTOList = template.query(sql, LikeBusinessDTORowMapper(), userNo);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
+        return likeBusinessDTOList;
     }
 
     private RowMapper<LikeBusinessDTO> LikeBusinessDTORowMapper() {

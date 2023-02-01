@@ -22,7 +22,7 @@ public class MyPageController {
     private final LikeService likeService;
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/v1/posts/{postNo}")
+    @DeleteMapping("/api/posts/{postNo}")
     public SuccessResponse requestDeletePost(@RequestBody ImagePresentationDTO imagePresentationDTO, @PathVariable int postNo) {
         postService.deletePost(postNo, imagePresentationDTO.getImageNo());
         return new SuccessResponse();
@@ -30,7 +30,7 @@ public class MyPageController {
 
     // 마이페이지 내 게시물 가져오기
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v1/posts/users/{userNo}")
+    @GetMapping("/api/posts/users/{userNo}")
     public SuccessResponse requestMyPosts(@PathVariable int userNo) {
         // Posts_TB -> 내가 업로드한 이미지 select
         return new SuccessResponse(postService.getMyPosts(userNo));
@@ -38,7 +38,7 @@ public class MyPageController {
 
     // 마이페이지 좋아요 게시물 가져오기
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v1/posts/likes/users/{userNo}")
+    @GetMapping("/api/posts/likes/users/{userNo}")
     public SuccessResponse requestLikePosts(@PathVariable int userNo) {
         return new SuccessResponse(likeService.getLikePosts(userNo));
     }

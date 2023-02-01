@@ -24,7 +24,7 @@ public class SearchController {
     private final LikeService likeService;
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v1/posts")
+    @GetMapping("/api/posts")
     public SuccessResponse requestSearchStyle(@ModelAttribute StyleDTO styleDTO) {
         log.info("??? hat={}, top={}, pants={}, shoes={}", styleDTO.getHat(), styleDTO.getTop(), styleDTO.getPants(), styleDTO.getShoes());
         List<PostDTO> posts = postService.getPostItems(styleDTO);
@@ -32,14 +32,14 @@ public class SearchController {
     }
 
     // 게시물 선택
-    @GetMapping("v1/posts/{postNo}")
+    @GetMapping("/api/posts/{postNo}")
     public SuccessResponse selectPost(@PathVariable int postNo){
         return new SuccessResponse(postService.getPostInfo(postNo));
     }
 
 
     // 게시물 좋아요
-    @PatchMapping("/v0/likes/posts/{postNo}")
+    @PatchMapping("/api/likes/posts/{postNo}")
     public boolean requestLike(@PathVariable int postNo, @RequestBody LikePresentationDTO likePresentationDTO) {
         LikeBusinessDTO likeBusinessDTO = new LikeBusinessDTO(
                 postNo,

@@ -21,7 +21,7 @@ public class ShareController {
     private final PostService postService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/v1/images")
+    @PostMapping("/api/images")
     public SuccessResponse RequestImageInfo(@RequestBody Image imageDTO) {
         log.info("??? userNo={}, location={}, hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
                 imageDTO.getUserNo(),
@@ -38,7 +38,7 @@ public class ShareController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/v1/posts")
+    @PostMapping("/api/posts")
     public SuccessResponse RequestPostInfo(@RequestBody Post postDTO) {
         log.info("??? userNo={}, imageNo={}, description={}, isSell={}, setUrl={}",
                 postDTO.getUserNo(),

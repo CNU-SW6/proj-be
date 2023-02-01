@@ -18,7 +18,7 @@ public class LoginController {
     private final UserService userService;
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/v1/users/signin")
+    @PostMapping("/api/users/signin")
     public SuccessResponse requestLogin(@RequestBody UserLoginDTO userLoginDTO) {
         log.info("id = {}, pw= {}", userLoginDTO.getId(), userLoginDTO.getPw());
         userService.login(userLoginDTO);

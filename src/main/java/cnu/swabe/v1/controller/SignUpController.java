@@ -16,7 +16,7 @@ public class SignUpController {
     private final UserService userService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/v1/users/signup")
+    @PostMapping("/api/users/signup")
     public SuccessResponse requestSignUp(@RequestBody UserDTO userDTO) {
         log.info("??? id={}, pw={}, nickname={}, isMale={}", userDTO.getId(), userDTO.getPw(), userDTO.getNickname(), userDTO.isMale());
         User user = userService.addUser(userDTO);
@@ -24,7 +24,7 @@ public class SignUpController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v1/users/nickname/{nickname}")
+    @GetMapping("/api/users/nickname/{nickname}")
     public SuccessResponse requestCheckDuplicateNickName(@PathVariable String nickname) {
         log.info("??? nickname={}", nickname);
         userService.checkDuplicateNickName(nickname);;
@@ -32,7 +32,7 @@ public class SignUpController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v1/users/id/{id}")
+    @GetMapping("/api/users/id/{id}")
     public SuccessResponse requestCheckDuplicateId(@PathVariable String id){
         log.info("id={}", id);
         userService.checkDuplicateId(id);

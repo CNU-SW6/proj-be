@@ -1,7 +1,7 @@
 package cnu.swabe.v2.controller;
 
 import cnu.swabe.v2.domain.image.Image;
-import cnu.swabe.v2.domain.post.Post;
+import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.ImageService;
 import cnu.swabe.v2.service.PostService;
@@ -39,16 +39,16 @@ public class ShareController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/v1/posts")
-    public SuccessResponse RequestPostInfo(@RequestBody Post postDTO) {
+    public SuccessResponse RequestPostInfo(@RequestBody PostEntity postEntityDTO) {
         log.info("??? userNo={}, imageNo={}, description={}, isSell={}, setUrl={}",
-                postDTO.getUserNo(),
-                postDTO.getImageNo(),
-                postDTO.getDescription(),
-                postDTO.isSell(),
-                postDTO.isSell()
+                postEntityDTO.getUserNo(),
+                postEntityDTO.getImageNo(),
+                postEntityDTO.getDescription(),
+                postEntityDTO.isSell(),
+                postEntityDTO.isSell()
         );
 
-        Post post = postService.savePostInfo(postDTO);
-        return new SuccessResponse(post);
+        PostEntity postEntity = postService.savePostInfo(postEntityDTO);
+        return new SuccessResponse(postEntity);
     }
 }

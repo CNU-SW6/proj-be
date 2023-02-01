@@ -2,7 +2,7 @@ package cnu.swabe.v2.service;
 
 import cnu.swabe.v2.domain.image.Image;
 import cnu.swabe.v2.domain.image.dto.ImageInfoDTO;
-import cnu.swabe.v2.extradto.StyleDTO;
+import cnu.swabe.v2.domain.image.dto.ImageStyleDTO;
 import cnu.swabe.v2.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,15 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageService {
     private final ImageRepository imageRepository;
-
-    /**
-     * version - v1
-     * */
-    public List<ImageInfoDTO> getImageInfo(StyleDTO styleDTO) {
-        List<ImageInfoDTO> imageInfoDTO = imageRepository.findByStyle(styleDTO);
-        return imageInfoDTO;
-    }
-
 
     /**
      * version - v1

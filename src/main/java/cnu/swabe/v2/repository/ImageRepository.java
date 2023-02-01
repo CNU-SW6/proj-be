@@ -2,7 +2,7 @@ package cnu.swabe.v2.repository;
 
 import cnu.swabe.v2.domain.image.Image;
 import cnu.swabe.v2.domain.image.dto.ImageInfoDTO;
-import cnu.swabe.v2.extradto.StyleDTO;
+import cnu.swabe.v2.domain.image.dto.ImageStyleDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,39 +59,8 @@ public class ImageRepository {
         return image;
     }
 
-    /**
-     * version - v1
-     * 동적쿼리 MyBatis
-     * DTO 분리
-    * */
-    public List<ImageInfoDTO> findByStyle(StyleDTO styleDTO) {
-        List<ImageInfoDTO> imageInfoDTO = null;
-        String sql = "select IMAGE_NO, LOCATION from IMAGES_TB where HAT_COLOR=? AND TOP_COLOR=? AND PANTS_COLOR=? AND SHOES_COLOR=?";
-        try {
-            imageInfoDTO = template.query(sql, imageInfoDTORowMapper(),
-                    styleDTO.getHat(),
-                    styleDTO.getTop(),
-                    styleDTO.getPants(),
-                    styleDTO.getShoes()
-            );
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-
-        return imageInfoDTO;
-    }
-
     public void deleteByImageNo(int imageNo) {
         String sql = "delete from IMAGES_TB where IMAGE_NO = ?";
         template.update(sql, imageNo);
-    }
-
-    private RowMapper<ImageInfoDTO> imageInfoDTORowMapper() {
-        return (rs, rowNum) -> {
-            ImageInfoDTO imageInfoDTO = new ImageInfoDTO();
-            imageInfoDTO.setImageNo(rs.getInt("IMAGE_NO"));
-            imageInfoDTO.setLocation(rs.getString("LOCATION"));
-            return imageInfoDTO;
-        };
     }
 }

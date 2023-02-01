@@ -1,8 +1,8 @@
 package cnu.swabe.v2.repository.post;
 
-import cnu.swabe.v2.domain.post.Post;
-import cnu.swabe.v2.domain.image.dto.ImageInfoDTO;
+import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.post.dto.PostDTO;
+import cnu.swabe.v2.domain.image.dto.ImageStyleDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,12 +11,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -31,54 +28,56 @@ public class PostRepository {
     /**
      * version - v1
      * */
-    public Post save(Post postDTO) {
-        Post post = null;
+    public PostEntity save(PostEntity postEntityDTO) {
+        PostEntity postEntity = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, SELL_URL, USER_NO, IMAGE_NO) values (?, ?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, postDTO.getDescription());
-            preparedStatement.setBoolean(2, postDTO.isSell());
-            preparedStatement.setString(3, postDTO.getSellUrl());
-            preparedStatement.setInt(4, postDTO.getUserNo());
-            preparedStatement.setInt(5, postDTO.getImageNo());
+            preparedStatement.setString(1, postEntityDTO.getDescription());
+            preparedStatement.setBoolean(2, postEntityDTO.isSell());
+            preparedStatement.setString(3, postEntityDTO.getSellUrl());
+            preparedStatement.setInt(4, postEntityDTO.getUserNo());
+            preparedStatement.setInt(5, postEntityDTO.getImageNo());
             return preparedStatement;
         };
 
         template.update(preparedStatementCreator, keyHolder);
-        post = new Post(
+        postEntity = new PostEntity(
                 (Integer) keyHolder.getKeys().get("post_no"),
-                postDTO.getUserNo(),
-                postDTO.getImageNo(),
-                postDTO.getDescription(),
-                postDTO.isSell(),
-                postDTO.getLikeNum(),
-                postDTO.getSellUrl()
+                postEntityDTO.getUserNo(),
+                postEntityDTO.getImageNo(),
+                postEntityDTO.getDescription(),
+                postEntityDTO.isSell(),
+                postEntityDTO.getLikeNum(),
+                postEntityDTO.getSellUrl()
                 );
 
-        return post;
+        return postEntity;
     }
 
     /**
-     * version - v1
-     * 동적쿼리 MyBatis
-     * */
-    public List<PostDTO> findByImageInfo(List<ImageInfoDTO> imageInfoDTO) {
-        String sql = "select * from POSTS_TB where IMAGE_NO = ?";
-        List<PostDTO> postDTOItems = new ArrayList<>();
+     * version - v2
+     * jdbcTemplate
+     */
+    public List<PostEntity> findByImageStyle(ImageStyleDTO styleDTO) {
+        List<PostEntity> posts = null;
+        String sql = "select * from POSTS_TB " +
+                "inner join IMAGES_TB on POSTS_TB.IMAGE_NO = IMAGES_TB.IMAGE_NO " +
+                "where HAT_COLOR=? AND TOP_COLOR=? AND PANTS_COLOR=? AND SHOES_COLOR=?";
 
         try {
-            for (ImageInfoDTO imageInfo : imageInfoDTO) {
-                PostDTO postDTO = template.queryForObject(sql, postDTORowMapper(imageInfo.getLocation()), imageInfo.getImageNo());
-                postDTOItems.add(postDTO);
-            }
+            posts = template.query(sql, postRowMapper(),
+                    styleDTO.getHat(),
+                    styleDTO.getTop(),
+                    styleDTO.getPants(),
+                    styleDTO.getShoes()
+            );
         } catch(EmptyResultDataAccessException e) {
-            // 이미지는 있는데, 게시물 정보는 없다?
             return null;
         }
 
-        Collections.sort(postDTOItems);
-        return postDTOItems;
+        return posts;
     }
 
 
@@ -90,10 +89,10 @@ public class PostRepository {
         template.update(sql, postNo);
     }
 
-    public Post findByPostNo(int postNo) {
+    public PostEntity findByPostNo(int postNo) {
         String sql = "select * from POSTS_TB where POST_NO = ?";
-        Post post = template.queryForObject(sql, postRowMapper(), postNo);
-        return post;
+        PostEntity postEntity = template.queryForObject(sql, postRowMapper(), postNo);
+        return postEntity;
     }
 
     public List<PostDTO> findById(int userNo){
@@ -112,28 +111,17 @@ public class PostRepository {
         };
     }
 
-    private RowMapper<PostDTO> postDTORowMapper(String imageLocation) {
+    private RowMapper<PostEntity> postRowMapper() {
         return (rs, rowNum) -> {
-            PostDTO postDTO = new PostDTO();
-            postDTO.setPostNo(rs.getInt("POST_NO"));
-            postDTO.setSell(rs.getBoolean("IS_SELL"));
-            postDTO.setLocation(imageLocation);
-            postDTO.setLikeNum(rs.getInt("LIKE_NUM"));
-            return postDTO;
-        };
-    }
-
-    private RowMapper<Post> postRowMapper() {
-        return (rs, rowNum) -> {
-            Post post = new Post();
-            post.setPostNo(rs.getInt("POST_NO"));
-            post.setDescription(rs.getString("DESCRIPTION"));
-            post.setSell(rs.getBoolean("IS_SELL"));
-            post.setImageNo(rs.getInt("IMAGE_NO"));
-            post.setUserNo(rs.getInt("USER_NO"));
-            post.setSellUrl(rs.getString("SELL_URL"));
-            post.setLikeNum(rs.getInt("LIKE_NUM"));
-            return post;
+            PostEntity postEntity = new PostEntity();
+            postEntity.setPostNo(rs.getInt("POST_NO"));
+            postEntity.setDescription(rs.getString("DESCRIPTION"));
+            postEntity.setSell(rs.getBoolean("IS_SELL"));
+            postEntity.setImageNo(rs.getInt("IMAGE_NO"));
+            postEntity.setUserNo(rs.getInt("USER_NO"));
+            postEntity.setSellUrl(rs.getString("SELL_URL"));
+            postEntity.setLikeNum(rs.getInt("LIKE_NUM"));
+            return postEntity;
         };
     }
 }

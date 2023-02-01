@@ -25,7 +25,7 @@ public class UserRepository {
     }
 
     /**
-     * version - v1
+     * version - v2
      * jdbcTemplate
      * */
     public UserEntity save(UserRequestDTO userRequestDTO) {

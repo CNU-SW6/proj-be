@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class Post {
+public class PostEntity {
     private int postNo;
     private int userNo;
     private int imageNo;
@@ -13,10 +13,10 @@ public class Post {
     private int likeNum;
     private String sellUrl;
 
-    public Post() {
+    public PostEntity() {
     }
 
-    public Post(int postNo, int userNo, int imageNo, String description, boolean isSell, int likeNum, String sellUrl) {
+    public PostEntity(int postNo, int userNo, int imageNo, String description, boolean isSell, int likeNum, String sellUrl) {
         this.postNo = postNo;
         this.userNo = userNo;
         this.imageNo = imageNo;

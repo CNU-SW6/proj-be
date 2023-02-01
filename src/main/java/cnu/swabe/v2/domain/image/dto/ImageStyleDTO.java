@@ -1,9 +1,9 @@
-package cnu.swabe.v2.extradto;
+package cnu.swabe.v2.domain.image.dto;
 
 import lombok.Data;
 
 @Data
-public class StyleDTO {
+public class ImageStyleDTO {
     private String hat;
     private String top;
     private String pants;

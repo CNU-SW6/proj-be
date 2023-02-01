@@ -1,14 +1,17 @@
 package cnu.swabe.v2.service;
 
-import cnu.swabe.v2.domain.post.Post;
-import cnu.swabe.v2.domain.image.dto.ImageInfoDTO;
+import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.post.dto.PostDTO;
-import cnu.swabe.v2.extradto.StyleDTO;
+import cnu.swabe.v2.domain.post.dto.PostSearchListDTO;
+import cnu.swabe.v2.domain.image.dto.ImageStyleDTO;
 import cnu.swabe.v2.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -22,23 +25,26 @@ public class PostService {
     /**
      * version - v1
      * */
-    public Post savePostInfo(Post postDTO) {
-        Post post = postRepository.save(postDTO);
-        return post;
+    public PostEntity savePostInfo(PostEntity postEntityDTO) {
+        PostEntity postEntity = postRepository.save(postEntityDTO);
+        return postEntity;
     }
 
     /**
-     * version - v1
-     * 예외를 만들어 던질 필요가 있을까?
+     * version - v2
      * */
-    public List<PostDTO> getPostItems(StyleDTO styleDTO) {
-        List<ImageInfoDTO> imageInfoDTO = imageService.getImageInfo(styleDTO);
-        if(imageInfoDTO == null) {
-            return null;
-        }
+    public List<PostSearchListDTO> getPosts(ImageStyleDTO imageStyleDTO) {
+        List<PostEntity> posts = postRepository.findByImageStyle(imageStyleDTO);
+        List<PostSearchListDTO> postSearchList = new ArrayList<>();
+        ModelMapper modelMapper = new ModelMapper();
 
-        List<PostDTO> posts = postRepository.findByImageInfo(imageInfoDTO);
-        return posts;
+        for(PostEntity postEntity : posts) {
+            PostSearchListDTO postSearchListDTO = modelMapper.map(postEntity, PostSearchListDTO.class);
+            postSearchList.add(postSearchListDTO);
+        }
+        Collections.sort(postSearchList);
+
+        return postSearchList;
     }
 
     /**
@@ -51,7 +57,7 @@ public class PostService {
         imageService.deleteImageInfo(imageNo);
     }
 
-    public Post getPostInfo (int postNo) {
+    public PostEntity getPostInfo (int postNo) {
         return postRepository.findByPostNo(postNo);
     }
 

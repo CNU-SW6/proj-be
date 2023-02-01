@@ -1,4 +1,4 @@
-package cnu.swabe.v2.extradto;
+package cnu.swabe.v2.dto;
 
 import lombok.Data;
 

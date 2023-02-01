@@ -1,6 +1,6 @@
 package cnu.swabe.v2.controller;
 
-import cnu.swabe.v2.extradto.UserLoginDTO;
+import cnu.swabe.v2.dto.UserLoginDTO;
 import cnu.swabe.v2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

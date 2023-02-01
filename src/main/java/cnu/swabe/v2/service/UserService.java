@@ -3,7 +3,7 @@ package cnu.swabe.v2.service;
 import cnu.swabe.v2.domain.user.UserEntity;
 import cnu.swabe.v2.domain.user.dto.UserRequestDTO;
 import cnu.swabe.v2.exception.custom.DuplicatedInfoException;
-import cnu.swabe.v2.extradto.UserLoginDTO;
+import cnu.swabe.v2.dto.UserLoginDTO;
 import cnu.swabe.v2.exception.ExceptionCode;
 import cnu.swabe.v2.exception.custom.WrongUserFormException;
 import cnu.swabe.v2.repository.UserRepository;

@@ -24,7 +24,7 @@ public class SearchController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/v2/posts")
-    public SuccessResponse requestSearchStyle(@ModelAttribute ImageStyleDTO imageStyleDTO) {
+    public SuccessResponse<List<PostSearchListDTO>> requestSearchStyle(@ModelAttribute ImageStyleDTO imageStyleDTO) {
         log.info("SearchStyle::: hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
                 imageStyleDTO.getHat(),
                 imageStyleDTO.getTop(),

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class Image {
+public class ImageEntity {
     private int imageNo;
     private int userNo;
     private String location;
@@ -13,10 +13,10 @@ public class Image {
     private String pantsColor;
     private String shoesColor;
 
-    public Image() {
+    public ImageEntity() {
     }
 
-    public Image(int imageNo, int userNo, String location, String hatColor, String topColor, String pantsColor, String shoesColor) {
+    public ImageEntity(int imageNo, int userNo, String location, String hatColor, String topColor, String pantsColor, String shoesColor) {
         this.imageNo = imageNo;
         this.userNo = userNo;
         this.location = location;

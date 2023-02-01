@@ -3,7 +3,6 @@ package cnu.swabe.v2.domain.image.dto;
 import lombok.Data;
 
 @Data
-public class ImageInfoDTO {
+public class ImageResponseDTO {
     private int imageNo;
-    private String location;
 }

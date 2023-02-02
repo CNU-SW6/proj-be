@@ -2,9 +2,9 @@ package cnu.swabe.v2.controller;
 
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.like.dto.LikeBusinessDTO;
-import cnu.swabe.v2.domain.post.dto.PostSearchListDTO;
-import cnu.swabe.v2.domain.image.dto.ImageStyleDTO;
+import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
 import cnu.swabe.v2.domain.like.dto.LikePresentationDTO;
+import cnu.swabe.v2.domain.post.dto.PostSearchListResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.LikeService;
 import cnu.swabe.v2.service.PostService;
@@ -24,15 +24,15 @@ public class SearchController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/v2/posts")
-    public SuccessResponse<List<PostSearchListDTO>> requestSearchStyle(@ModelAttribute ImageStyleDTO imageStyleDTO) {
+    public SuccessResponse<List<PostSearchListResponseDTO>> requestSearchStyle(@ModelAttribute ImageStyleRequestDTO imageStyleRequestDTO) {
         log.info("SearchStyle::: hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
-                imageStyleDTO.getHat(),
-                imageStyleDTO.getTop(),
-                imageStyleDTO.getPants(),
-                imageStyleDTO.getShoes()
+                imageStyleRequestDTO.getHat(),
+                imageStyleRequestDTO.getTop(),
+                imageStyleRequestDTO.getPants(),
+                imageStyleRequestDTO.getShoes()
         );
-        List<PostSearchListDTO> postSearchList = postService.getPosts(imageStyleDTO);
-        return new SuccessResponse(postSearchList);
+        List<PostSearchListResponseDTO> postSearchListResponse = postService.getPosts(imageStyleRequestDTO);
+        return new SuccessResponse(postSearchListResponse);
     }
 
     // 게시물 선택

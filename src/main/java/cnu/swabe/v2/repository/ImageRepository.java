@@ -1,6 +1,7 @@
 package cnu.swabe.v2.repository;
 
 import cnu.swabe.v2.domain.image.ImageEntity;
+import cnu.swabe.v2.domain.image.dto.ImageSaveRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -27,30 +28,30 @@ public class ImageRepository {
      * problem1. 모든 옵션 다 선택 후 저장 가정
      * problem2. 객체 생성 or 파라미터에 바인딩
      * */
-    public ImageEntity save(ImageEntity imageEntity) {
+    public ImageEntity save(ImageSaveRequestDTO imageSaveRequestDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into IMAGES_TB(USER_NO, LOCATION, HAT_COLOR, TOP_COLOR, PANTS_COLOR, SHOES_COLOR) " +
                 "values (?, ?, ?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, imageEntity.getUserNo());
-            preparedStatement.setString(2, imageEntity.getLocation());
-            preparedStatement.setString(3, imageEntity.getHatColor());
-            preparedStatement.setString(4, imageEntity.getTopColor());
-            preparedStatement.setString(5, imageEntity.getPantsColor());
-            preparedStatement.setString(6, imageEntity.getShoesColor());
+            preparedStatement.setInt(1, imageSaveRequestDTO.getUserNo());
+            preparedStatement.setString(2, imageSaveRequestDTO.getLocation());
+            preparedStatement.setString(3, imageSaveRequestDTO.getHatColor());
+            preparedStatement.setString(4, imageSaveRequestDTO.getTopColor());
+            preparedStatement.setString(5, imageSaveRequestDTO.getPantsColor());
+            preparedStatement.setString(6, imageSaveRequestDTO.getShoesColor());
             return preparedStatement;
         };
 
         template.update(preparedStatementCreator, keyHolder);
         ImageEntity image = new ImageEntity(
                 (Integer) keyHolder.getKeys().get("IMAGE_NO"),
-                imageEntity.getUserNo(),
-                imageEntity.getLocation(),
-                imageEntity.getHatColor(),
-                imageEntity.getTopColor(),
-                imageEntity.getPantsColor(),
-                imageEntity.getShoesColor()
+                imageSaveRequestDTO.getUserNo(),
+                imageSaveRequestDTO.getLocation(),
+                imageSaveRequestDTO.getHatColor(),
+                imageSaveRequestDTO.getTopColor(),
+                imageSaveRequestDTO.getPantsColor(),
+                imageSaveRequestDTO.getShoesColor()
         );
 
         return image;

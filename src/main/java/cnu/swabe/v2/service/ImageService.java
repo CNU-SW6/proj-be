@@ -21,7 +21,7 @@ public class ImageService {
      * Not Null Exception은 UncheckedException으로 그냥 던져주자
      * */
     public ImageSaveResponseDTO saveImage(ImageSaveRequestDTO imageSaveRequestDTO) {
-        ImageEntity image = imageRepository.save(modelMapper.map(imageSaveRequestDTO, ImageEntity.class));
+        ImageEntity image = imageRepository.save(imageSaveRequestDTO);
         ImageSaveResponseDTO imageSaveResponse = modelMapper.map(image, ImageSaveResponseDTO.class);
         return imageSaveResponse;
     }

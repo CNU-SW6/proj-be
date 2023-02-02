@@ -1,7 +1,8 @@
 package cnu.swabe.v2.service;
 
 import cnu.swabe.v2.domain.user.UserEntity;
-import cnu.swabe.v2.domain.user.dto.UserRequestDTO;
+import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
+import cnu.swabe.v2.domain.user.dto.UserSignUpResponseDTO;
 import cnu.swabe.v2.exception.custom.DuplicatedInfoException;
 import cnu.swabe.v2.dto.UserLoginDTO;
 import cnu.swabe.v2.exception.ExceptionCode;
@@ -26,15 +27,17 @@ public class UserService {
      * problem2. transaction으로 동시성 이슈를 해결할 수 있는지
      * */
     @Transactional
-    public UserEntity register(UserRequestDTO userRequestDTO) {
+    public UserSignUpResponseDTO register(UserSignUpRequestDTO userRequestDTO) {
         if(!checkInputLength(userRequestDTO.getId())) throw new WrongUserFormException(ExceptionCode.WRONG_LENGTH_USER_ID);
         if(!checkInputLength(userRequestDTO.getPw())) throw new WrongUserFormException(ExceptionCode.WRONG_LENGTH_USER_PW);
         if(!checkInputLength(userRequestDTO.getNickname())) throw new WrongUserFormException(ExceptionCode.WRONG_LENGTH_USER_NICKNAME);
         if(checkDuplicateNickName(userRequestDTO.getNickname())) throw new DuplicatedInfoException(ExceptionCode.EXIST_USER_NICKNAME);
         // checkDuplicatedId 구현 후 체크
-        
+
         UserEntity user = userRepository.save(userRequestDTO);
-        return user;
+
+        UserSignUpResponseDTO userSignUpResponse = new UserSignUpResponseDTO(user.getNo());
+        return userSignUpResponse;
     }
 
     /**

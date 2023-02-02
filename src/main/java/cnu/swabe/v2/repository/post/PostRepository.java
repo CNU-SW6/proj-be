@@ -2,7 +2,7 @@ package cnu.swabe.v2.repository.post;
 
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.post.dto.PostDTO;
-import cnu.swabe.v2.domain.image.dto.ImageStyleDTO;
+import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -60,7 +60,7 @@ public class PostRepository {
      * version - v2
      * jdbcTemplate
      */
-    public List<PostEntity> findByImageStyle(ImageStyleDTO styleDTO) {
+    public List<PostEntity> findByImageStyle(ImageStyleRequestDTO styleDTO) {
         List<PostEntity> posts = null;
         String sql = "select * from POSTS_TB " +
                 "inner join IMAGES_TB on POSTS_TB.IMAGE_NO = IMAGES_TB.IMAGE_NO " +

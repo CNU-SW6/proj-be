@@ -18,7 +18,7 @@ public class ImageService {
 
     /**
      * version - v2
-     * location 없으면 exception
+     * Not Null Exception은 UncheckedException으로 그냥 던져주자
      * */
     public ImageResponseDTO saveImage(ImageRequestDTO imageRequestDTO) {
         ImageEntity image = imageRepository.save(modelMapper.map(imageRequestDTO, ImageEntity.class));

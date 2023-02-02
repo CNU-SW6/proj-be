@@ -3,6 +3,7 @@ package cnu.swabe.v2.repository.post;
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.post.dto.PostDTO;
 import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
+import cnu.swabe.v2.domain.post.dto.PostSaveRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,31 +27,32 @@ public class PostRepository {
     }
 
     /**
-     * version - v1
+     * version - v2
+     * jdbcTemplate
      * */
-    public PostEntity save(PostEntity postEntityDTO) {
+    public PostEntity save(PostSaveRequestDTO postSaveRequestDTO) {
         PostEntity postEntity = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, SELL_URL, USER_NO, IMAGE_NO) values (?, ?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, postEntityDTO.getDescription());
-            preparedStatement.setBoolean(2, postEntityDTO.isSell());
-            preparedStatement.setString(3, postEntityDTO.getSellUrl());
-            preparedStatement.setInt(4, postEntityDTO.getUserNo());
-            preparedStatement.setInt(5, postEntityDTO.getImageNo());
+            preparedStatement.setString(1, postSaveRequestDTO.getDescription());
+            preparedStatement.setBoolean(2, postSaveRequestDTO.isSell());
+            preparedStatement.setString(3, postSaveRequestDTO.getSellUrl());
+            preparedStatement.setInt(4, postSaveRequestDTO.getUserNo());
+            preparedStatement.setInt(5, postSaveRequestDTO.getImageNo());
             return preparedStatement;
         };
 
         template.update(preparedStatementCreator, keyHolder);
         postEntity = new PostEntity(
                 (Integer) keyHolder.getKeys().get("post_no"),
-                postEntityDTO.getUserNo(),
-                postEntityDTO.getImageNo(),
-                postEntityDTO.getDescription(),
-                postEntityDTO.isSell(),
-                postEntityDTO.getLikeNum(),
-                postEntityDTO.getSellUrl()
+                postSaveRequestDTO.getUserNo(),
+                postSaveRequestDTO.getImageNo(),
+                postSaveRequestDTO.getDescription(),
+                postSaveRequestDTO.isSell(),
+                0,
+                postSaveRequestDTO.getSellUrl()
                 );
 
         return postEntity;

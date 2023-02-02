@@ -1,8 +1,7 @@
 package cnu.swabe.v2.controller;
 
-import cnu.swabe.v2.domain.user.UserEntity;
-import cnu.swabe.v2.domain.user.dto.UserRequestDTO;
-import cnu.swabe.v2.domain.user.dto.UserResponseDTO;
+import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
+import cnu.swabe.v2.domain.user.dto.UserSignUpResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,21 +17,16 @@ public class SignUpController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/v2/users/signup")
-    public SuccessResponse<UserResponseDTO> requestSignUp(@RequestBody UserRequestDTO userRequestDTO) {
+    public SuccessResponse<UserSignUpResponseDTO> requestSignUp(@RequestBody UserSignUpRequestDTO userSignUpRequestDTO) {
         log.info("SignUp::: id={}, pw={}, nickname={}, isMale={}",
-                userRequestDTO.getId(),
-                userRequestDTO.getPw(),
-                userRequestDTO.getNickname(),
-                userRequestDTO.isMale()
+                userSignUpRequestDTO.getId(),
+                userSignUpRequestDTO.getPw(),
+                userSignUpRequestDTO.getNickname(),
+                userSignUpRequestDTO.isMale()
         );
-        UserEntity user = userService.register(userRequestDTO);
-        UserResponseDTO userResponse = new UserResponseDTO(
-                user.getId(),
-                user.getNickname(),
-                user.isMale()
-        );
+        UserSignUpResponseDTO userSignUpResponse = userService.register(userSignUpRequestDTO);
 
-        return new SuccessResponse(userResponse);
+        return new SuccessResponse(userSignUpResponse);
     }
 
     @ResponseStatus(HttpStatus.OK)

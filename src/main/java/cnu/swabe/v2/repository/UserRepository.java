@@ -1,7 +1,7 @@
 package cnu.swabe.v2.repository;
 
 import cnu.swabe.v2.domain.user.UserEntity;
-import cnu.swabe.v2.domain.user.dto.UserRequestDTO;
+import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,7 +28,7 @@ public class UserRepository {
      * version - v2
      * jdbcTemplate
      * */
-    public UserEntity save(UserRequestDTO userRequestDTO) {
+    public UserEntity save(UserSignUpRequestDTO userRequestDTO) {
         UserEntity user = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into USERS_TB(USER_ID, USER_PW, USER_NICKNAME, USER_ISMALE) values(?, ?, ?, ?)";

@@ -2,7 +2,7 @@ package cnu.swabe.v2.exception.custom;
 
 import cnu.swabe.v2.exception.ExceptionCode;
 
-public class WrongUserFormException extends RuntimeException {
+public class WrongUserFormException extends IllegalArgumentException {
     ExceptionCode errorCode;
 
     public WrongUserFormException() {

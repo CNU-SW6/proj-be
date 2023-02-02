@@ -1,6 +1,8 @@
 package cnu.swabe.v2.controller;
 
-import cnu.swabe.v2.domain.image.Image;
+import cnu.swabe.v2.domain.image.ImageEntity;
+import cnu.swabe.v2.domain.image.dto.ImageRequestDTO;
+import cnu.swabe.v2.domain.image.dto.ImageResponseDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.ImageService;
@@ -21,20 +23,20 @@ public class ShareController {
     private final PostService postService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/v1/images")
-    public SuccessResponse RequestImageInfo(@RequestBody Image imageDTO) {
-        log.info("??? userNo={}, location={}, hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
-                imageDTO.getUserNo(),
-                imageDTO.getLocation(),
-                imageDTO.getHatColor(),
-                imageDTO.getTopColor(),
-                imageDTO.getPantsColor(),
-                imageDTO.getShoesColor()
+    @PostMapping("/v2/images")
+    public SuccessResponse<ImageResponseDTO> RequestSaveImage(@RequestBody ImageRequestDTO imageRequestDTO) {
+        log.info("SaveImage::: userNo={}, location={}, hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
+                imageRequestDTO.getUserNo(),
+                imageRequestDTO.getLocation(),
+                imageRequestDTO.getHatColor(),
+                imageRequestDTO.getTopColor(),
+                imageRequestDTO.getPantsColor(),
+                imageRequestDTO.getShoesColor()
         );
 
-        Image image = imageService.saveImageInfo(imageDTO);
+        ImageResponseDTO imageResponse = imageService.saveImage(imageRequestDTO);
 
-        return new SuccessResponse(image);
+        return new SuccessResponse(imageResponse);
     }
 
     @ResponseStatus(HttpStatus.CREATED)

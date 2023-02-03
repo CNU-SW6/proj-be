@@ -3,16 +3,16 @@ package cnu.swabe.v2.exception.custom;
 import cnu.swabe.v2.exception.ExceptionCode;
 
 public class WrongUserFormException extends IllegalArgumentException {
-    ExceptionCode errorCode;
+    ExceptionCode exceptionCode;
 
     public WrongUserFormException() {
     }
 
-    public WrongUserFormException(ExceptionCode errorCode) {
-        this.errorCode = errorCode;
+    public WrongUserFormException(ExceptionCode exceptionCode) {
+        this.exceptionCode = exceptionCode;
     }
 
     public ExceptionCode getErrorCode() {
-        return errorCode;
+        return exceptionCode;
     }
 }

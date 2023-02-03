@@ -43,7 +43,7 @@ public class ShareController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/v2/posts")
     public SuccessResponse<PostSaveResponseDTO> RequestSavePost(@RequestBody PostSaveRequestDTO postSaveRequestDTO) {
-        log.info("SavePost::: userNo={}, imageNo={}, description={}, isSell={}, setUrl={}",
+        log.info("SavePost::: userNo={}, imageNo={}, description={}, isSell={}, sellUrl={}",
                 postSaveRequestDTO.getUserNo(),
                 postSaveRequestDTO.getImageNo(),
                 postSaveRequestDTO.getDescription(),

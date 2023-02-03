@@ -2,17 +2,18 @@ package cnu.swabe.v2.exception.custom;
 
 import cnu.swabe.v2.exception.ExceptionCode;
 
-public class DuplicatedInfoException extends IllegalArgumentException {
+public class WrongPostFormException extends IllegalArgumentException {
     ExceptionCode exceptionCode;
 
-    public DuplicatedInfoException() {
+    public WrongPostFormException() {
     }
 
-    public DuplicatedInfoException(ExceptionCode exceptionCode) {
+    public WrongPostFormException(ExceptionCode exceptionCode) {
         this.exceptionCode = exceptionCode;
     }
 
     public ExceptionCode getErrorCode() {
         return exceptionCode;
     }
+
 }

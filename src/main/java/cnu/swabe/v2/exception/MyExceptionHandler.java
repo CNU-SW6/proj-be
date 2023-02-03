@@ -1,6 +1,7 @@
 package cnu.swabe.v2.exception;
 
 import cnu.swabe.v2.exception.custom.DuplicatedInfoException;
+import cnu.swabe.v2.exception.custom.WrongPostFormException;
 import cnu.swabe.v2.exception.custom.WrongUserFormException;
 import cnu.swabe.v2.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,14 @@ public class MyExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(WrongUserFormException.class)
-    protected ErrorResponse handleWrongLengthUserInfoException(WrongUserFormException ex) {
+    protected ErrorResponse handleWrongUserFormException(WrongUserFormException ex) {
+        log.error("error log={}", ex.getErrorCode().getMessage());
+        return new ErrorResponse(ex.getErrorCode());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(WrongPostFormException.class)
+    protected ErrorResponse handleWrongPostFormException(WrongPostFormException ex) {
         log.error("error log={}", ex.getErrorCode().getMessage());
         return new ErrorResponse(ex.getErrorCode());
     }

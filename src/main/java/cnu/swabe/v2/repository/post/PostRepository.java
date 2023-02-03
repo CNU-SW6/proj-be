@@ -62,7 +62,7 @@ public class PostRepository {
      * version - v2
      * jdbcTemplate
      */
-    public List<PostEntity> findByImageStyle(ImageStyleRequestDTO styleDTO) {
+    public List<PostEntity> findByImageStyle(ImageStyleRequestDTO imageStyleRequestDTO) {
         List<PostEntity> posts = null;
         String sql = "select * from POSTS_TB " +
                 "inner join IMAGES_TB on POSTS_TB.IMAGE_NO = IMAGES_TB.IMAGE_NO " +
@@ -70,10 +70,10 @@ public class PostRepository {
 
         try {
             posts = template.query(sql, postRowMapper(),
-                    styleDTO.getHat(),
-                    styleDTO.getTop(),
-                    styleDTO.getPants(),
-                    styleDTO.getShoes()
+                    imageStyleRequestDTO.getHat(),
+                    imageStyleRequestDTO.getTop(),
+                    imageStyleRequestDTO.getPants(),
+                    imageStyleRequestDTO.getShoes()
             );
         } catch(EmptyResultDataAccessException e) {
             return null;

@@ -1,18 +1,18 @@
 package cnu.swabe.v2.service;
 
 import cnu.swabe.v2.domain.post.PostEntity;
-import cnu.swabe.v2.domain.post.dto.PostDTO;
+import cnu.swabe.v2.domain.post.dto.*;
 import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
-import cnu.swabe.v2.domain.post.dto.PostSaveRequestDTO;
-import cnu.swabe.v2.domain.post.dto.PostSaveResponseDTO;
-import cnu.swabe.v2.domain.post.dto.PostSearchListResponseDTO;
 import cnu.swabe.v2.exception.ExceptionCode;
+import cnu.swabe.v2.exception.custom.CannotBeDeletedException;
 import cnu.swabe.v2.exception.custom.WrongPostFormException;
 import cnu.swabe.v2.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,13 +59,19 @@ public class PostService {
     }
 
     /**
-     * version - v1
-     * 해당 유저가 맞는지 확인해야 할듯?
+     * version - v2
+     * logic. 이미지삭제 -> 좋아요삭제 -> 게시물삭제
+     * 게시물 삭제할 때
      * */
-    public void deletePost(int postNo, int imageNo) {
+    @Transactional
+    public void deletePost(int postNo, PostDeleteSideInfoRequestDTO postDeleteSideInfoRequestDTO) {
+        PostEntity post = postRepository.findByPostNo(postNo);
+        if(post.getUserNo() != postDeleteSideInfoRequestDTO.getUserNo()) {
+            throw new CannotBeDeletedException(ExceptionCode.DIFFERENCE_USER_NO_AND_POST_USER_NO);
+        }
+        imageService.deleteImage(postDeleteSideInfoRequestDTO.getImageNo());
         likeService.removeLikeRelationByPostNo(postNo);
         postRepository.deleteByPostNo(postNo);
-        imageService.deleteImageInfo(imageNo);
     }
 
     public PostEntity getPostInfo (int postNo) {

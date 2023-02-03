@@ -29,7 +29,7 @@ public class ImageService {
     /**
      * version - v1
      * */
-    public void deleteImageInfo(int imageNo) {
+    public void deleteImage(int imageNo) {
         imageRepository.deleteByImageNo(imageNo);
     }
 }

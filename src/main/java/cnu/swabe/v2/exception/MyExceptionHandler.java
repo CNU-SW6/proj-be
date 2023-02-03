@@ -1,5 +1,6 @@
 package cnu.swabe.v2.exception;
 
+import cnu.swabe.v2.exception.custom.CannotBeDeletedException;
 import cnu.swabe.v2.exception.custom.DuplicatedInfoException;
 import cnu.swabe.v2.exception.custom.WrongPostFormException;
 import cnu.swabe.v2.exception.custom.WrongUserFormException;
@@ -31,6 +32,13 @@ public class MyExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(WrongPostFormException.class)
     protected ErrorResponse handleWrongPostFormException(WrongPostFormException ex) {
+        log.error("error log={}", ex.getErrorCode().getMessage());
+        return new ErrorResponse(ex.getErrorCode());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(CannotBeDeletedException.class)
+    protected ErrorResponse handleCannotBeDeletedException(CannotBeDeletedException ex) {
         log.error("error log={}", ex.getErrorCode().getMessage());
         return new ErrorResponse(ex.getErrorCode());
     }

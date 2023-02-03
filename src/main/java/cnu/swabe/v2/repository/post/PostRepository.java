@@ -91,10 +91,19 @@ public class PostRepository {
         template.update(sql, postNo);
     }
 
+    /**
+     * version - v2
+     * jdbcTemplate
+     * */
     public PostEntity findByPostNo(int postNo) {
+        PostEntity post = null;
         String sql = "select * from POSTS_TB where POST_NO = ?";
-        PostEntity postEntity = template.queryForObject(sql, postRowMapper(), postNo);
-        return postEntity;
+        try {
+            post = template.queryForObject(sql, postRowMapper(), postNo);
+        } catch(EmptyResultDataAccessException e) {
+            return null;
+        }
+        return post;
     }
 
     public List<PostDTO> findById(int userNo){

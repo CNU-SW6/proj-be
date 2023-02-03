@@ -55,7 +55,7 @@ public class UserRepository {
 
     /**
      * version - v2
-     * nickname이 중복으로 있을 경우
+     * jdbcTemplate
      * */
     public UserEntity findByNickName(String nickname) {
         UserEntity user = null;

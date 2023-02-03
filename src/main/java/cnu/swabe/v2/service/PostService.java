@@ -3,7 +3,11 @@ package cnu.swabe.v2.service;
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.post.dto.PostDTO;
 import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
+import cnu.swabe.v2.domain.post.dto.PostSaveRequestDTO;
+import cnu.swabe.v2.domain.post.dto.PostSaveResponseDTO;
 import cnu.swabe.v2.domain.post.dto.PostSearchListResponseDTO;
+import cnu.swabe.v2.exception.ExceptionCode;
+import cnu.swabe.v2.exception.custom.WrongPostFormException;
 import cnu.swabe.v2.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +27,18 @@ public class PostService {
     private final LikeService likeService;
 
     /**
-     * version - v1
+     * version - v2
      * */
-    public PostEntity savePostInfo(PostEntity postEntityDTO) {
-        PostEntity postEntity = postRepository.save(postEntityDTO);
-        return postEntity;
+    public PostSaveResponseDTO savePost(PostSaveRequestDTO postSaveRequestDTO) {
+        if(postSaveRequestDTO.isSell()) {
+            if(postSaveRequestDTO.getSellUrl() == null || postSaveRequestDTO.getSellUrl().equals("")) {
+                throw new WrongPostFormException(ExceptionCode.NO_EXIST_POST_URL);
+            }
+        }
+        PostEntity postEntity = postRepository.save(postSaveRequestDTO);
+        ModelMapper modelMapper = new ModelMapper();
+        PostSaveResponseDTO postSaveResponse = modelMapper.map(postEntity, PostSaveResponseDTO.class);
+        return postSaveResponse;
     }
 
     /**

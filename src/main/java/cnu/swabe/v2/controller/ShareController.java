@@ -1,9 +1,10 @@
 package cnu.swabe.v2.controller;
 
-import cnu.swabe.v2.domain.image.ImageEntity;
-import cnu.swabe.v2.domain.image.dto.ImageRequestDTO;
-import cnu.swabe.v2.domain.image.dto.ImageResponseDTO;
+import cnu.swabe.v2.domain.image.dto.ImageSaveRequestDTO;
+import cnu.swabe.v2.domain.image.dto.ImageSaveResponseDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
+import cnu.swabe.v2.domain.post.dto.PostSaveRequestDTO;
+import cnu.swabe.v2.domain.post.dto.PostSaveResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.ImageService;
 import cnu.swabe.v2.service.PostService;
@@ -24,33 +25,33 @@ public class ShareController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/v2/images")
-    public SuccessResponse<ImageResponseDTO> RequestSaveImage(@RequestBody ImageRequestDTO imageRequestDTO) {
+    public SuccessResponse<ImageSaveResponseDTO> RequestSaveImage(@RequestBody ImageSaveRequestDTO imageSaveRequestDTO) {
         log.info("SaveImage::: userNo={}, location={}, hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
-                imageRequestDTO.getUserNo(),
-                imageRequestDTO.getLocation(),
-                imageRequestDTO.getHatColor(),
-                imageRequestDTO.getTopColor(),
-                imageRequestDTO.getPantsColor(),
-                imageRequestDTO.getShoesColor()
+                imageSaveRequestDTO.getUserNo(),
+                imageSaveRequestDTO.getLocation(),
+                imageSaveRequestDTO.getHatColor(),
+                imageSaveRequestDTO.getTopColor(),
+                imageSaveRequestDTO.getPantsColor(),
+                imageSaveRequestDTO.getShoesColor()
         );
 
-        ImageResponseDTO imageResponse = imageService.saveImage(imageRequestDTO);
+        ImageSaveResponseDTO imageSaveResponse = imageService.saveImage(imageSaveRequestDTO);
 
-        return new SuccessResponse(imageResponse);
+        return new SuccessResponse(imageSaveResponse);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/v1/posts")
-    public SuccessResponse RequestPostInfo(@RequestBody PostEntity postEntityDTO) {
-        log.info("??? userNo={}, imageNo={}, description={}, isSell={}, setUrl={}",
-                postEntityDTO.getUserNo(),
-                postEntityDTO.getImageNo(),
-                postEntityDTO.getDescription(),
-                postEntityDTO.isSell(),
-                postEntityDTO.isSell()
+    @PostMapping("/v2/posts")
+    public SuccessResponse<PostSaveResponseDTO> RequestSavePost(@RequestBody PostSaveRequestDTO postSaveRequestDTO) {
+        log.info("SavePost::: userNo={}, imageNo={}, description={}, isSell={}, sellUrl={}",
+                postSaveRequestDTO.getUserNo(),
+                postSaveRequestDTO.getImageNo(),
+                postSaveRequestDTO.getDescription(),
+                postSaveRequestDTO.isSell(),
+                postSaveRequestDTO.isSell()
         );
 
-        PostEntity postEntity = postService.savePostInfo(postEntityDTO);
-        return new SuccessResponse(postEntity);
+        PostSaveResponseDTO postSaveResponse = postService.savePost(postSaveRequestDTO);
+        return new SuccessResponse(postSaveResponse);
     }
 }

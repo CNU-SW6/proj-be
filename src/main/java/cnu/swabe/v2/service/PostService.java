@@ -69,9 +69,9 @@ public class PostService {
         if(post.getUserNo() != postDeleteSideInfoRequestDTO.getUserNo()) {
             throw new CannotBeDeletedException(ExceptionCode.DIFFERENCE_USER_NO_AND_POST_USER_NO);
         }
+        postRepository.deleteByPostNo(postNo);
         imageService.deleteImage(postDeleteSideInfoRequestDTO.getImageNo());
         likeService.removeLikeRelationByPostNo(postNo);
-        postRepository.deleteByPostNo(postNo);
     }
 
     public PostEntity getPostInfo (int postNo) {

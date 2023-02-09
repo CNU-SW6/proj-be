@@ -52,7 +52,9 @@ public class LikeService {
     }
 
     public List<LikeBusinessDTO> getLikePosts(int userNo) {
-        return likeRepository.findLikePost(userNo);
+        List<LikeBusinessDTO> likePosts = likeRepository.findLikePost(userNo);
+        return likePosts;
+
     }
 
     public void removeLikeRelationByPostNo(int postNo) {

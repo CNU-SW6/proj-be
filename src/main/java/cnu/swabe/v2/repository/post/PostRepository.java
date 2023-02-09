@@ -1,5 +1,8 @@
 package cnu.swabe.v2.repository.post;
 
+import cnu.swabe.v2.domain.Post;
+import cnu.swabe.v2.dto.ImageInfoDTO;
+import cnu.swabe.v2.dto.PostDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.post.dto.PostDTO;
 import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
@@ -12,6 +15,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
+import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -27,6 +36,7 @@ public class PostRepository {
     }
 
     /**
+
      * version - v2
      * jdbcTemplate
      * */
@@ -36,6 +46,7 @@ public class PostRepository {
         String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, SELL_URL, USER_NO, IMAGE_NO) values (?, ?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
             preparedStatement.setString(1, postSaveRequestDTO.getDescription());
             preparedStatement.setBoolean(2, postSaveRequestDTO.isSell());
             preparedStatement.setString(3, postSaveRequestDTO.getSellUrl());
@@ -45,6 +56,7 @@ public class PostRepository {
         };
 
         template.update(preparedStatementCreator, keyHolder);
+
         postEntity = new PostEntity(
                 (Integer) keyHolder.getKeys().get("post_no"),
                 postSaveRequestDTO.getUserNo(),
@@ -91,6 +103,7 @@ public class PostRepository {
         template.update(sql, postNo);
     }
 
+
     /**
      * version - v2
      * jdbcTemplate
@@ -108,7 +121,15 @@ public class PostRepository {
 
     public List<PostDTO> findById(int userNo){
         String sql = "select * from POSTS_TB where USER_NO = ?";
-        List<PostDTO> postDTOList = template.query(sql, postDTORowMapper(), userNo);
+        List<PostDTO> postDTOList = new ArrayList<>();
+        try {
+            postDTOList = template.query(sql, postDTORowMapper(), userNo);
+        }catch(EmptyResultDataAccessException e){
+            return null;
+        }
+
+        Collections.sort(postDTOList);
+
         return postDTOList;
     }
 
@@ -121,6 +142,7 @@ public class PostRepository {
             return postDTO;
         };
     }
+
 
     private RowMapper<PostEntity> postRowMapper() {
         return (rs, rowNum) -> {

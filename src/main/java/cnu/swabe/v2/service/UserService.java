@@ -1,5 +1,6 @@
 package cnu.swabe.v2.service;
 
+
 import cnu.swabe.v2.domain.user.UserEntity;
 import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
 import cnu.swabe.v2.domain.user.dto.UserSignUpResponseDTO;
@@ -51,22 +52,6 @@ public class UserService {
         return false;
     }
 
-    public boolean login(UserLoginDTO userLoginDTO) {
-        UserEntity userEntity = userRepository.findUser(userLoginDTO.getId(), userLoginDTO.getPw());
-        log.info("idDTO = {}, pwDTO= {}, id = {}, pw= {}", userLoginDTO.getId(), userLoginDTO.getPw(), userEntity.getId(), userEntity.getPw());
-        if (userEntity.getId().equals(userLoginDTO.getId()) && userEntity.getPw().equals(userLoginDTO.getPw())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean checkDuplicateId(String id) {
-        UserEntity userEntity = userRepository.findById(id);
-        if(userEntity == null){
-            return false;
-        }else{
-            return true;
         }
     }
 }

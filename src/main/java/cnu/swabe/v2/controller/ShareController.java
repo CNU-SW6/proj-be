@@ -1,5 +1,7 @@
 package cnu.swabe.v2.controller;
 
+import cnu.swabe.v2.domain.image.Image;
+import cnu.swabe.v2.domain.Post;
 import cnu.swabe.v2.domain.image.dto.ImageSaveRequestDTO;
 import cnu.swabe.v2.domain.image.dto.ImageSaveResponseDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
@@ -24,6 +26,37 @@ public class ShareController {
     private final PostService postService;
 
     @ResponseStatus(HttpStatus.CREATED)
+
+    @PostMapping("/api/images")
+    public SuccessResponse RequestImageInfo(@RequestBody Image imageDTO) {
+        log.info("??? userNo={}, location={}, hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
+                imageDTO.getUserNo(),
+                imageDTO.getLocation(),
+                imageDTO.getHatColor(),
+                imageDTO.getTopColor(),
+                imageDTO.getPantsColor(),
+                imageDTO.getShoesColor()
+        );
+
+        Image image = imageService.saveImageInfo(imageDTO);
+
+        return new SuccessResponse(image);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/api/posts")
+    public SuccessResponse RequestPostInfo(@RequestBody Post postDTO) {
+        log.info("??? userNo={}, imageNo={}, description={}, isSell={}, setUrl={}",
+                postDTO.getUserNo(),
+                postDTO.getImageNo(),
+                postDTO.getDescription(),
+                postDTO.isSell(),
+                postDTO.isSell()
+        );
+
+        Post post = postService.savePostInfo(postDTO);
+        return new SuccessResponse(post);
+
     @PostMapping("/v2/images")
     public SuccessResponse<ImageSaveResponseDTO> RequestSaveImage(@RequestBody ImageSaveRequestDTO imageSaveRequestDTO) {
         log.info("SaveImage::: userNo={}, location={}, hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
@@ -53,5 +86,6 @@ public class ShareController {
 
         PostSaveResponseDTO postSaveResponse = postService.savePost(postSaveRequestDTO);
         return new SuccessResponse(postSaveResponse);
+
     }
 }

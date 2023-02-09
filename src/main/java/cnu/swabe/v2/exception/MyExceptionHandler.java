@@ -1,5 +1,10 @@
 package cnu.swabe.v2.exception;
 
+import cnu.swabe.v2.exception.custom.IdDuplicatedException;
+import cnu.swabe.v2.exception.custom.NicknameDuplicatedException;
+import cnu.swabe.v2.exception.custom.WrongInfoAccessException;
+import cnu.swabe.v2.exception.custom.PostNotExistException;
+import cnu.swabe.v2.exception.custom.WrongLengthUserInfoException;
 import cnu.swabe.v2.exception.custom.CannotBeDeletedException;
 import cnu.swabe.v2.exception.custom.DuplicatedInfoException;
 import cnu.swabe.v2.exception.custom.WrongPostFormException;
@@ -16,6 +21,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class MyExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NicknameDuplicatedException.class)
+    protected ErrorResponse handleNicknameDuplicatedException() {
+        log.error("!!! error log={}", ExceptionCode.EXIST_VALUE.getMessage());
+        return new ErrorResponse(ExceptionCode.EXIST_VALUE);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(WrongLengthUserInfoException.class)
+    protected ErrorResponse handleWrongLengthUserInfoException(WrongLengthUserInfoException ex) {
+        log.error("!!! error log={}", ex.getErrorCode().getMessage());
     @ExceptionHandler(DuplicatedInfoException.class)
     protected ErrorResponse handleDuplicatedInfoException(DuplicatedInfoException ex) {
         log.error("error log={}", ex.getErrorCode().getMessage());
@@ -30,6 +45,21 @@ public class MyExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IdDuplicatedException.class)
+    protected ErrorResponse handleIdDuplicatedException(){
+        log.error("!!! error log=()", ExceptionCode.EXIST_VALUE.getMessage());
+        return new ErrorResponse(ExceptionCode.EXIST_VALUE);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(WrongInfoAccessException.class)
+    protected ErrorResponse handlerWrongInfoAccessException(WrongInfoAccessException ex){
+        return new ErrorResponse(ex.getErrorCode());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(PostNotExistException.class)
+    protected ErrorResponse handlePostNotExistException(PostNotExistException ex) {
     @ExceptionHandler(WrongPostFormException.class)
     protected ErrorResponse handleWrongPostFormException(WrongPostFormException ex) {
         log.error("error log={}", ex.getErrorCode().getMessage());

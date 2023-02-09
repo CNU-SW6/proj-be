@@ -11,6 +11,7 @@ public class SuccessResponse<T> {
         this.error = false;
     }
 
+
     public SuccessResponse(T data) {
         this.error = false;
         this.data = data;

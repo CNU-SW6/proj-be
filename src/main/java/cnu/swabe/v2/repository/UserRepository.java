@@ -1,5 +1,7 @@
 package cnu.swabe.v2.repository;
 
+import cnu.swabe.v2.domain.user.User;
+import cnu.swabe.v2.dto.UserDTO;
 import cnu.swabe.v2.domain.user.UserEntity;
 import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ public class UserRepository {
     }
 
     /**
+
      * version - v2
      * jdbcTemplate
      * */
@@ -34,6 +37,7 @@ public class UserRepository {
         String sql = "insert into USERS_TB(USER_ID, USER_PW, USER_NICKNAME, USER_ISMALE) values(?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
             preparedStatement.setString(1, userRequestDTO.getId());
             preparedStatement.setString(2, userRequestDTO.getPw());
             preparedStatement.setString(3, userRequestDTO.getNickname());
@@ -42,6 +46,7 @@ public class UserRepository {
         };
 
         template.update(preparedStatementCreator, keyHolder);
+
         user = new UserEntity(
                 (Integer) keyHolder.getKeys().get("USER_NO"),
                 userRequestDTO.getId(),
@@ -54,6 +59,7 @@ public class UserRepository {
     }
 
     /**
+
      * version - v2
      * jdbcTemplate
      * */
@@ -69,10 +75,15 @@ public class UserRepository {
         return user;
     }
 
-    public UserEntity findById(String id) {
+    public User findById(String id) {
+        User user = null;
         String sql = "select * from USERS_TB where USER_ID = ?";
-        UserEntity userEntity = template.queryForObject(sql, userExcludedPasswordRowMapper(), id);
-        return userEntity;
+        try{
+            user = template.queryForObject(sql, userExcludedPasswordRowMapper(), id);
+        }catch(EmptyResultDataAccessException e){
+            return null;
+        }
+        return user;
     }
 
 //    public User findByPw(String Pw) {
@@ -80,6 +91,7 @@ public class UserRepository {
 //        User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), Pw);
 //        return user;
 //    }
+
 
     public UserEntity findUser(String id, String pw) {
         String sql = "select * from USERS_TB where USER_ID = ? AND USER_PW = ?";

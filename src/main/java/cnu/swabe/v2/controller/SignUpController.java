@@ -1,5 +1,7 @@
 package cnu.swabe.v2.controller;
 
+import cnu.swabe.v2.domain.user.User;
+import cnu.swabe.v2.dto.UserDTO;
 import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
 import cnu.swabe.v2.domain.user.dto.UserSignUpResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
@@ -16,6 +18,15 @@ public class SignUpController {
     private final UserService userService;
 
     @ResponseStatus(HttpStatus.CREATED)
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/api/users/id/{id}")
+    public SuccessResponse requestCheckDuplicateId(@PathVariable String id){
+        log.info("id={}", id);
+        userService.checkDuplicateId(id);
+        return new SuccessResponse();
+    }
+        
     @PostMapping("/v2/users/signup")
     public SuccessResponse<UserSignUpResponseDTO> requestSignUp(@RequestBody UserSignUpRequestDTO userSignUpRequestDTO) {
         log.info("SignUp::: id={}, pw={}, nickname={}, isMale={}",
@@ -35,12 +46,5 @@ public class SignUpController {
         log.info("CheckDuplicateNickName::: nickname={}", nickname);
         boolean isDuplicate = userService.checkDuplicateNickName(nickname);;
         return isDuplicate;
-    }
-
-    @GetMapping("/v0/users/id/{id}")
-    public boolean requestCheckDuplicateId(@PathVariable String id){
-        log.info("id={}", id);
-        boolean isExist = userService.checkDuplicateId(id);
-        return isExist;
     }
 }

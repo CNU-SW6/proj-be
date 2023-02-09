@@ -1,5 +1,6 @@
 package cnu.swabe.v2.service;
 
+
 import cnu.swabe.v2.domain.image.ImageEntity;
 import cnu.swabe.v2.domain.image.dto.ImageSaveRequestDTO;
 import cnu.swabe.v2.domain.image.dto.ImageSaveResponseDTO;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ImageService {
     private final ImageRepository imageRepository;
+
     private final ModelMapper modelMapper = new ModelMapper();
 
     /**
@@ -29,6 +31,7 @@ public class ImageService {
     /**
      * version - v1
      * */
+
     public void deleteImage(int imageNo) {
         imageRepository.deleteByImageNo(imageNo);
     }

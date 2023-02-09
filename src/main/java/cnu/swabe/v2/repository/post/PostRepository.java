@@ -1,10 +1,7 @@
 package cnu.swabe.v2.repository.post;
 
-import cnu.swabe.v2.domain.Post;
-import cnu.swabe.v2.dto.ImageInfoDTO;
 import cnu.swabe.v2.dto.PostDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
-import cnu.swabe.v2.domain.post.dto.PostDTO;
 import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
 import cnu.swabe.v2.domain.post.dto.PostSaveRequestDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -15,15 +12,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
-import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 
 @Slf4j

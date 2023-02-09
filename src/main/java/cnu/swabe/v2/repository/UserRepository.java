@@ -1,7 +1,5 @@
 package cnu.swabe.v2.repository;
 
-import cnu.swabe.v2.domain.user.User;
-import cnu.swabe.v2.dto.UserDTO;
 import cnu.swabe.v2.domain.user.UserEntity;
 import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -75,8 +73,8 @@ public class UserRepository {
         return user;
     }
 
-    public User findById(String id) {
-        User user = null;
+    public UserEntity findById(String id) {
+        UserEntity user = null;
         String sql = "select * from USERS_TB where USER_ID = ?";
         try{
             user = template.queryForObject(sql, userExcludedPasswordRowMapper(), id);
@@ -86,21 +84,14 @@ public class UserRepository {
         return user;
     }
 
-//    public User findByPw(String Pw) {
-//        String sql = "select * from USERS_TB where USER_NICKNAME = ?";
-//        User user = template.queryForObject(sql, userExcludedPasswordRowMapper(), Pw);
-//        return user;
-//    }
-
-
     public UserEntity findUser(String id, String pw) {
+        UserEntity user = null;
         String sql = "select * from USERS_TB where USER_ID = ? AND USER_PW = ?";
-//        try {
-//            return template.queryForObject(sql, userRowMapper(), id, pw);
-//        }catch (EmptyResultDataAccessException e){
-//            return null;
-//        }
-        return template.queryForObject(sql, userRowMapper(), id, pw);
+        try {
+            return template.queryForObject(sql, userRowMapper(), id, pw);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
     private RowMapper<UserEntity> userExcludedPasswordRowMapper() {

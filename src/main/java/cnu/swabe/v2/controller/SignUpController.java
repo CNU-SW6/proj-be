@@ -1,7 +1,5 @@
 package cnu.swabe.v2.controller;
 
-import cnu.swabe.v2.domain.user.User;
-import cnu.swabe.v2.dto.UserDTO;
 import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
 import cnu.swabe.v2.domain.user.dto.UserSignUpResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class SignUpController {
     private final UserService userService;
-
-    @ResponseStatus(HttpStatus.CREATED)
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/api/users/id/{id}")

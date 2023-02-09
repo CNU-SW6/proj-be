@@ -1,20 +1,13 @@
 package cnu.swabe.v2.controller;
 
-import cnu.swabe.v2.domain.image.dto.ImagePresentationDTO;
 import cnu.swabe.v2.domain.post.dto.PostDeleteSideInfoRequestDTO;
 import cnu.swabe.v2.response.SuccessResponse;
-import cnu.swabe.v2.domain.like.dto.LikeBusinessDTO;
-import cnu.swabe.v2.domain.post.dto.PostDTO;
 import cnu.swabe.v2.service.LikeService;
 import cnu.swabe.v2.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-
-import java.util.List;
-
 
 @Slf4j
 @RestController

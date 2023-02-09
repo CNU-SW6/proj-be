@@ -4,6 +4,7 @@ package cnu.swabe.v2.service;
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.post.dto.*;
 import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
+import cnu.swabe.v2.dto.PostDTO;
 import cnu.swabe.v2.exception.ExceptionCode;
 import cnu.swabe.v2.exception.custom.CannotBeDeletedException;
 import cnu.swabe.v2.exception.custom.WrongPostFormException;
@@ -11,7 +12,6 @@ import cnu.swabe.v2.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

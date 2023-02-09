@@ -4,9 +4,11 @@ package cnu.swabe.v2.service;
 import cnu.swabe.v2.domain.user.UserEntity;
 import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
 import cnu.swabe.v2.domain.user.dto.UserSignUpResponseDTO;
-import cnu.swabe.v2.exception.custom.DuplicatedInfoException;
 import cnu.swabe.v2.dto.UserLoginDTO;
+import cnu.swabe.v2.exception.custom.DuplicatedInfoException;
 import cnu.swabe.v2.exception.ExceptionCode;
+import cnu.swabe.v2.exception.custom.IdDuplicatedException;
+import cnu.swabe.v2.exception.custom.WrongInfoAccessException;
 import cnu.swabe.v2.exception.custom.WrongUserFormException;
 import cnu.swabe.v2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +54,17 @@ public class UserService {
         return false;
     }
 
+    public void login(UserLoginDTO userLoginDTO) {
+        UserEntity user = userRepository.findUser(userLoginDTO.getId(), userLoginDTO.getPw());
+        if(user == null){
+            throw new WrongInfoAccessException(ExceptionCode.WRONG_INFO_USER_ACCESS);
+        }
+    }
+
+    public void checkDuplicateId(String id) {
+        UserEntity user = userRepository.findById(id);
+        if(user != null){
+            throw new IdDuplicatedException();
         }
     }
 }

@@ -5,13 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Like {
+public class LikeEntity {
     private String userLikePost;
     private int postNo;
     private int userNo;
     private int likeNum;
 
-    public Like(String userLikePost, int postNo, int userNo, int likeNum) {
+    public LikeEntity(String userLikePost, int postNo, int userNo, int likeNum) {
         this.userLikePost = userLikePost;
         this.postNo = postNo;
         this.userNo = userNo;

@@ -59,7 +59,9 @@ public class LikeRepository {
 
 
     /**
-     * version - v1
+
+     * version - v2
+     * jdbcTemplate
      * */
     public void deleteByPostNo(int postNo) {
         String sql = "delete from LIKES_TB where POST_NO = ?";

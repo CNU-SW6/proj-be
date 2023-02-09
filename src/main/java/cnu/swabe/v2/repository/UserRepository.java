@@ -2,6 +2,8 @@ package cnu.swabe.v2.repository;
 
 import cnu.swabe.v2.domain.user.User;
 import cnu.swabe.v2.dto.UserDTO;
+import cnu.swabe.v2.domain.user.UserEntity;
+import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,37 +27,47 @@ public class UserRepository {
     }
 
     /**
-     * version - v1
-     * 동적쿼리 MyBatis
-     * DTO 필요
+
+     * version - v2
+     * jdbcTemplate
      * */
-    public User save(UserDTO userDTO) {
-        User user = null;
+    public UserEntity save(UserSignUpRequestDTO userRequestDTO) {
+        UserEntity user = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into USERS_TB(USER_ID, USER_PW, USER_NICKNAME, USER_ISMALE) values(?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, userDTO.getId());
-            preparedStatement.setString(2, userDTO.getPw());
-            preparedStatement.setString(3, userDTO.getNickname());
-            preparedStatement.setBoolean(4, userDTO.isMale());
+
+            preparedStatement.setString(1, userRequestDTO.getId());
+            preparedStatement.setString(2, userRequestDTO.getPw());
+            preparedStatement.setString(3, userRequestDTO.getNickname());
+            preparedStatement.setBoolean(4, userRequestDTO.isMale());
             return preparedStatement;
         };
 
         template.update(preparedStatementCreator, keyHolder);
-        user = new User((Integer) keyHolder.getKeys().get("USER_NO"), userDTO.getId(), userDTO.getPw(), userDTO.getNickname(), userDTO.isMale());
+
+        user = new UserEntity(
+                (Integer) keyHolder.getKeys().get("USER_NO"),
+                userRequestDTO.getId(),
+                userRequestDTO.getPw(),
+                userRequestDTO.getNickname(),
+                userRequestDTO.isMale()
+        );
 
         return user;
     }
 
     /**
-     * version - v1
+
+     * version - v2
+     * jdbcTemplate
      * */
-    public User findByNickName(String nickname) {
-        User user = null;
+    public UserEntity findByNickName(String nickname) {
+        UserEntity user = null;
         String sql = "select * from USERS_TB where USER_NICKNAME = ?";
         try {
-            user = template.queryForObject(sql, userExcludedPasswordRowMapper(), nickname);
+            user = template.queryForObject(sql, userRowMapper(), nickname);
         } catch(EmptyResultDataAccessException e) {
             return null;
         }
@@ -80,36 +92,37 @@ public class UserRepository {
 //        return user;
 //    }
 
-    public User findUser(String id, String pw) {
-        User user = null;
+
+    public UserEntity findUser(String id, String pw) {
         String sql = "select * from USERS_TB where USER_ID = ? AND USER_PW = ?";
-        try {
-            return template.queryForObject(sql, userRowMapper(), id, pw);
-        }catch (EmptyResultDataAccessException e){
-            return null;
-        }
+//        try {
+//            return template.queryForObject(sql, userRowMapper(), id, pw);
+//        }catch (EmptyResultDataAccessException e){
+//            return null;
+//        }
+        return template.queryForObject(sql, userRowMapper(), id, pw);
     }
 
-    private RowMapper<User> userExcludedPasswordRowMapper() {
+    private RowMapper<UserEntity> userExcludedPasswordRowMapper() {
         return (rs, rowNum) -> {
-            User user = new User();
-            user.setNo(Integer.parseInt(rs.getString("USER_NO")));
-            user.setId(rs.getString("USER_ID"));
-            user.setNickname(rs.getString("USER_NICKNAME"));
-            user.setMale(rs.getBoolean("USER_ISMALE"));
-            return user;
+            UserEntity userEntity = new UserEntity();
+            userEntity.setNo(Integer.parseInt(rs.getString("USER_NO")));
+            userEntity.setId(rs.getString("USER_ID"));
+            userEntity.setNickname(rs.getString("USER_NICKNAME"));
+            userEntity.setMale(rs.getBoolean("USER_ISMALE"));
+            return userEntity;
         };
     }
 
-    private RowMapper<User> userRowMapper() {
+    private RowMapper<UserEntity> userRowMapper() {
         return (rs, rowNum) -> {
-            User user = new User();
-            user.setNo(Integer.parseInt(rs.getString("USER_NO")));
-            user.setId(rs.getString("USER_ID"));
-            user.setPw(rs.getString("USER_PW"));
-            user.setNickname(rs.getString("USER_NICKNAME"));
-            user.setMale(rs.getBoolean("USER_ISMALE"));
-            return user;
+            UserEntity userEntity = new UserEntity();
+            userEntity.setNo(Integer.parseInt(rs.getString("USER_NO")));
+            userEntity.setId(rs.getString("USER_ID"));
+            userEntity.setPw(rs.getString("USER_PW"));
+            userEntity.setNickname(rs.getString("USER_NICKNAME"));
+            userEntity.setMale(rs.getBoolean("USER_ISMALE"));
+            return userEntity;
         };
     }
 }

@@ -10,8 +10,9 @@ public class ErrorResponse {
     private boolean error;
     private String message;
 
-    public ErrorResponse(ExceptionCode errorCode) {
-        this.error = errorCode.isError();
-        this.message = errorCode.getMessage();
+
+    public ErrorResponse(ExceptionCode exceptionCode) {
+        this.error = true;
+        this.message = exceptionCode.getMessage();
     }
 }

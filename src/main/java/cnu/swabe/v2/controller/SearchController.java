@@ -4,6 +4,11 @@ import cnu.swabe.v2.domain.like.dto.LikeBusinessDTO;
 import cnu.swabe.v2.dto.PostDTO;
 import cnu.swabe.v2.dto.StyleDTO;
 import cnu.swabe.v2.domain.like.dto.LikePresentationDTO;
+import cnu.swabe.v2.domain.post.PostEntity;
+import cnu.swabe.v2.domain.like.dto.LikeBusinessDTO;
+import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
+import cnu.swabe.v2.domain.like.dto.LikePresentationDTO;
+import cnu.swabe.v2.domain.post.dto.PostSearchListResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.LikeService;
 import cnu.swabe.v2.service.PostService;
@@ -22,22 +27,29 @@ public class SearchController {
     private final LikeService likeService;
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/api/posts")
-    public SuccessResponse requestSearchStyle(@ModelAttribute StyleDTO styleDTO) {
-        log.info("??? hat={}, top={}, pants={}, shoes={}", styleDTO.getHat(), styleDTO.getTop(), styleDTO.getPants(), styleDTO.getShoes());
-        List<PostDTO> posts = postService.getPostItems(styleDTO);
-        return new SuccessResponse(posts);
-    }
+
 
     // 게시물 선택
     @GetMapping("/api/posts/{postNo}")
     public SuccessResponse selectPost(@PathVariable int postNo){
         return new SuccessResponse(postService.getPostInfo(postNo));
+    @GetMapping("/v2/posts")
+    public SuccessResponse<List<PostSearchListResponseDTO>> requestSearchStyle(@ModelAttribute ImageStyleRequestDTO imageStyleRequestDTO) {
+        log.info("SearchStyle::: hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
+                imageStyleRequestDTO.getHat(),
+                imageStyleRequestDTO.getTop(),
+                imageStyleRequestDTO.getPants(),
+                imageStyleRequestDTO.getShoes()
+        );
+        List<PostSearchListResponseDTO> postSearchListResponse = postService.getPosts(imageStyleRequestDTO);
+        return new SuccessResponse(postSearchListResponse);
+    }
     }
 
 
     // 게시물 좋아요
     @PatchMapping("/api/likes/posts/{postNo}")
+
     public boolean requestLike(@PathVariable int postNo, @RequestBody LikePresentationDTO likePresentationDTO) {
         LikeBusinessDTO likeBusinessDTO = new LikeBusinessDTO(
                 postNo,

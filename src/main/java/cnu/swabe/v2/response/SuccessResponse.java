@@ -3,16 +3,17 @@ package cnu.swabe.v2.response;
 import lombok.Getter;
 
 @Getter
-public class SuccessResponse {
+public class SuccessResponse<T> {
     private boolean error;
-    private Object data;
+    private T data;
 
     public SuccessResponse() {
         this.error = false;
     }
 
-    public SuccessResponse(Object object) {
+
+    public SuccessResponse(T data) {
         this.error = false;
-        this.data = object;
+        this.data = data;
     }
 }

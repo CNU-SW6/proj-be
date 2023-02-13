@@ -45,7 +45,6 @@ public class SearchController {
 
     // 게시물 좋아요
     @PatchMapping("/api/likes/posts/{postNo}")
-
     public boolean requestLike(@PathVariable int postNo, @RequestBody LikePresentationDTO likePresentationDTO) {
         LikeBusinessDTO likeBusinessDTO = new LikeBusinessDTO(
                 postNo,

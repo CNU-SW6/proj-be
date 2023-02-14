@@ -1,6 +1,6 @@
 package cnu.swabe.v2.repository;
 
-import cnu.swabe.v2.domain.like.dto.LikeBusinessDTO;
+import cnu.swabe.v2.domain.post.dto.like.dto.LikeBusinessDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

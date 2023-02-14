@@ -1,6 +1,6 @@
 package cnu.swabe.v2.service;
 
-import cnu.swabe.v2.domain.like.dto.LikeBusinessDTO;
+import cnu.swabe.v2.domain.post.dto.like.dto.LikeBusinessDTO;
 import cnu.swabe.v2.repository.LikeRepository;
 import cnu.swabe.v2.repository.post.PostDetailRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,6 @@
 package cnu.swabe.v2.controller;
 
-import cnu.swabe.v2.domain.user.dto.UserSignUpRequestDTO;
-import cnu.swabe.v2.domain.user.dto.UserSignUpResponseDTO;
+import cnu.swabe.v2.domain.user.dto.UserSignUpDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,32 +14,32 @@ import org.springframework.web.bind.annotation.*;
 public class SignUpController {
     private final UserService userService;
 
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/api/users/id/{id}")
-    public SuccessResponse requestCheckDuplicateId(@PathVariable String id){
-        log.info("id={}", id);
-        userService.checkDuplicateId(id);
-        return new SuccessResponse();
-    }
-        
-    @PostMapping("/v2/users/signup")
-    public SuccessResponse<UserSignUpResponseDTO> requestSignUp(@RequestBody UserSignUpRequestDTO userSignUpRequestDTO) {
+    @PostMapping("/v2.1/users/signup")
+    public SuccessResponse<UserSignUpDTO.Response> requestSignUp(@RequestBody UserSignUpDTO.Request userSignUpRequestDTO) {
         log.info("SignUp::: id={}, pw={}, nickname={}, isMale={}",
                 userSignUpRequestDTO.getId(),
                 userSignUpRequestDTO.getPw(),
                 userSignUpRequestDTO.getNickname(),
                 userSignUpRequestDTO.isMale()
         );
-        UserSignUpResponseDTO userSignUpResponse = userService.register(userSignUpRequestDTO);
+        UserSignUpDTO.Response userSignUpResponseDTO = userService.register(userSignUpRequestDTO);
 
-        return new SuccessResponse(userSignUpResponse);
+        return new SuccessResponse(userSignUpResponseDTO);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v2/users/nickname/{nickname}")
+    @GetMapping("/v2.1/users/nickname/{nickname}")
     public boolean requestCheckDuplicateNickName(@PathVariable String nickname) {
-        log.info("CheckDuplicateNickName::: nickname={}", nickname);
+        log.info("CheckDuplicatedNickName::: nickname={}", nickname);
         boolean isDuplicate = userService.checkDuplicateNickName(nickname);;
+        return isDuplicate;
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/v2.1/users/id/{id}")
+    public boolean requestCheckDuplicateId(@PathVariable String id){
+        log.info("CheckDuplicatedId::: id={}", id);
+        boolean isDuplicate = userService.checkDuplicateId(id);
         return isDuplicate;
     }
 }

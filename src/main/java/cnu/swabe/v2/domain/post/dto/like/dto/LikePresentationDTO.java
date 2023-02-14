@@ -1,4 +1,4 @@
-package cnu.swabe.v2.domain.like.dto;
+package cnu.swabe.v2.domain.post.dto.like.dto;
 
 import lombok.Data;
 

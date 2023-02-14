@@ -1,8 +1,8 @@
 package cnu.swabe.v2.controller;
 
 import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
-import cnu.swabe.v2.domain.like.dto.LikeBusinessDTO;
-import cnu.swabe.v2.domain.like.dto.LikePresentationDTO;
+import cnu.swabe.v2.domain.post.dto.like.dto.LikeBusinessDTO;
+import cnu.swabe.v2.domain.post.dto.like.dto.LikePresentationDTO;
 import cnu.swabe.v2.domain.post.dto.PostSearchListResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.LikeService;

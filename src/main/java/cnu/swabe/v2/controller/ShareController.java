@@ -1,11 +1,8 @@
 package cnu.swabe.v2.controller;
 
-import cnu.swabe.v2.domain.image.ImageEntity;
 import cnu.swabe.v2.domain.image.dto.ImageSaveRequestDTO;
 import cnu.swabe.v2.domain.image.dto.ImageSaveResponseDTO;
-import cnu.swabe.v2.domain.post.PostEntity;
-import cnu.swabe.v2.domain.post.dto.PostSaveRequestDTO;
-import cnu.swabe.v2.domain.post.dto.PostSaveResponseDTO;
+import cnu.swabe.v2.domain.post.dto.PostSaveDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.ImageService;
 import cnu.swabe.v2.service.PostService;
@@ -42,7 +39,7 @@ public class ShareController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/v2/posts")
-    public SuccessResponse<PostSaveResponseDTO> RequestSavePost(@RequestBody PostSaveRequestDTO postSaveRequestDTO) {
+    public SuccessResponse<PostSaveDTO.ResponseDTO> RequestSavePost(@RequestBody PostSaveDTO.RequestDTO postSaveRequestDTO) {
         log.info("SavePost::: userNo={}, imageNo={}, description={}, isSell={}, sellUrl={}",
                 postSaveRequestDTO.getUserNo(),
                 postSaveRequestDTO.getImageNo(),
@@ -51,7 +48,7 @@ public class ShareController {
                 postSaveRequestDTO.isSell()
         );
 
-        PostSaveResponseDTO postSaveResponse = postService.savePost(postSaveRequestDTO);
+        PostSaveDTO.ResponseDTO postSaveResponse = postService.savePost(postSaveRequestDTO);
         return new SuccessResponse(postSaveResponse);
     }
 }

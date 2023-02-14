@@ -4,7 +4,7 @@ import cnu.swabe.v2.domain.post.dto.PostUserDetailDTO;
 import cnu.swabe.v2.dto.PostDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
-import cnu.swabe.v2.domain.post.dto.PostSaveRequestDTO;
+import cnu.swabe.v2.domain.post.dto.PostSaveDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,7 +34,7 @@ public class PostRepository {
      * version - v2
      * jdbcTemplate
      * */
-    public PostEntity save(PostSaveRequestDTO postSaveRequestDTO) {
+    public PostEntity save(PostSaveDTO.RequestDTO postSaveRequestDTO) {
         PostEntity postEntity = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, SELL_URL, USER_NO, IMAGE_NO) values (?, ?, ?, ?, ?)";

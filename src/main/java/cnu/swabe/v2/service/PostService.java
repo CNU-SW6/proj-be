@@ -33,7 +33,7 @@ public class PostService {
 
      * version - v2
      * */
-    public PostSaveResponseDTO savePost(PostSaveRequestDTO postSaveRequestDTO) {
+    public PostSaveDTO.ResponseDTO savePost(PostSaveDTO.RequestDTO postSaveRequestDTO) {
         if(postSaveRequestDTO.isSell()) {
             if(postSaveRequestDTO.getSellUrl() == null || postSaveRequestDTO.getSellUrl().equals("")) {
                 throw new WrongPostFormException(ExceptionCode.NO_EXIST_POST_URL);
@@ -41,7 +41,7 @@ public class PostService {
         }
         PostEntity postEntity = postRepository.save(postSaveRequestDTO);
         ModelMapper modelMapper = new ModelMapper();
-        PostSaveResponseDTO postSaveResponse = modelMapper.map(postEntity, PostSaveResponseDTO.class);
+        PostSaveDTO.ResponseDTO postSaveResponse = modelMapper.map(postEntity, PostSaveDTO.ResponseDTO.class);
         return postSaveResponse;
     }
 

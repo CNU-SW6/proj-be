@@ -2,6 +2,7 @@ package cnu.swabe.v2.domain.post.dto;
 
 import lombok.Data;
 
+// 추천 검색
 @Data
 public class PostSearchListResponseDTO implements Comparable<PostSearchListResponseDTO> {
     private int postNo;

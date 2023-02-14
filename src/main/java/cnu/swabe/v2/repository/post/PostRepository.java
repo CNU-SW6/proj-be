@@ -1,9 +1,10 @@
 package cnu.swabe.v2.repository.post;
 
+import cnu.swabe.v2.domain.post.dto.PostUserDetailDTO;
 import cnu.swabe.v2.dto.PostDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
-import cnu.swabe.v2.domain.post.dto.PostSaveRequestDTO;
+import cnu.swabe.v2.domain.post.dto.PostSaveDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,7 +34,7 @@ public class PostRepository {
      * version - v2
      * jdbcTemplate
      * */
-    public PostEntity save(PostSaveRequestDTO postSaveRequestDTO) {
+    public PostEntity save(PostSaveDTO.RequestDTO postSaveRequestDTO) {
         PostEntity postEntity = null;
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, SELL_URL, USER_NO, IMAGE_NO) values (?, ?, ?, ?, ?)";
@@ -100,13 +101,17 @@ public class PostRepository {
     /**
      * version - v2
      * jdbcTemplate
-     * */
-    public PostEntity findByPostNo(int postNo) {
-        PostEntity post = null;
-        String sql = "select * from POSTS_TB where POST_NO = ?";
+     */
+    public PostUserDetailDTO findByPostNo(int postNo) {
+        String sql = "select * from POSTS_TB " +
+                "full join USERS_TB on POSTS_TB.USER_NO = USERS_TB.USER_NO " +
+                "where POST_NO = ?";
+
+        PostUserDetailDTO post = null;
+
         try {
-            post = template.queryForObject(sql, postRowMapper(), postNo);
-        } catch(EmptyResultDataAccessException e) {
+            post = template.queryForObject(sql, postUserDetailDTORowMapper(), postNo);
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
         return post;
@@ -148,6 +153,23 @@ public class PostRepository {
             postEntity.setSellUrl(rs.getString("SELL_URL"));
             postEntity.setLikeNum(rs.getInt("LIKE_NUM"));
             return postEntity;
+        };
+    }
+
+    private RowMapper<PostUserDetailDTO> postUserDetailDTORowMapper() {
+        return (rs, rowNum) -> {
+            PostUserDetailDTO postUserDetailDTO = new PostUserDetailDTO();
+            postUserDetailDTO.setPostNo(rs.getInt("POST_NO"));
+            postUserDetailDTO.setDescription(rs.getString("DESCRIPTION"));
+            postUserDetailDTO.setSell(rs.getBoolean("IS_SELL"));
+            postUserDetailDTO.setImageNo(rs.getInt("IMAGE_NO"));
+            postUserDetailDTO.setUserNo(rs.getInt("USER_NO"));
+            postUserDetailDTO.setSellUrl(rs.getString("SELL_URL"));
+            postUserDetailDTO.setLikeNum(rs.getInt("LIKE_NUM"));
+            postUserDetailDTO.setId(rs.getString("USER_ID"));
+            postUserDetailDTO.setNickname(rs.getString("USER_NICKNAME"));
+            postUserDetailDTO.setMale(rs.getBoolean("USER_ISMALE"));
+            return postUserDetailDTO;
         };
     }
 }

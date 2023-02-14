@@ -21,10 +21,8 @@ public class SearchController {
     private final PostService postService;
     private final LikeService likeService;
 
+    // 게시물 상세 조회
     @ResponseStatus(HttpStatus.OK)
-
-
-    // 게시물 선택
     @GetMapping("/api/posts/{postNo}")
     public SuccessResponse selectPost(@PathVariable int postNo) {
         return new SuccessResponse(postService.getPostInfo(postNo));
@@ -45,7 +43,6 @@ public class SearchController {
 
     // 게시물 좋아요
     @PatchMapping("/api/likes/posts/{postNo}")
-
     public boolean requestLike(@PathVariable int postNo, @RequestBody LikePresentationDTO likePresentationDTO) {
         LikeBusinessDTO likeBusinessDTO = new LikeBusinessDTO(
                 postNo,
@@ -55,4 +52,12 @@ public class SearchController {
         );
         return likeService.clickLike(likeBusinessDTO);
     }
+
+    // 금주 좋아요 순 게시물 조회
+//    @GetMapping("/api")
+//    public List<PostSearchListResponseDTO> weeklyLikePosts() {
+//        List<PostSearchListResponseDTO> postSearchListResponseDTO = postService.getWeeklyPost();
+//
+//        return
+//    }
 }

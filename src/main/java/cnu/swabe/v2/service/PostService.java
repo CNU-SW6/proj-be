@@ -7,6 +7,7 @@ import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
 import cnu.swabe.v2.dto.PostDTO;
 import cnu.swabe.v2.exception.ExceptionCode;
 import cnu.swabe.v2.exception.custom.CannotBeDeletedException;
+import cnu.swabe.v2.exception.custom.PostNotExistException;
 import cnu.swabe.v2.exception.custom.WrongPostFormException;
 import cnu.swabe.v2.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class PostService {
 
      * version - v2
      * */
-    public PostSaveResponseDTO savePost(PostSaveRequestDTO postSaveRequestDTO) {
+    public PostSaveDTO.ResponseDTO savePost(PostSaveDTO.RequestDTO postSaveRequestDTO) {
         if(postSaveRequestDTO.isSell()) {
             if(postSaveRequestDTO.getSellUrl() == null || postSaveRequestDTO.getSellUrl().equals("")) {
                 throw new WrongPostFormException(ExceptionCode.NO_EXIST_POST_URL);
@@ -40,7 +41,7 @@ public class PostService {
         }
         PostEntity postEntity = postRepository.save(postSaveRequestDTO);
         ModelMapper modelMapper = new ModelMapper();
-        PostSaveResponseDTO postSaveResponse = modelMapper.map(postEntity, PostSaveResponseDTO.class);
+        PostSaveDTO.ResponseDTO postSaveResponse = modelMapper.map(postEntity, PostSaveDTO.ResponseDTO.class);
         return postSaveResponse;
     }
 
@@ -68,7 +69,7 @@ public class PostService {
      * */
     @Transactional
     public void deletePost(int postNo, PostDeleteSideInfoRequestDTO postDeleteSideInfoRequestDTO) {
-        PostEntity post = postRepository.findByPostNo(postNo);
+        PostUserDetailDTO post = postRepository.findByPostNo(postNo);
         if(post.getUserNo() != postDeleteSideInfoRequestDTO.getUserNo()) {
             throw new CannotBeDeletedException(ExceptionCode.DIFFERENCE_USER_NO_AND_POST_USER_NO);
         }
@@ -77,8 +78,11 @@ public class PostService {
         likeService.removeLikeRelationByPostNo(postNo);
     }
 
-    public PostEntity getPostInfo (int postNo) {
-        return postRepository.findByPostNo(postNo);
+    public PostUserDetailDTO getPostInfo (int postNo) {
+        PostUserDetailDTO byPostNo = postRepository.findByPostNo(postNo);
+        if(byPostNo == null) throw new PostNotExistException(ExceptionCode.No_Exist_Post);
+
+        return byPostNo;
     }
 
     public List<PostDTO> getMyPosts(int userNo){

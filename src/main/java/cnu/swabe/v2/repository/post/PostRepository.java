@@ -34,34 +34,22 @@ public class PostRepository {
      * version - v2
      * jdbcTemplate
      * */
-    public PostEntity save(PostSaveDTO.RequestDTO postSaveRequestDTO) {
-        PostEntity postEntity = null;
+    public void save(PostEntity post) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, SELL_URL, USER_NO, IMAGE_NO) values (?, ?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            preparedStatement.setString(1, postSaveRequestDTO.getDescription());
-            preparedStatement.setBoolean(2, postSaveRequestDTO.isSell());
-            preparedStatement.setString(3, postSaveRequestDTO.getSellUrl());
-            preparedStatement.setInt(4, postSaveRequestDTO.getUserNo());
-            preparedStatement.setInt(5, postSaveRequestDTO.getImageNo());
+            preparedStatement.setString(1, post.getDescription());
+            preparedStatement.setBoolean(2, post.isSell());
+            preparedStatement.setString(3, post.getSellUrl());
+            preparedStatement.setInt(4, post.getUserNo());
+            preparedStatement.setInt(5, post.getImageNo());
             return preparedStatement;
         };
 
         template.update(preparedStatementCreator, keyHolder);
-
-        postEntity = new PostEntity(
-                (Integer) keyHolder.getKeys().get("post_no"),
-                postSaveRequestDTO.getUserNo(),
-                postSaveRequestDTO.getImageNo(),
-                postSaveRequestDTO.getDescription(),
-                postSaveRequestDTO.isSell(),
-                0,
-                postSaveRequestDTO.getSellUrl()
-                );
-
-        return postEntity;
+        post.setNo((Integer) keyHolder.getKeys().get("POST_NO"));
     }
 
     /**
@@ -145,7 +133,7 @@ public class PostRepository {
     private RowMapper<PostEntity> postRowMapper() {
         return (rs, rowNum) -> {
             PostEntity postEntity = new PostEntity();
-            postEntity.setPostNo(rs.getInt("POST_NO"));
+            postEntity.setNo(rs.getInt("POST_NO"));
             postEntity.setDescription(rs.getString("DESCRIPTION"));
             postEntity.setSell(rs.getBoolean("IS_SELL"));
             postEntity.setImageNo(rs.getInt("IMAGE_NO"));

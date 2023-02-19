@@ -1,4 +1,4 @@
-package cnu.swabe.v2.domain.post.dto.like;
+package cnu.swabe.v2.domain.like;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -3,9 +3,10 @@ package cnu.swabe.v2.domain.image;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 public class ImageEntity {
-    private int imageNo;
+    private int no;
     private int userNo;
     private String location;
     private String hatColor;
@@ -16,8 +17,7 @@ public class ImageEntity {
     public ImageEntity() {
     }
 
-    public ImageEntity(int imageNo, int userNo, String location, String hatColor, String topColor, String pantsColor, String shoesColor) {
-        this.imageNo = imageNo;
+    public ImageEntity(int userNo, String location, String hatColor, String topColor, String pantsColor, String shoesColor) {
         this.userNo = userNo;
         this.location = location;
         this.hatColor = hatColor;

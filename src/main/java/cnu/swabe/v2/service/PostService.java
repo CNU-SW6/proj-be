@@ -1,6 +1,7 @@
 package cnu.swabe.v2.service;
 
 
+import cnu.swabe.v2.domain.image.dto.ImageSaveDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.post.dto.*;
 import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
@@ -27,22 +28,34 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageService imageService;
     private final LikeService likeService;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     /**
-
-
-     * version - v2
+     * version - v2.1
+     * DTO에 비즈니스로직을 넣고 메소드를 호출하면 더 나을것으로 보이는데 , , ,
      * */
-    public PostSaveDTO.ResponseDTO savePost(PostSaveDTO.RequestDTO postSaveRequestDTO) {
+    @Transactional
+    public PostSaveDTO.Response savePost(PostSaveDTO.Request postSaveRequestDTO) {
         if(postSaveRequestDTO.isSell()) {
             if(postSaveRequestDTO.getSellUrl() == null || postSaveRequestDTO.getSellUrl().equals("")) {
                 throw new WrongPostFormException(ExceptionCode.NO_EXIST_POST_URL);
             }
         }
-        PostEntity postEntity = postRepository.save(postSaveRequestDTO);
-        ModelMapper modelMapper = new ModelMapper();
-        PostSaveDTO.ResponseDTO postSaveResponse = modelMapper.map(postEntity, PostSaveDTO.ResponseDTO.class);
-        return postSaveResponse;
+
+        if(postSaveRequestDTO.getHatColor() == null && postSaveRequestDTO.getTopColor() == null &&
+                postSaveRequestDTO.getPantsColor() == null && postSaveRequestDTO.getShoesColor() == null
+        ) {
+            throw new WrongPostFormException(ExceptionCode.NO_EXIST_COLOR);
+        }
+
+        ImageSaveDTO.Request imageSaveRequestDTO = modelMapper.map(postSaveRequestDTO, ImageSaveDTO.Request.class);
+        ImageSaveDTO.Response imageSaveResponseDTO = imageService.saveImage(imageSaveRequestDTO);
+        PostEntity post = modelMapper.map(postSaveRequestDTO, PostEntity.class);
+        post = modelMapper.map(imageSaveResponseDTO, PostEntity.class);
+
+        PostSaveDTO.Response postSaveResponseDTO = modelMapper.map(post, PostSaveDTO.Response.class);
+
+        return postSaveResponseDTO;
     }
 
     /**
@@ -80,7 +93,7 @@ public class PostService {
 
     public PostUserDetailDTO getPostInfo (int postNo) {
         PostUserDetailDTO byPostNo = postRepository.findByPostNo(postNo);
-        if(byPostNo == null) throw new PostNotExistException(ExceptionCode.No_Exist_Post);
+        if(byPostNo == null) throw new PostNotExistException(ExceptionCode.NO_EXIST_POST);
 
         return byPostNo;
     }

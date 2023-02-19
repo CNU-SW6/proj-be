@@ -22,7 +22,6 @@ public class PostDTO implements Comparable<PostDTO>{
         }
     }
     @Data
-    @Builder
     class SearchListResponseDTO implements Comparable<cnu.swabe.v2.domain.post.dto.PostSearchListResponseDTO> {
         private int postNo;
         private boolean isSell;

@@ -1,6 +1,5 @@
 package cnu.swabe.v2.exception;
 
-import cnu.swabe.v2.exception.custom.IdDuplicatedException;
 import cnu.swabe.v2.exception.custom.NicknameDuplicatedException;
 import cnu.swabe.v2.exception.custom.WrongInfoAccessException;
 import cnu.swabe.v2.exception.custom.PostNotExistException;

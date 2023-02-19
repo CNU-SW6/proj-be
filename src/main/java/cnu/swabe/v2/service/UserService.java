@@ -6,7 +6,6 @@ import cnu.swabe.v2.domain.user.dto.UserSignUpDTO;
 import cnu.swabe.v2.dto.UserLoginDTO;
 import cnu.swabe.v2.exception.custom.DuplicatedInfoException;
 import cnu.swabe.v2.exception.ExceptionCode;
-import cnu.swabe.v2.exception.custom.IdDuplicatedException;
 import cnu.swabe.v2.exception.custom.WrongInfoAccessException;
 import cnu.swabe.v2.exception.custom.WrongUserFormException;
 import cnu.swabe.v2.repository.UserRepository;
@@ -35,7 +34,7 @@ public class UserService {
         if(!checkInputLength(userSignUpRequestDTO.getPw())) throw new WrongUserFormException(ExceptionCode.WRONG_LENGTH_USER_PW);
         if(!checkInputLength(userSignUpRequestDTO.getNickname())) throw new WrongUserFormException(ExceptionCode.WRONG_LENGTH_USER_NICKNAME);
         if(checkDuplicateNickName(userSignUpRequestDTO.getNickname())) throw new DuplicatedInfoException(ExceptionCode.EXIST_USER_NICKNAME);
-        // checkDuplicatedId 구현 후 체크
+        if(checkDuplicateId(userSignUpRequestDTO.getId())) throw new DuplicatedInfoException(ExceptionCode.EXIST_USER_ID);
 
         UserEntity user = modelMapper.map(userSignUpRequestDTO, UserEntity.class);
         userRepository.save(user);

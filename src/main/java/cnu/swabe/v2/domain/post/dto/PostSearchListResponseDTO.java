@@ -1,23 +1,15 @@
 package cnu.swabe.v2.domain.post.dto;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-// 추천 검색
-@Data
-public class PostSearchListResponseDTO implements Comparable<PostSearchListResponseDTO> {
+@Getter
+@Builder
+@AllArgsConstructor
+public class PostSearchListResponseDTO {
     private int postNo;
     private boolean isSell;
     private String location;
     private int likeNum;
-
-    @Override
-    public int compareTo(PostSearchListResponseDTO o) {
-        if(this.likeNum > o.getLikeNum()) {
-            return -1;
-        } else if(this.likeNum < o.getLikeNum()) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
 }

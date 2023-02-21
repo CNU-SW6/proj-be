@@ -1,12 +1,17 @@
 package cnu.swabe.v2.repository;
 
-import cnu.swabe.v2.domain.like.dto.LikeBusinessDTO;
+import cnu.swabe.v2.domain.like.LikeEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,51 +25,70 @@ public class LikeRepository {
         this.template = new JdbcTemplate(dataSource);
     }
 
-    public String save(LikeBusinessDTO likeBusinessDTO) {
-        StringBuilder sb = new StringBuilder();
+    /**
+     * version - v2.1
+     * jdbcTemplate
+     * */
+    public void save(LikeEntity like) {
         String sql = "insert into LIKES_TB(USER_LIKE_POST, USER_NO, POST_NO) values (?, ?, ?)";
-        sb.append(likeBusinessDTO.getUserNo());
+        StringBuilder sb = new StringBuilder();
+        sb.append(like.getUserNo());
         sb.append("_LIKE_");
-        sb.append(likeBusinessDTO.getPostNo());
+        sb.append(like.getPostNo());
         String pk = sb.toString();
-        template.update(sql, pk, likeBusinessDTO.getUserNo(), likeBusinessDTO.getPostNo());
-        return pk;
-    }
 
-    public List<LikeBusinessDTO> findLikePost(int userNo) {
-        String sql = "select * from LIKES_TB where USER_NO = ?";
-        List<LikeBusinessDTO> likeBusinessDTOList = new ArrayList<>();
-        try {
-            likeBusinessDTOList = template.query(sql, LikeBusinessDTORowMapper(), userNo);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-
-        return likeBusinessDTOList;
-    }
-
-    private RowMapper<LikeBusinessDTO> LikeBusinessDTORowMapper() {
-        return (rs, rowNum) -> {
-            LikeBusinessDTO likeBusinessDTO = new LikeBusinessDTO();
-            likeBusinessDTO.setPostNo(rs.getInt("POST_NO"));
-            likeBusinessDTO.setUserNo(rs.getInt("USER_NO"));
-            return likeBusinessDTO;
+        PreparedStatementCreator preparedStatementCreator = (connection) -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, pk);
+            preparedStatement.setInt(2, like.getUserNo());
+            preparedStatement.setInt(3, like.getPostNo());
+            return preparedStatement;
         };
-    }
 
-    public void delete(LikeBusinessDTO likeBusinessDTO) {
-        String sql = "delete from LIKES_TB where USER_NO = ? AND POST_NO = ?";
-        template.update(sql, likeBusinessDTO.getUserNo(), likeBusinessDTO.getPostNo());
+        template.update(preparedStatementCreator);
+        like.setUserNoLikePostNo(pk);
     }
-
 
     /**
+     * version - v2.1
+     * jdbcTemplate
+     * */
+    public void delete(LikeEntity like) {
+        String sql = "delete from LIKES_TB where POST_NO = ? AND USER_NO = ? ";
+        template.update(sql, like.getPostNo(), like.getUserNo());
+    }
 
+    /**
      * version - v2
      * jdbcTemplate
      * */
     public void deleteByPostNo(int postNo) {
         String sql = "delete from LIKES_TB where POST_NO = ?";
         template.update(sql, postNo);
+    }
+
+    public LikeEntity findByPostNoAndUserNo(int postNo, int userNo) {
+        LikeEntity like = null;
+        String sql = "select * from LIKES_TB where POST_NO and USER_NO = ?";
+
+        try {
+            like = template.queryForObject(sql, likeRowMapper(), postNo ,userNo);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
+        return like;
+    }
+
+    private RowMapper<LikeEntity> likeRowMapper() {
+        return (rs, rowNum) -> {
+            LikeEntity like = new LikeEntity(
+                    rs.getString("USER_LIKE_POST"),
+                    rs.getInt("POST_NO"),
+                    rs.getInt("USER_NO")
+            );
+
+            return like;
+        };
     }
 }

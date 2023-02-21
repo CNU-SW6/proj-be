@@ -1,13 +1,6 @@
 package cnu.swabe.v2.exception;
 
-import cnu.swabe.v2.exception.custom.NicknameDuplicatedException;
-import cnu.swabe.v2.exception.custom.WrongInfoAccessException;
-import cnu.swabe.v2.exception.custom.PostNotExistException;
-import cnu.swabe.v2.exception.custom.WrongLengthUserInfoException;
-import cnu.swabe.v2.exception.custom.CannotBeDeletedException;
-import cnu.swabe.v2.exception.custom.DuplicatedInfoException;
-import cnu.swabe.v2.exception.custom.WrongPostFormException;
-import cnu.swabe.v2.exception.custom.WrongUserFormException;
+import cnu.swabe.v2.exception.custom.*;
 import cnu.swabe.v2.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -46,13 +39,6 @@ public class MyExceptionHandler {
         return new ErrorResponse(ex.getErrorCode());
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IdDuplicatedException.class)
-    protected ErrorResponse handleIdDuplicatedException(){
-        log.error("!!! error log=()", ExceptionCode.EXIST_VALUE.getMessage());
-        return new ErrorResponse(ExceptionCode.EXIST_VALUE);
-    }
-
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(WrongInfoAccessException.class)
     protected ErrorResponse handlerWrongInfoAccessException(WrongInfoAccessException ex){
@@ -61,8 +47,8 @@ public class MyExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(PostNotExistException.class)
-    protected ErrorResponse handlePostNotExistException(PostNotExistException ex) {
+    @ExceptionHandler(NotExistException.class)
+    protected ErrorResponse handlePostNotExistException(NotExistException ex) {
         log.error("error log={}", ex.getErrorCode().getMessage());
         return new ErrorResponse(ex.getErrorCode());
     }

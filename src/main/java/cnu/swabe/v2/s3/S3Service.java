@@ -20,7 +20,7 @@ import java.io.IOException;
 @NoArgsConstructor
 public class S3Service {
     private AmazonS3 s3Client;
-    private final String endPoint = "https://kr.object.fin-ncloudstorage.com";
+    private final String endPoint = "https://kr.object.ncloudstorage.com";
 
     @Value("${cloud.aws.credentials.accessKey}")
     private String accessKey;

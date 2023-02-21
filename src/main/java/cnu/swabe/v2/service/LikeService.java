@@ -1,63 +1,51 @@
 package cnu.swabe.v2.service;
 
-import cnu.swabe.v2.domain.like.dto.LikeBusinessDTO;
+import cnu.swabe.v2.domain.like.LikeEntity;
+import cnu.swabe.v2.domain.like.dto.LikeClickDTO;
+import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.repository.LikeRepository;
-import cnu.swabe.v2.repository.post.PostDetailRepository;
+import cnu.swabe.v2.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class LikeService {
     private final LikeRepository likeRepository;
-    private final PostDetailRepository postDetailRepository;
+    private final PostRepository postRepository;
 
     /**
-     * 트랜잭션으로 처리되어야 할듯.. 하나만 처리되면 안됌
+     * version - v2.1
      * */
-    public boolean clickLike(LikeBusinessDTO likeBusinessDTO) {
-        boolean checked = likeBusinessDTO.isChecked();
-        if(checked == false) { // 체크 X -> O
-            LikeCount(likeBusinessDTO.getPostNo(), likeBusinessDTO.getLikeNum());
-            addLikeRelation(likeBusinessDTO);
-            return true;
-        } else { // 체크 O -> X
-            LikeDiscount(likeBusinessDTO.getPostNo(), likeBusinessDTO.getLikeNum());
-            removeLikeRelation(likeBusinessDTO);
+    @Transactional
+    public LikeClickDTO.Response clickLike(int postNo, LikeClickDTO.Request likeBusinessRequestDTO) {
+        boolean alreadyLiked = inquireLikeRelation(postNo, likeBusinessRequestDTO.getUserNo());
+        LikeEntity like = new LikeEntity(postNo, likeBusinessRequestDTO.getUserNo());
+        PostEntity post = postRepository.findByPostNo(postNo);
+        int likeNum = post.getLikeNum();
+        if (alreadyLiked) {
+            likeNum = likeNum -1;
+            likeRepository.delete(like);
+            postRepository.updateLikeNum(postNo, likeNum);
+        } else {
+            likeNum = likeNum +1;
+            likeRepository.save(like);
+            postRepository.updateLikeNum(postNo, likeNum);
+        }
+
+        LikeClickDTO.Response likeClickResponseDTO = new LikeClickDTO.Response(likeNum);
+        return likeClickResponseDTO;
+    }
+
+    public boolean inquireLikeRelation(int postNo, int userNo) {
+        LikeEntity like = likeRepository.findByPostNoAndUserNo(postNo, userNo);
+        if(like == null) {
             return false;
         }
-    }
 
-    public int LikeCount(int postNo, int likeNum) {
-        int addedLikeNum = postDetailRepository.plusLikeNumByPostNo(postNo, likeNum);
-        return addedLikeNum;
-    }
-
-    public String addLikeRelation(LikeBusinessDTO likeBusinessDTO) {
-        String pk = likeRepository.save(likeBusinessDTO);
-        return pk;
-    }
-
-    public int LikeDiscount(int postNo, int likeNum) {
-        int minusLikeNum = postDetailRepository.minusLikeNumByPostNo(postNo, likeNum);
-        return minusLikeNum;
-    }
-
-    public void removeLikeRelation(LikeBusinessDTO likeBusinessDTO) {
-        likeRepository.delete(likeBusinessDTO);
-    }
-
-    public List<LikeBusinessDTO> getLikePosts(int userNo) {
-        List<LikeBusinessDTO> likePosts = likeRepository.findLikePost(userNo);
-        return likePosts;
-
-    }
-
-    public void removeLikeRelationByPostNo(int postNo) {
-        likeRepository.deleteByPostNo(postNo);
+        return true;
     }
 }

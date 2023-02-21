@@ -1,7 +1,6 @@
 package cnu.swabe.v2.repository;
 
 import cnu.swabe.v2.dto.ImageInfoDTO;
-import cnu.swabe.v2.dto.StyleDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,29 +47,6 @@ public class ImageRepository {
 
         template.update(preparedStatementCreator, keyHolder);
         image.setNo((Integer) keyHolder.getKeys().get("IMAGE_NO"));
-    }
-
-    /**
-     * version - v1
-     * 동적쿼리 MyBatis
-     * DTO 분리
-    * */
-    public List<ImageInfoDTO> findByStyle(StyleDTO styleDTO) {
-        List<ImageInfoDTO> imageInfoDTO = null;
-        String sql = "select IMAGE_NO, LOCATION from IMAGES_TB where HAT_COLOR=? AND TOP_COLOR=? AND PANTS_COLOR=? AND SHOES_COLOR=?";
-        try {
-            imageInfoDTO = template.query(sql, imageInfoDTORowMapper(),
-                    styleDTO.getHat(),
-                    styleDTO.getTop(),
-                    styleDTO.getPants(),
-                    styleDTO.getShoes()
-            );
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-
-        return imageInfoDTO;
-
     }
 
     public void deleteByImageNo(int imageNo) {

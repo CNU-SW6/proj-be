@@ -4,13 +4,12 @@ package cnu.swabe.v2.service;
 import cnu.swabe.v2.domain.image.dto.ImageSaveDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.post.dto.*;
-import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
-import cnu.swabe.v2.dto.PostDTO;
+import cnu.swabe.v2.dto.StyleRequestDTO;
 import cnu.swabe.v2.exception.ExceptionCode;
 import cnu.swabe.v2.exception.custom.CannotBeDeletedException;
-import cnu.swabe.v2.exception.custom.PostNotExistException;
+import cnu.swabe.v2.exception.custom.NotExistException;
 import cnu.swabe.v2.exception.custom.WrongPostFormException;
-import cnu.swabe.v2.repository.post.PostRepository;
+import cnu.swabe.v2.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -59,18 +57,16 @@ public class PostService {
     }
 
     /**
-     * version - v2
+     * version - v2.1
      * */
-    public List<PostSearchListResponseDTO> getPosts(ImageStyleRequestDTO imageStyleRequestDTO) {
-        List<PostEntity> posts = postRepository.findByImageStyle(imageStyleRequestDTO);
+    public List<PostSearchListResponseDTO> getPosts(StyleRequestDTO styleRequestDTO) {
+        List<PostEntity> posts = postRepository.findByImageStyle(styleRequestDTO);
         List<PostSearchListResponseDTO> postSearchListResponse = new ArrayList<>();
-        ModelMapper modelMapper = new ModelMapper();
 
         for(PostEntity postEntity : posts) {
             PostSearchListResponseDTO postSearchListDTO = modelMapper.map(postEntity, PostSearchListResponseDTO.class);
             postSearchListResponse.add(postSearchListDTO);
         }
-        Collections.sort(postSearchListResponse);
 
         return postSearchListResponse;
     }
@@ -91,11 +87,16 @@ public class PostService {
         likeService.removeLikeRelationByPostNo(postNo);
     }
 
-    public PostUserDetailDTO getPostInfo (int postNo) {
-        PostUserDetailDTO byPostNo = postRepository.findByPostNo(postNo);
-        if(byPostNo == null) throw new PostNotExistException(ExceptionCode.NO_EXIST_POST);
+    /**
+     * version - v2.1
+     * */
+    public PostUserDetailDTO getPostDetail(int postNo) {
+        PostUserDetailDTO postUserDetailDTO = postRepository.findPostAndUserByPostNo(postNo);
+        if(postUserDetailDTO == null) {
+            throw new NotExistException(ExceptionCode.NO_EXIST_POST);
+        }
 
-        return byPostNo;
+        return postUserDetailDTO;
     }
 
     public List<PostDTO> getMyPosts(int userNo){

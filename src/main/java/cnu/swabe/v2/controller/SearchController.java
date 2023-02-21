@@ -1,8 +1,8 @@
 package cnu.swabe.v2.controller;
 
-import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
-import cnu.swabe.v2.domain.like.dto.LikeBusinessDTO;
-import cnu.swabe.v2.domain.like.dto.LikePresentationDTO;
+import cnu.swabe.v2.domain.like.dto.LikeClickDTO;
+import cnu.swabe.v2.domain.post.dto.PostUserDetailDTO;
+import cnu.swabe.v2.dto.StyleRequestDTO;
 import cnu.swabe.v2.domain.post.dto.PostSearchListResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.LikeService;
@@ -21,43 +21,44 @@ public class SearchController {
     private final PostService postService;
     private final LikeService likeService;
 
-    // 게시물 상세 조회
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/api/posts/{postNo}")
-    public SuccessResponse selectPost(@PathVariable int postNo) {
-        return new SuccessResponse(postService.getPostInfo(postNo));
-    }
+    @GetMapping("/v2.1/posts")
+    public SuccessResponse<List<PostSearchListResponseDTO>> requestSearchStyle(@ModelAttribute StyleRequestDTO styleRequestDTO) {
+        log.info("SearchStyle::: hatColor={}, topColor={}, pantsColor={}, shoesColor={}, isMale={}, isOrderByLikeNum={}",
+                styleRequestDTO.getHatColor(),
+                styleRequestDTO.getTopColor(),
+                styleRequestDTO.getPantsColor(),
+                styleRequestDTO.getShoesColor(),
+                styleRequestDTO.isMale(),
+                styleRequestDTO.isOrderByLikeNum()
 
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v2/posts")
-    public SuccessResponse<List<PostSearchListResponseDTO>> requestSearchStyle(@ModelAttribute ImageStyleRequestDTO imageStyleRequestDTO) {
-        log.info("SearchStyle::: hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
-                imageStyleRequestDTO.getHat(),
-                imageStyleRequestDTO.getTop(),
-                imageStyleRequestDTO.getPants(),
-                imageStyleRequestDTO.getShoes()
         );
-        List<PostSearchListResponseDTO> postSearchListResponse = postService.getPosts(imageStyleRequestDTO);
+
+        List<PostSearchListResponseDTO> postSearchListResponse = postService.getPosts(styleRequestDTO);
+
         return new SuccessResponse(postSearchListResponse);
     }
 
-    // 게시물 좋아요
-    @PatchMapping("/api/likes/posts/{postNo}")
-    public boolean requestLike(@PathVariable int postNo, @RequestBody LikePresentationDTO likePresentationDTO) {
-        LikeBusinessDTO likeBusinessDTO = new LikeBusinessDTO(
-                postNo,
-                likePresentationDTO.getUserNo(),
-                likePresentationDTO.getLikeNum(),
-                likePresentationDTO.isChecked()
-        );
-        return likeService.clickLike(likeBusinessDTO);
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/v2.1/posts/{postNo}")
+    public SuccessResponse<PostUserDetailDTO> requestPostDetail(@PathVariable int postNo) {
+        log.info("PostDetail::: postNo={}", postNo);
+
+        PostUserDetailDTO postUserDetailDTO = postService.getPostDetail(postNo);
+
+        return new SuccessResponse(postUserDetailDTO);
     }
 
-    // 금주 좋아요 순 게시물 조회
-//    @GetMapping("/api")
-//    public List<PostSearchListResponseDTO> weeklyLikePosts() {
-//        List<PostSearchListResponseDTO> postSearchListResponseDTO = postService.getWeeklyPost();
-//
-//        return
-//    }
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/v2.1/likes/posts/{postNo}")
+    public SuccessResponse<LikeClickDTO.Response> requestLike(@PathVariable int postNo, @RequestBody LikeClickDTO.Request likeClickRequestDTO) {
+        log.info("PostDetail::: postNo={}, userNo={}",
+                postNo,
+                likeClickRequestDTO.getUserNo()
+        );
+
+        LikeClickDTO.Response likeClickResponseDTO = likeService.clickLike(postNo, likeClickRequestDTO);
+
+        return new SuccessResponse(likeClickResponseDTO);
+    }
 }

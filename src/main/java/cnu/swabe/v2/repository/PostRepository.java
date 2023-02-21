@@ -1,10 +1,8 @@
-package cnu.swabe.v2.repository.post;
+package cnu.swabe.v2.repository;
 
 import cnu.swabe.v2.domain.post.dto.PostUserDetailDTO;
-import cnu.swabe.v2.dto.PostDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
-import cnu.swabe.v2.domain.image.dto.ImageStyleRequestDTO;
-import cnu.swabe.v2.domain.post.dto.PostSaveDTO;
+import cnu.swabe.v2.dto.StyleRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,7 +28,6 @@ public class PostRepository {
     }
 
     /**
-
      * version - v2
      * jdbcTemplate
      * */
@@ -39,12 +36,10 @@ public class PostRepository {
         String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, SELL_URL, USER_NO, IMAGE_NO) values (?, ?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
             preparedStatement.setString(1, post.getDescription());
             preparedStatement.setBoolean(2, post.isSell());
-            preparedStatement.setString(3, post.getSellUrl());
-            preparedStatement.setInt(4, post.getUserNo());
-            preparedStatement.setInt(5, post.getImageNo());
+            preparedStatement.setInt(3, post.getUserNo());
+            preparedStatement.setInt(4, post.getImageNo());
             return preparedStatement;
         };
 
@@ -53,21 +48,25 @@ public class PostRepository {
     }
 
     /**
-     * version - v2
+     * version - v2.1
      * jdbcTemplate
+     * problem. ImageStyleRequestDTO 클래스는 god 클래스가 아닌가
+     * problem. 동적 쿼리 시 isMale, isOrderByLikeNum 고려
      */
-    public List<PostEntity> findByImageStyle(ImageStyleRequestDTO imageStyleRequestDTO) {
+    public List<PostEntity> findByImageStyle(StyleRequestDTO styleRequestDTO) {
         List<PostEntity> posts = null;
         String sql = "select * from POSTS_TB " +
-                "inner join IMAGES_TB on POSTS_TB.IMAGE_NO = IMAGES_TB.IMAGE_NO " +
-                "where HAT_COLOR=? AND TOP_COLOR=? AND PANTS_COLOR=? AND SHOES_COLOR=?";
+                "inner join IMAGES_TB " +
+                "on POSTS_TB.IMAGE_NO = IMAGES_TB.IMAGE_NO " +
+                "where HAT_COLOR=? AND TOP_COLOR=? AND PANTS_COLOR=? AND SHOES_COLOR=?"+
+                "order by LIKE_NUM";
 
         try {
             posts = template.query(sql, postRowMapper(),
-                    imageStyleRequestDTO.getHat(),
-                    imageStyleRequestDTO.getTop(),
-                    imageStyleRequestDTO.getPants(),
-                    imageStyleRequestDTO.getShoes()
+                    styleRequestDTO.getHatColor(),
+                    styleRequestDTO.getTopColor(),
+                    styleRequestDTO.getPantsColor(),
+                    styleRequestDTO.getShoesColor()
             );
         } catch(EmptyResultDataAccessException e) {
             return null;
@@ -76,32 +75,42 @@ public class PostRepository {
         return posts;
     }
 
-
     /**
-     * version - v1
-     * */
-    public void deleteByPostNo(int postNo) {
-        String sql = "delete from POSTS_TB where POST_NO = ?";
-        template.update(sql, postNo);
-    }
-
-
-    /**
-     * version - v2
+     * version - v2.1
      * jdbcTemplate
+     * problem 1. Join시에는 어떻게 return 해야할까?
      */
-    public PostUserDetailDTO findByPostNo(int postNo) {
-        String sql = "select * from POSTS_TB " +
-                "full join USERS_TB on POSTS_TB.USER_NO = USERS_TB.USER_NO " +
+    public PostUserDetailDTO findPostAndUserByPostNo(int postNo) {
+        PostUserDetailDTO postUserDetailDTO = null;
+        String sql = "select POSTS_TB.DESCRIPTION, POSTS_TB.LIKE_NUM, POSTS_TB.IS_SELL, USERS_TB.NICKNAME" +
+                "from POSTS_TB " +
+                "inner join USERS_TB " +
+                "on POSTS_TB.USER_NO = USERS_TB.USER_NO " +
                 "where POST_NO = ?";
 
-        PostUserDetailDTO post = null;
-
         try {
-            post = template.queryForObject(sql, postUserDetailDTORowMapper(), postNo);
+            postUserDetailDTO = template.queryForObject(sql, postUserDetailDTORowMapper(), postNo);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+
+        return postUserDetailDTO;
+    }
+
+    /**
+     * version - v2.1
+     * jdbcTemplate
+     * */
+    public PostEntity findByPostNo(int postNo) {
+        PostEntity post = null;
+        String sql = "select * from POSTS_TB where POST_NO = ?";
+
+        try {
+            post = template.queryForObject(sql, postRowMapper(), postNo);
+        } catch(EmptyResultDataAccessException e) {
+            return null;
+        }
+
         return post;
     }
 
@@ -119,16 +128,22 @@ public class PostRepository {
         return postDTOList;
     }
 
-    private RowMapper<PostDTO> postDTORowMapper() {
-        return (rs, rowNum) -> {
-            PostDTO postDTO = new PostDTO();
-            postDTO.setUserNo(rs.getInt("USER_NO"));
-            postDTO.setPostNo(rs.getInt("POST_NO"));
-            postDTO.setSell(rs.getBoolean("IS_SELL"));
-            return postDTO;
-        };
+    /**
+     * version - v2.1
+     * jdbcTemplate
+     **/
+    public void updateLikeNum(int postNo, int likeNum) {
+        String sql = "update POSTS_TB set LIKE_NUM=? where POST_NO=?";
+        template.update(sql, likeNum, postNo);
     }
 
+    /**
+     * version - v1
+     * */
+    public void deleteByPostNo(int postNo) {
+        String sql = "delete from POSTS_TB where POST_NO = ?";
+        template.update(sql, postNo);
+    }
 
     private RowMapper<PostEntity> postRowMapper() {
         return (rs, rowNum) -> {
@@ -138,7 +153,6 @@ public class PostRepository {
             postEntity.setSell(rs.getBoolean("IS_SELL"));
             postEntity.setImageNo(rs.getInt("IMAGE_NO"));
             postEntity.setUserNo(rs.getInt("USER_NO"));
-            postEntity.setSellUrl(rs.getString("SELL_URL"));
             postEntity.setLikeNum(rs.getInt("LIKE_NUM"));
             return postEntity;
         };
@@ -147,16 +161,10 @@ public class PostRepository {
     private RowMapper<PostUserDetailDTO> postUserDetailDTORowMapper() {
         return (rs, rowNum) -> {
             PostUserDetailDTO postUserDetailDTO = new PostUserDetailDTO();
-            postUserDetailDTO.setPostNo(rs.getInt("POST_NO"));
             postUserDetailDTO.setDescription(rs.getString("DESCRIPTION"));
             postUserDetailDTO.setSell(rs.getBoolean("IS_SELL"));
-            postUserDetailDTO.setImageNo(rs.getInt("IMAGE_NO"));
-            postUserDetailDTO.setUserNo(rs.getInt("USER_NO"));
-            postUserDetailDTO.setSellUrl(rs.getString("SELL_URL"));
             postUserDetailDTO.setLikeNum(rs.getInt("LIKE_NUM"));
-            postUserDetailDTO.setId(rs.getString("USER_ID"));
             postUserDetailDTO.setNickname(rs.getString("USER_NICKNAME"));
-            postUserDetailDTO.setMale(rs.getBoolean("USER_ISMALE"));
             return postUserDetailDTO;
         };
     }

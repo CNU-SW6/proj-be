@@ -1,11 +1,13 @@
 package cnu.swabe.v2.s3;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.NoArgsConstructor;
@@ -48,5 +50,15 @@ public class S3Service {
         s3Client.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
         return s3Client.getUrl(bucket, fileName).toString();
+    }
+
+    public void delete(String objectName) {
+        try {
+            s3Client.deleteObject(bucket, objectName);
+        } catch (AmazonS3Exception e) {
+            e.printStackTrace();
+        } catch(SdkClientException e) {
+            e.printStackTrace();
+        }
     }
 }

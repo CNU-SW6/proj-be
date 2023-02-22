@@ -1,6 +1,7 @@
 package cnu.swabe.v2.controller;
 
 import cnu.swabe.v2.domain.post.dto.PostDeleteSideInfoRequestDTO;
+import cnu.swabe.v2.domain.post.dto.PostSearchListResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.LikeService;
 import cnu.swabe.v2.service.PostService;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -17,33 +20,38 @@ public class MyPageController {
     private final LikeService likeService;
 
     @ResponseStatus(HttpStatus.OK)
-
-    @DeleteMapping("/v2/posts/{postNo}")
+    @DeleteMapping("/v2.1/posts/{postNo}")
     public SuccessResponse requestDeletePost(
             @RequestBody PostDeleteSideInfoRequestDTO postDeleteSideInfoRequestDTO,
             @PathVariable int postNo
     ) {
-        log.info("DeletePost::: postNo={}, imageNo={}, userNo={}",
+        log.info("DeletePost::: postNo={}, userNo={}",
                 postNo,
-                postDeleteSideInfoRequestDTO.getImageNo(),
                 postDeleteSideInfoRequestDTO.getUserNo()
         );
+
         postService.deletePost(postNo, postDeleteSideInfoRequestDTO);
+
         return new SuccessResponse();
     }
 
-    // 마이페이지 내 게시물 가져오기
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/api/posts/users/{userNo}")
-    public SuccessResponse requestMyPosts(@PathVariable int userNo) {
-        // Posts_TB -> 내가 업로드한 이미지 select
-        return new SuccessResponse(postService.getMyPosts(userNo));
+    @GetMapping("/v2.1/posts/users/{userNo}")
+    public SuccessResponse<List<PostSearchListResponseDTO>> requestMyPosts(@PathVariable int userNo) {
+        log.info("MyPosts::: userNo={}", userNo);
+
+        List<PostSearchListResponseDTO> postSearchListResponseDTO = postService.getMyPosts(userNo);
+
+        return new SuccessResponse(postSearchListResponseDTO);
     }
 
-    // 마이페이지 좋아요 게시물 가져오기
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/api/posts/likes/users/{userNo}")
-    public SuccessResponse requestLikePosts(@PathVariable int userNo) {
-        return new SuccessResponse(likeService.getLikePosts(userNo));
+    @GetMapping("/v2.1/posts/likes/users/{userNo}")
+    public SuccessResponse<List<PostSearchListResponseDTO>> requestLikePosts(@PathVariable int userNo) {
+        log.info("LikePosts::: userNo={}", userNo);
+
+        List<PostSearchListResponseDTO> postSearchListResponseDTO = postService.getLikePosts(userNo);
+
+        return new SuccessResponse(postSearchListResponseDTO);
     }
 }

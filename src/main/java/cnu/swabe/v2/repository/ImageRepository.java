@@ -1,5 +1,6 @@
 package cnu.swabe.v2.repository;
 
+import cnu.swabe.v2.domain.user.UserEntity;
 import cnu.swabe.v2.dto.ImageInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -46,21 +47,48 @@ public class ImageRepository {
         };
 
         template.update(preparedStatementCreator, keyHolder);
-        image.setNo((Integer) keyHolder.getKeys().get("IMAGE_NO"));
+        image.setImageNo((Integer) keyHolder.getKeys().get("IMAGE_NO"));
     }
 
+    /**
+     * version - v2.1
+     * jdbcTemplate
+     * */
+    public ImageEntity findByImageNo(int imageNo) {
+        ImageEntity image = null;
+        String sql = "select * from IMAGES_TB where IMAGE_NO = ?";
+
+        try {
+            image = template.queryForObject(sql, imageRowMapper(), imageNo);
+        } catch(EmptyResultDataAccessException e) {
+            return null;
+        }
+
+        return image;
+    }
+
+    /**
+     * version - v2.1
+     * jdbcTemplate
+     * */
     public void deleteByImageNo(int imageNo) {
         String sql = "delete from IMAGES_TB where IMAGE_NO = ?";
         template.update(sql, imageNo);
     }
-    
 
-    private RowMapper<ImageInfoDTO> imageInfoDTORowMapper() {
+    private RowMapper<ImageEntity> imageRowMapper() {
         return (rs, rowNum) -> {
-            ImageInfoDTO imageInfoDTO = new ImageInfoDTO();
-            imageInfoDTO.setImageNo(rs.getInt("IMAGE_NO"));
-            imageInfoDTO.setLocation(rs.getString("LOCATION"));
-            return imageInfoDTO;
+            ImageEntity image = new ImageEntity(
+                    rs.getInt("IMAGE_NO"),
+                    rs.getInt("USER_NO"),
+                    rs.getString("FILE_NAME"),
+                    rs.getString("LOCATION"),
+                    rs.getString("HAT_COLOR"),
+                    rs.getString("TOP_COLOR"),
+                    rs.getString("PANTS_COLOR"),
+                    rs.getString("SHOES_COLOR")
+            );
+            return image;
         };
     }
 

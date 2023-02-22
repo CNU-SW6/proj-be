@@ -28,7 +28,7 @@ public class PostRepository {
     }
 
     /**
-     * version - v2
+     * version - v2.1
      * jdbcTemplate
      * */
     public void save(PostEntity post) {

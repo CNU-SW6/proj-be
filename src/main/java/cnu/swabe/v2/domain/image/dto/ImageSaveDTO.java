@@ -3,6 +3,7 @@ package cnu.swabe.v2.domain.image.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ImageSaveDTO {
@@ -12,11 +13,15 @@ public class ImageSaveDTO {
     @AllArgsConstructor
     public static class Request {
         private int userNo;
-        private MultipartFile imageFile;
+        private String Location;
         private String hatColor;
         private String topColor;
         private String pantsColor;
         private String shoesColor;
+
+        public void setLocation(String location) {
+            Location = location;
+        }
     }
 
     @Getter

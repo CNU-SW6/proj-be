@@ -11,7 +11,9 @@ public enum ExceptionCode {
     EXIST_USER_ID(true, "존재하는 아이디"),
     NO_EXIST_POST_URL(true, "판매주소 없음"),
     NO_EXIST_COLOR(true, "색상 선택 안 됨"),
-    DIFFERENCE_USER_NO_AND_POST_USER_NO(true, "삭제할 수 없음");
+    DIFFERENCE_USER_NO_AND_POST_USER_NO(true, "삭제할 수 없음"),
+    CANNOT_UPLOAD_S3(true, "이미지를 업로드할 수 없음"),
+    CANNOT_DELETE_S3(true, "이미지를 삭제할 수 없음");
 
 
     private boolean error;

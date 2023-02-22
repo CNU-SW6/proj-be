@@ -53,6 +53,40 @@ public class LikeRepository {
      * version - v2.1
      * jdbcTemplate
      * */
+    public LikeEntity findByPostNoAndUserNo(int postNo, int userNo) {
+        LikeEntity like = null;
+        String sql = "select * from LIKES_TB where POST_NO and USER_NO = ?";
+
+        try {
+            like = template.queryForObject(sql, likeRowMapper(), postNo ,userNo);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
+        return like;
+    }
+
+    /**
+     * version - v2.1
+     * jdbcTemplate
+     * */
+    public List<LikeEntity> findByUserNo(int userNo) {
+        List<LikeEntity> likes = null;
+        String sql = "select * from LiKES_TB where USER_NO = ?";
+
+        try {
+            likes = template.query(sql, likeRowMapper(), userNo);
+        } catch(EmptyResultDataAccessException e) {
+            return null;
+        }
+
+        return likes;
+    }
+
+    /**
+     * version - v2.1
+     * jdbcTemplate
+     * */
     public void delete(LikeEntity like) {
         String sql = "delete from LIKES_TB where POST_NO = ? AND USER_NO = ? ";
         template.update(sql, like.getPostNo(), like.getUserNo());
@@ -65,19 +99,6 @@ public class LikeRepository {
     public void deleteByPostNo(int postNo) {
         String sql = "delete from LIKES_TB where POST_NO = ?";
         template.update(sql, postNo);
-    }
-
-    public LikeEntity findByPostNoAndUserNo(int postNo, int userNo) {
-        LikeEntity like = null;
-        String sql = "select * from LIKES_TB where POST_NO and USER_NO = ?";
-
-        try {
-            like = template.queryForObject(sql, likeRowMapper(), postNo ,userNo);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-
-        return like;
     }
 
     private RowMapper<LikeEntity> likeRowMapper() {

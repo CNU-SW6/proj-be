@@ -10,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -40,6 +43,9 @@ public class LikeService {
         return likeClickResponseDTO;
     }
 
+    /**
+     * version - v2.1
+     * */
     public boolean inquireLikeRelation(int postNo, int userNo) {
         LikeEntity like = likeRepository.findByPostNoAndUserNo(postNo, userNo);
         if(like == null) {
@@ -47,5 +53,26 @@ public class LikeService {
         }
 
         return true;
+    }
+
+    /**
+     * version - v2.1
+     * */
+    public void removeLikeRelationByPostNo(int postNo) {
+        likeRepository.deleteByPostNo(postNo);
+    }
+
+    /**
+     * version - v2.1
+     * */
+    public List<Integer> findPostNoByUserNo(int userNo) {
+        List<LikeEntity> likes = likeRepository.findByUserNo(userNo);
+        List<Integer> postNos = new ArrayList<>();
+
+        for(LikeEntity like : likes) {
+            postNos.add(like.getPostNo());
+        }
+
+        return postNos;
     }
 }

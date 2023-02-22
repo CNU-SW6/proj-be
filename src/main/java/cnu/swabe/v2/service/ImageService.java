@@ -19,7 +19,6 @@ public class ImageService {
 
     /**
      * version - v2.1
-     * Not Null Exception은 UncheckedException으로 그냥 던져주자
      * */
     public ImageSaveDTO.Response saveImage(ImageSaveDTO.Request imageSaveRequestDTO) {
         ImageEntity image = modelMapper.map(imageSaveRequestDTO, ImageEntity.class);
@@ -29,9 +28,17 @@ public class ImageService {
     }
 
     /**
-     * version - v1
+     * version - v2.1
      * */
     public void deleteImage(int imageNo) {
         imageRepository.deleteByImageNo(imageNo);
+    }
+
+    /**
+     * version - v2.1
+     * */
+    public ImageEntity findImageByImageNo(int imageNo) {
+        ImageEntity image = imageRepository.findByImageNo(imageNo);
+        return image;
     }
 }

@@ -44,7 +44,7 @@ public class PostRepository {
         };
 
         template.update(preparedStatementCreator, keyHolder);
-        post.setNo((Integer) keyHolder.getKeys().get("POST_NO"));
+        post.setPostNo((Integer) keyHolder.getKeys().get("POST_NO"));
     }
 
     /**
@@ -114,16 +114,29 @@ public class PostRepository {
         return post;
     }
 
-    public List<PostDTO> findById(int userNo){
-        String sql = "select * from POSTS_TB where USER_NO = ?";
-        List<PostDTO> postDTOList = new ArrayList<>();
+    /**
+     * version - v2.1
+     * jdbcTemplate
+     * */
+    public List<PostEntity> findByPostNos(List<Integer> postNos) {
+
+    }
+
+    /**
+     * version - v2.1
+     * jdbcTemplate
+     * */
+    public List<PostEntity> findByUserNo(int userNo){
+        List<PostEntity> postDTOList = null;
+        String sql = "select * from POSTS_TB " +
+                "where USER_NO = ?" +
+                "order by CREATE_AT";
+
         try {
-            postDTOList = template.query(sql, postDTORowMapper(), userNo);
-        }catch(EmptyResultDataAccessException e){
+            postDTOList = template.query(sql, postRowMapper(), userNo);
+        } catch(EmptyResultDataAccessException e) {
             return null;
         }
-
-        Collections.sort(postDTOList);
 
         return postDTOList;
     }
@@ -138,7 +151,7 @@ public class PostRepository {
     }
 
     /**
-     * version - v1
+     * version - v2.1
      * */
     public void deleteByPostNo(int postNo) {
         String sql = "delete from POSTS_TB where POST_NO = ?";
@@ -148,12 +161,14 @@ public class PostRepository {
     private RowMapper<PostEntity> postRowMapper() {
         return (rs, rowNum) -> {
             PostEntity postEntity = new PostEntity();
-            postEntity.setNo(rs.getInt("POST_NO"));
-            postEntity.setDescription(rs.getString("DESCRIPTION"));
-            postEntity.setSell(rs.getBoolean("IS_SELL"));
-            postEntity.setImageNo(rs.getInt("IMAGE_NO"));
+            postEntity.setPostNo(rs.getInt("POST_NO"));
             postEntity.setUserNo(rs.getInt("USER_NO"));
+            postEntity.setImageNo(rs.getInt("IMAGE_NO"));
+            postEntity.setDescription(rs.getString("DESCRIPTION"));
             postEntity.setLikeNum(rs.getInt("LIKE_NUM"));
+            postEntity.setSell(rs.getBoolean("IS_SELL"));
+            postEntity.setMale(rs.getBoolean("POST_ISMALE"));
+            postEntity.setCreatedAt(rs.getDate("CREATE_AT").toLocalDate());
             return postEntity;
         };
     }

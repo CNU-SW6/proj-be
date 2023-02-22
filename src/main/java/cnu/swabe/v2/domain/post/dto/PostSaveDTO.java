@@ -24,7 +24,6 @@ public class PostSaveDTO {
         private String description;
         @JsonProperty(value = "isSell")
         private boolean sell;
-        private String sellUrl;
     }
 
     @Getter

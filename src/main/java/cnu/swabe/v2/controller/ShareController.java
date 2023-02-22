@@ -20,8 +20,6 @@ import java.io.IOException;
 public class ShareController {
     private final ImageService imageService;
     private final PostService postService;
-    private final S3Service s3Service;
-
 
     /*
     @ResponseStatus(HttpStatus.CREATED)
@@ -42,7 +40,6 @@ public class ShareController {
     }
     */
 
-    /*
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/v2.1/posts")
     public SuccessResponse<PostSaveDTO.Response> RequestSavePost(@RequestBody PostSaveDTO.Request postSaveRequestDTO) throws IOException {
@@ -55,26 +52,11 @@ public class ShareController {
                 postSaveRequestDTO.getShoesColor(),
                 postSaveRequestDTO.isMale(),
                 postSaveRequestDTO.getDescription(),
-                postSaveRequestDTO.isSell(),
                 postSaveRequestDTO.isSell()
         );
-
-        s3Service.upload(postSaveRequestDTO.getImageFile());
 
         PostSaveDTO.Response postSaveResponseDTO = postService.savePost(postSaveRequestDTO);
 
         return new SuccessResponse(postSaveResponseDTO);
-    }
-    */
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/v2.1/posts")
-    public SuccessResponse<PostSaveDTO.Response> RequestSavePost(MultipartFile multipartFile) throws IOException {
-        log.info(multipartFile.getOriginalFilename());
-
-        s3Service.upload(multipartFile);
-
-
-        return new SuccessResponse();
     }
 }

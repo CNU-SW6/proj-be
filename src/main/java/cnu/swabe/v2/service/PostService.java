@@ -9,6 +9,7 @@ import cnu.swabe.v2.dto.StyleRequestDTO;
 import cnu.swabe.v2.exception.ExceptionCode;
 import cnu.swabe.v2.exception.custom.CannotBeDeletedException;
 import cnu.swabe.v2.exception.custom.NotExistException;
+import cnu.swabe.v2.exception.custom.S3Exception;
 import cnu.swabe.v2.exception.custom.WrongPostFormException;
 import cnu.swabe.v2.repository.ImageRepository;
 import cnu.swabe.v2.repository.PostRepository;
@@ -39,7 +40,7 @@ public class PostService {
     @Transactional
     public PostSaveDTO.Response savePost(PostSaveDTO.Request postSaveRequestDTO) {
         if(postSaveRequestDTO.isSell()) {
-            if(postSaveRequestDTO.getSellUrl() == null || postSaveRequestDTO.getSellUrl().equals("")) {
+            if(postSaveRequestDTO.getDescription() == null || postSaveRequestDTO.getDescription().equals("")) {
                 throw new WrongPostFormException(ExceptionCode.NO_EXIST_POST_URL);
             }
         }
@@ -50,11 +51,19 @@ public class PostService {
             throw new WrongPostFormException(ExceptionCode.NO_EXIST_COLOR);
         }
 
+        String imageS3Url;
+        try {
+            imageS3Url = s3Service.upload(postSaveRequestDTO.getImageFile());
+        } catch(Exception e) {
+            throw new S3Exception(ExceptionCode.CANNOT_UPLOAD_S3);
+        }
+
         ImageSaveDTO.Request imageSaveRequestDTO = modelMapper.map(postSaveRequestDTO, ImageSaveDTO.Request.class);
+        imageSaveRequestDTO.setLocation(imageS3Url);
         ImageSaveDTO.Response imageSaveResponseDTO = imageService.saveImage(imageSaveRequestDTO);
         PostEntity post = modelMapper.map(postSaveRequestDTO, PostEntity.class);
-        post = modelMapper.map(imageSaveResponseDTO, PostEntity.class);
-
+        post.setImageNo(imageSaveResponseDTO.getImageNo());
+        postRepository.save(post);
         PostSaveDTO.Response postSaveResponseDTO = modelMapper.map(post, PostSaveDTO.Response.class);
 
         return postSaveResponseDTO;

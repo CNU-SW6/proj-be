@@ -1,6 +1,5 @@
 package cnu.swabe.v2.service;
 
-
 import cnu.swabe.v2.domain.image.ImageEntity;
 import cnu.swabe.v2.domain.image.dto.ImageSaveDTO;
 import cnu.swabe.v2.repository.ImageRepository;
@@ -9,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import static cnu.swabe.v2.service.util.ImageServiceUtil.randomAlphabet;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -16,14 +17,16 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final ModelMapper modelMapper = new ModelMapper();
 
-
     /**
      * version - v2.1
      * */
     public ImageSaveDTO.Response saveImage(ImageSaveDTO.Request imageSaveRequestDTO) {
+        String randomFileName = randomAlphabet();
         ImageEntity image = modelMapper.map(imageSaveRequestDTO, ImageEntity.class);
+        image.setFileName(randomFileName);
         imageRepository.save(image);
         ImageSaveDTO.Response imageSaveResponseDTO = modelMapper.map(image, ImageSaveDTO.Response.class);
+
         return imageSaveResponseDTO;
     }
 

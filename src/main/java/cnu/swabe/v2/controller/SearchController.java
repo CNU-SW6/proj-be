@@ -24,14 +24,13 @@ public class SearchController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/v2.1/posts")
     public SuccessResponse<List<PostSearchListResponseDTO>> requestSearchStyle(@ModelAttribute StyleRequestDTO styleRequestDTO) {
-        log.info("SearchStyle::: hatColor={}, topColor={}, pantsColor={}, shoesColor={}, isMale={}, isOrderByLikeNum={}",
+        log.info("SearchStyle::: hatColor={}, topColor={}, pantsColor={}, shoesColor={}, gender={}, sort={}",
                 styleRequestDTO.getHatColor(),
                 styleRequestDTO.getTopColor(),
                 styleRequestDTO.getPantsColor(),
                 styleRequestDTO.getShoesColor(),
-                styleRequestDTO.isMale(),
-                styleRequestDTO.isOrderByLikeNum()
-
+                styleRequestDTO.getGender(),
+                styleRequestDTO.getSort()
         );
 
         List<PostSearchListResponseDTO> postSearchListResponse = postService.getPosts(styleRequestDTO);

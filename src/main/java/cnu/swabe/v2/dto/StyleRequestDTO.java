@@ -14,6 +14,6 @@ public class StyleRequestDTO {
     private String pantsColor;
     private String shoesColor;
     @JsonProperty(value = "isMale")
-    private boolean male;
-    private boolean isOrderByLikeNum;
+    private String gender;
+    private String sort;
 }

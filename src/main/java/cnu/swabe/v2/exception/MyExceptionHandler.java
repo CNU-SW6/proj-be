@@ -11,21 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class MyExceptionHandler {
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(NicknameDuplicatedException.class)
-    protected ErrorResponse handleNicknameDuplicatedException(DuplicatedInfoException ex) {
-        log.error("error log={}", ex.getErrorCode().getMessage());
-        return new ErrorResponse(ex.getErrorCode());
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(WrongLengthUserInfoException.class)
-    protected ErrorResponse handleWrongLengthUserInfoException(WrongLengthUserInfoException ex) {
-        log.error("error log={}", ex.getErrorCode().getMessage());
-        return new ErrorResponse(ex.getErrorCode());
-    }
-
     @ExceptionHandler(DuplicatedInfoException.class)
     protected ErrorResponse handleDuplicatedInfoException(DuplicatedInfoException ex) {
         log.error("error log={}", ex.getErrorCode().getMessage());
@@ -40,8 +25,8 @@ public class MyExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(WrongInfoAccessException.class)
-    protected ErrorResponse handlerWrongInfoAccessException(WrongInfoAccessException ex){
+    @ExceptionHandler(WrongInfoException.class)
+    protected ErrorResponse handlerWrongInfoAccessException(WrongInfoException ex){
         log.error("error log={}", ex.getErrorCode().getMessage());
         return new ErrorResponse(ex.getErrorCode());
     }

@@ -1,7 +1,5 @@
 package cnu.swabe.v2.repository;
 
-import cnu.swabe.v2.domain.user.UserEntity;
-import cnu.swabe.v2.dto.ImageInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.List;
 
 @Slf4j
 @Repository

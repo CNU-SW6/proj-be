@@ -2,11 +2,11 @@ package cnu.swabe.v2.service;
 
 
 import cnu.swabe.v2.domain.user.UserEntity;
+import cnu.swabe.v2.domain.user.dto.UserLoginDTO;
 import cnu.swabe.v2.domain.user.dto.UserSignUpDTO;
-import cnu.swabe.v2.dto.UserLoginDTO;
 import cnu.swabe.v2.exception.custom.DuplicatedInfoException;
 import cnu.swabe.v2.exception.ExceptionCode;
-import cnu.swabe.v2.exception.custom.WrongInfoAccessException;
+import cnu.swabe.v2.exception.custom.WrongInfoException;
 import cnu.swabe.v2.exception.custom.WrongUserFormException;
 import cnu.swabe.v2.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class UserService {
         UserEntity user = modelMapper.map(userSignUpRequestDTO, UserEntity.class);
         userRepository.save(user);
 
-        UserSignUpDTO.Response userSignUpResponseDTO = new UserSignUpDTO.Response(user.getNo());
+        UserSignUpDTO.Response userSignUpResponseDTO = new UserSignUpDTO.Response(user.getUserNo());
         return userSignUpResponseDTO;
     }
 
@@ -65,12 +65,17 @@ public class UserService {
         return false;
     }
 
-    public void login(UserLoginDTO userLoginDTO) {
-        UserEntity user = userRepository.findUser(userLoginDTO.getId(), userLoginDTO.getPw());
+    /**
+     * version - v2.1
+     * */
+    public UserLoginDTO.Response login(UserLoginDTO.Request userLoginRequestDTO) {
+        UserEntity user = userRepository.findByIdAndPw(userLoginRequestDTO.getId(), userLoginRequestDTO.getPw());
         if(user == null){
-            throw new WrongInfoAccessException(ExceptionCode.WRONG_INFO_USER_ACCESS);
+            throw new WrongInfoException(ExceptionCode.WRONG_USER_INFO);
         }
+
+        UserLoginDTO.Response userLoginResponseDTO = new UserLoginDTO.Response(user.getUserNo());
+
+        return userLoginResponseDTO;
     }
-
-
 }

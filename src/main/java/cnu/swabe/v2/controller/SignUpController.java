@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class SignUpController {
     private final UserService userService;
 
-    @PostMapping("/v2.1/users/signup")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/api/users/signup")
     public SuccessResponse<UserSignUpDTO.Response> requestSignUp(@RequestBody UserSignUpDTO.Request userSignUpRequestDTO) {
         log.info("SignUp::: id={}, pw={}, nickname={}, isMale={}",
                 userSignUpRequestDTO.getId(),
@@ -28,7 +29,7 @@ public class SignUpController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v2.1/users/nickname/{nickname}")
+    @GetMapping("/api/users/nickname/{nickname}")
     public boolean requestCheckDuplicateNickName(@PathVariable String nickname) {
         log.info("CheckDuplicatedNickName::: nickname={}", nickname);
         boolean isDuplicate = userService.checkDuplicateNickName(nickname);;
@@ -36,7 +37,7 @@ public class SignUpController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v2.1/users/id/{id}")
+    @GetMapping("/api/users/id/{id}")
     public boolean requestCheckDuplicateId(@PathVariable String id){
         log.info("CheckDuplicatedId::: id={}", id);
         boolean isDuplicate = userService.checkDuplicateId(id);

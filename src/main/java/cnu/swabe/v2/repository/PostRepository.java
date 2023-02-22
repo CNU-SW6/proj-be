@@ -119,7 +119,7 @@ public class PostRepository {
      * jdbcTemplate
      * */
     public List<PostEntity> findByPostNos(List<Integer> postNos) {
-
+        return null;
     }
 
     /**

@@ -134,7 +134,7 @@ public class PostService {
         List<Integer> postNos = likeService.findPostNoByUserNo(userNo);
 
 
-        return likePosts;
+        return null;
     }
 }
 

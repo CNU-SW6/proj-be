@@ -51,7 +51,7 @@ public class PostRepository {
      * version - v2.1
      * jdbcTemplate
      * problem. ImageStyleRequestDTO 클래스는 god 클래스가 아닌가
-     * problem. 동적 쿼리 시 isMale, isOrderByLikeNum 고려
+     * problem. 동적 쿼리 시 gender, sort 고려
      */
     public List<PostEntity> findByImageStyle(StyleRequestDTO styleRequestDTO) {
         List<PostEntity> posts = null;

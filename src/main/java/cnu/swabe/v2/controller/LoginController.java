@@ -1,6 +1,6 @@
 package cnu.swabe.v2.controller;
 
-import cnu.swabe.v2.dto.UserLoginDTO;
+import cnu.swabe.v2.domain.user.dto.UserLoginDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +19,12 @@ public class LoginController {
     private final UserService userService;
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/api/users/signin")
-    public SuccessResponse requestLogin(@RequestBody UserLoginDTO userLoginDTO) {
-        log.info("id = {}, pw= {}", userLoginDTO.getId(), userLoginDTO.getPw());
-        userService.login(userLoginDTO);
-        return new SuccessResponse(userLoginDTO);
+    @PostMapping("/v2.1/users/signin")
+    public SuccessResponse<UserLoginDTO.Response> requestLogin(@RequestBody UserLoginDTO.Request userLoginRequestDTO) {
+        log.info("Login::: id = {}, pw= {}", userLoginRequestDTO.getId(), userLoginRequestDTO.getPw());
+
+        UserLoginDTO.Response userLoginResponseDTO = userService.login(userLoginRequestDTO);
+
+        return new SuccessResponse(userLoginResponseDTO);
     }
 }

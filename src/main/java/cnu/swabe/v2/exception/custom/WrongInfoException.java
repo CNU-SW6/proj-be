@@ -2,17 +2,17 @@ package cnu.swabe.v2.exception.custom;
 
 import cnu.swabe.v2.exception.ExceptionCode;
 
-public class WrongInfoAccessException extends RuntimeException {
+public class WrongInfoException extends RuntimeException {
     ExceptionCode errorCode;
-    public WrongInfoAccessException(){
+    public WrongInfoException(){
 
     }
 
-    public WrongInfoAccessException(String message){
+    public WrongInfoException(String message){
         super(message);
     }
 
-    public WrongInfoAccessException(ExceptionCode errorCode){
+    public WrongInfoException(ExceptionCode errorCode){
         this.errorCode = errorCode;
     }
 

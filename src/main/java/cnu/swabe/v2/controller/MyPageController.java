@@ -1,7 +1,7 @@
 package cnu.swabe.v2.controller;
 
 import cnu.swabe.v2.domain.post.dto.PostDeleteSideInfoRequestDTO;
-import cnu.swabe.v2.domain.post.dto.PostSearchListResponseDTO;
+import cnu.swabe.v2.dto.PostSearchListResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.LikeService;
 import cnu.swabe.v2.service.PostService;

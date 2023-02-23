@@ -1,9 +1,9 @@
 package cnu.swabe.v2.controller;
 
 import cnu.swabe.v2.domain.like.dto.LikeClickDTO;
-import cnu.swabe.v2.domain.post.dto.PostUserDetailDTO;
-import cnu.swabe.v2.dto.StyleRequestDTO;
-import cnu.swabe.v2.domain.post.dto.PostSearchListResponseDTO;
+import cnu.swabe.v2.dto.PostAndUserDetailDTO;
+import cnu.swabe.v2.dto.StyleSearchRequestDTO;
+import cnu.swabe.v2.dto.PostSearchListResponseDTO;
 import cnu.swabe.v2.response.SuccessResponse;
 import cnu.swabe.v2.service.LikeService;
 import cnu.swabe.v2.service.PostService;
@@ -22,34 +22,34 @@ public class SearchController {
     private final LikeService likeService;
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v2.1/posts")
-    public SuccessResponse<List<PostSearchListResponseDTO>> requestSearchStyle(@ModelAttribute StyleRequestDTO styleRequestDTO) {
+    @GetMapping("/api/posts")
+    public SuccessResponse<List<PostSearchListResponseDTO>> requestSearchStyle(@ModelAttribute StyleSearchRequestDTO styleSearchRequestDTO) {
         log.info("SearchStyle::: hatColor={}, topColor={}, pantsColor={}, shoesColor={}, gender={}, sort={}",
-                styleRequestDTO.getHatColor(),
-                styleRequestDTO.getTopColor(),
-                styleRequestDTO.getPantsColor(),
-                styleRequestDTO.getShoesColor(),
-                styleRequestDTO.getGender(),
-                styleRequestDTO.getSort()
+                styleSearchRequestDTO.getHatColor(),
+                styleSearchRequestDTO.getTopColor(),
+                styleSearchRequestDTO.getPantsColor(),
+                styleSearchRequestDTO.getShoesColor(),
+                styleSearchRequestDTO.getGender(),
+                styleSearchRequestDTO.getSort()
         );
 
-        List<PostSearchListResponseDTO> postSearchListResponse = postService.getPosts(styleRequestDTO);
+        List<PostSearchListResponseDTO> postSearchListResponse = postService.getPosts(styleSearchRequestDTO);
 
         return new SuccessResponse(postSearchListResponse);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v2.1/posts/{postNo}")
-    public SuccessResponse<PostUserDetailDTO> requestPostDetail(@PathVariable int postNo) {
+    @GetMapping("/api/posts/{postNo}")
+    public SuccessResponse<PostAndUserDetailDTO> requestPostDetail(@PathVariable int postNo) {
         log.info("PostDetail::: postNo={}", postNo);
 
-        PostUserDetailDTO postUserDetailDTO = postService.getPostDetail(postNo);
+        PostAndUserDetailDTO postAndUserDetailDTO = postService.getPostDetail(postNo);
 
-        return new SuccessResponse(postUserDetailDTO);
+        return new SuccessResponse(postAndUserDetailDTO);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PatchMapping("/v2.1/likes/posts/{postNo}")
+    @PatchMapping("/api/likes/posts/{postNo}")
     public SuccessResponse<LikeClickDTO.Response> requestLike(@PathVariable int postNo, @RequestBody LikeClickDTO.Request likeClickRequestDTO) {
         log.info("PostDetail::: postNo={}, userNo={}",
                 postNo,

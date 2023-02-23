@@ -1,8 +1,9 @@
 package cnu.swabe.v2.repository;
 
-import cnu.swabe.v2.domain.post.dto.PostUserDetailDTO;
+import cnu.swabe.v2.dto.PostAndUserDetailDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
-import cnu.swabe.v2.dto.StyleRequestDTO;
+import cnu.swabe.v2.dto.PostSearchListResponseDTO;
+import cnu.swabe.v2.dto.StyleSearchRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +16,6 @@ import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -52,23 +52,44 @@ public class PostRepository {
      * version - v2.1
      * jdbcTemplate
      * problem. ImageStyleRequestDTO 클래스는 god 클래스가 아닌가
-     * problem. 동적 쿼리 시 gender, sort 고려
      */
-    public List<PostEntity> findByImageStyle(StyleRequestDTO styleRequestDTO) {
-        List<PostEntity> posts = null;
-        String sql = "select * from POSTS_TB " +
-                "inner join IMAGES_TB " +
-                "on POSTS_TB.IMAGE_NO = IMAGES_TB.IMAGE_NO " +
-                "where HAT_COLOR=? AND TOP_COLOR=? AND PANTS_COLOR=? AND SHOES_COLOR=?"+
-                "order by LIKE_NUM";
+    public List<PostSearchListResponseDTO> findByImageStyle(StyleSearchRequestDTO styleSearchRequestDTO) {
+        List<PostSearchListResponseDTO> posts = null;
+        StringBuilder sb = new StringBuilder();
+        List<Object> params = new ArrayList<>();
+        sb.append("select *, IMAGES_TB.LOCATION from POSTS_TB ");
+        sb.append("inner join IMAGES_TB on POSTS_TB.IMAGE_NO = IMAGES_TB.IMAGE_NO ");
+        sb.append("where ");
+        if(styleSearchRequestDTO.getHatColor() != null) {
+            sb.append("HAT_COLOR=? ");
+            params.add(styleSearchRequestDTO.getHatColor());
+        }
+
+        if(styleSearchRequestDTO.getTopColor() != null) {
+            if(styleSearchRequestDTO.getHatColor() == null) {
+                sb.append("TOP_COLOR=? ");
+            } else {
+                sb.append("and TOP_COLOR=? ");
+            }
+            params.add(styleSearchRequestDTO.getTopColor());
+        }
+        if(styleSearchRequestDTO.getPantsColor() != null) {
+            sb.append("and PANTS_COLOR=? ");
+            params.add(styleSearchRequestDTO.getPantsColor());
+        }
+        if(styleSearchRequestDTO.getShoesColor() != null) {
+            sb.append("and SHOES_COLOR=? ");
+            params.add(styleSearchRequestDTO.getShoesColor());
+        }
+        if(styleSearchRequestDTO.getGender().equals("male")) sb.append("and POST_ISMALE=true ");
+        if(styleSearchRequestDTO.getGender().equals("female")) sb.append("and POST_ISMALE=false ");
+        sb.append("order by ");
+        if(styleSearchRequestDTO.getSort().equals("like")) sb.append("LIKE_NUM DESC");
+        if(styleSearchRequestDTO.getSort().equals("newest")) sb.append("CREATED_AT DESC");
+        String sql = sb.toString();
 
         try {
-            posts = template.query(sql, postRowMapper(),
-                    styleRequestDTO.getHatColor(),
-                    styleRequestDTO.getTopColor(),
-                    styleRequestDTO.getPantsColor(),
-                    styleRequestDTO.getShoesColor()
-            );
+            posts = template.query(sql, postSearchListResponseDTOMapper(), params.toArray());
         } catch(EmptyResultDataAccessException e) {
             return null;
         }
@@ -81,21 +102,21 @@ public class PostRepository {
      * jdbcTemplate
      * problem 1. Join시에는 어떻게 return 해야할까?
      */
-    public PostUserDetailDTO findPostAndUserByPostNo(int postNo) {
-        PostUserDetailDTO postUserDetailDTO = null;
-        String sql = "select POSTS_TB.DESCRIPTION, POSTS_TB.LIKE_NUM, POSTS_TB.IS_SELL, USERS_TB.NICKNAME" +
+    public PostAndUserDetailDTO findPostAndUserByPostNo(int postNo) {
+        PostAndUserDetailDTO postAndUserDetailDTO = null;
+        String sql = "select POSTS_TB.DESCRIPTION, POSTS_TB.LIKE_NUM, POSTS_TB.IS_SELL, USERS_TB.USER_NICKNAME " +
                 "from POSTS_TB " +
                 "inner join USERS_TB " +
                 "on POSTS_TB.USER_NO = USERS_TB.USER_NO " +
                 "where POST_NO = ?";
 
         try {
-            postUserDetailDTO = template.queryForObject(sql, postUserDetailDTORowMapper(), postNo);
+            postAndUserDetailDTO = template.queryForObject(sql, postAndUserDetailDTORowMapper(), postNo);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
 
-        return postUserDetailDTO;
+        return postAndUserDetailDTO;
     }
 
     /**
@@ -169,19 +190,31 @@ public class PostRepository {
             postEntity.setLikeNum(rs.getInt("LIKE_NUM"));
             postEntity.setSell(rs.getBoolean("IS_SELL"));
             postEntity.setMale(rs.getBoolean("POST_ISMALE"));
-            postEntity.setCreatedAt(rs.getDate("CREATE_AT").toString());
+            postEntity.setCreatedAt(rs.getDate("CREATED_AT").toString());
             return postEntity;
         };
     }
 
-    private RowMapper<PostUserDetailDTO> postUserDetailDTORowMapper() {
+    private RowMapper<PostSearchListResponseDTO> postSearchListResponseDTOMapper() {
         return (rs, rowNum) -> {
-            PostUserDetailDTO postUserDetailDTO = new PostUserDetailDTO();
-            postUserDetailDTO.setDescription(rs.getString("DESCRIPTION"));
-            postUserDetailDTO.setSell(rs.getBoolean("IS_SELL"));
-            postUserDetailDTO.setLikeNum(rs.getInt("LIKE_NUM"));
-            postUserDetailDTO.setNickname(rs.getString("USER_NICKNAME"));
-            return postUserDetailDTO;
+            PostSearchListResponseDTO postSearchListResponseDTO = new PostSearchListResponseDTO(
+                    rs.getInt("POST_NO"),
+                    rs.getBoolean("IS_SELL"),
+                    rs.getString("LOCATION"),
+                    rs.getInt("LIKE_NUM")
+            );
+            return postSearchListResponseDTO;
+        };
+    }
+
+    private RowMapper<PostAndUserDetailDTO> postAndUserDetailDTORowMapper() {
+        return (rs, rowNum) -> {
+            PostAndUserDetailDTO postAndUserDetailDTO = new PostAndUserDetailDTO();
+            postAndUserDetailDTO.setDescription(rs.getString("DESCRIPTION"));
+            postAndUserDetailDTO.setSell(rs.getBoolean("IS_SELL"));
+            postAndUserDetailDTO.setLikeNum(rs.getInt("LIKE_NUM"));
+            postAndUserDetailDTO.setNickname(rs.getString("USER_NICKNAME"));
+            return postAndUserDetailDTO;
         };
     }
 }

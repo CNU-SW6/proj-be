@@ -5,6 +5,7 @@ public enum ExceptionCode {
     WRONG_LENGTH_USER_NICKNAME(true, "잘못된 닉네임 양식"),
     WRONG_LENGTH_USER_PW(true, "잘못된 비밀번호 양식"),
     NO_EXIST_POST(true, "존재하지 않는 게시물"),
+    NO_EXIST_USER(true, "존재하지 않는 유저"),
     WRONG_USER_INFO(true, "잘못된 ID, PW 값 입력"),
     EXIST_USER_NICKNAME(true, "존재하는 닉네임"),
     EXIST_USER_ID(true, "존재하는 아이디"),

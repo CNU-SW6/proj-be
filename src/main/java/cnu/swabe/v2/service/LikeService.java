@@ -65,7 +65,7 @@ public class LikeService {
     /**
      * version - v2.1
      * */
-    public List<Integer> findPostNoByUserNo(int userNo) {
+    public List<Integer> findPostNosByUserNo(int userNo) {
         List<LikeEntity> likes = likeRepository.findByUserNo(userNo);
         List<Integer> postNos = new ArrayList<>();
 

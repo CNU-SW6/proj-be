@@ -20,7 +20,7 @@ public class MyPageController {
     private final LikeService likeService;
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/v2.1/posts/{postNo}")
+    @DeleteMapping("/api/posts/{postNo}")
     public SuccessResponse requestDeletePost(
             @RequestBody PostDeleteSideInfoRequestDTO postDeleteSideInfoRequestDTO,
             @PathVariable int postNo
@@ -36,7 +36,7 @@ public class MyPageController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v2.1/posts/users/{userNo}")
+    @GetMapping("/api/posts/users/{userNo}")
     public SuccessResponse<List<PostSearchListResponseDTO>> requestMyPosts(@PathVariable int userNo) {
         log.info("MyPosts::: userNo={}", userNo);
 
@@ -46,7 +46,7 @@ public class MyPageController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/v2.1/posts/likes/users/{userNo}")
+    @GetMapping("/api/posts/likes/users/{userNo}")
     public SuccessResponse<List<PostSearchListResponseDTO>> requestLikePosts(@PathVariable int userNo) {
         log.info("LikePosts::: userNo={}", userNo);
 

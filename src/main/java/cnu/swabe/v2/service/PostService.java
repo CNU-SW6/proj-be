@@ -81,6 +81,10 @@ public class PostService {
     @Transactional
     public void deletePost(int postNo, PostDeleteSideInfoRequestDTO postDeleteSideInfoRequestDTO) {
         PostEntity post = postRepository.findByPostNo(postNo);
+        if(post == null) {
+            throw new CannotBeDeletedException(ExceptionCode.NO_EXIST_POST);
+        }
+
         if(post.getUserNo() != postDeleteSideInfoRequestDTO.getUserNo()) {
             throw new CannotBeDeletedException(ExceptionCode.DIFFERENCE_USER_NO_AND_POST_USER_NO);
         }
@@ -108,12 +112,7 @@ public class PostService {
      * version - v2.1
      * */
     public List<PostSearchListResponseDTO> getMyPosts(int userNo) {
-        List<PostEntity> posts = postRepository.findByUserNo(userNo);
-        List<PostSearchListResponseDTO> postSearchListResponseDTO = new ArrayList<>();
-
-        for(PostEntity post : posts) {
-            postSearchListResponseDTO.add(modelMapper.map(post, PostSearchListResponseDTO.class));
-        }
+        List<PostSearchListResponseDTO> postSearchListResponseDTO = postRepository.findByUserNo(userNo);
 
         return postSearchListResponseDTO;
     }
@@ -122,10 +121,10 @@ public class PostService {
      * version - v2.1
      * */
     public List<PostSearchListResponseDTO> getLikePosts(int userNo) {
-        List<Integer> postNos = likeService.findPostNoByUserNo(userNo);
+        List<Integer> postNos = likeService.findPostNosByUserNo(userNo);
+        List<PostSearchListResponseDTO> postSearchListResponseDTO = postRepository.findByPostNos(postNos);
 
-
-        return null;
+        return postSearchListResponseDTO;
     }
 }
 

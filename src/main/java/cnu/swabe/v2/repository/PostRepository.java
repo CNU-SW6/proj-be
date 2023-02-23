@@ -140,27 +140,52 @@ public class PostRepository {
      * version - v2.1
      * jdbcTemplate
      * */
-    public List<PostEntity> findByPostNos(List<Integer> postNos) {
-        return null;
+    public List<PostSearchListResponseDTO> findByPostNos(List<Integer> postNos) {
+        List<PostSearchListResponseDTO> postSearchListResponseDTO = null;
+        StringBuilder sb = new StringBuilder();
+        sb.append("select POSTS_TB.POST_NO, POSTS_TB.IS_SELL, IMAGES_TB.LOCATION, POSTS_TB.LIKE_NUM ");
+        sb.append("from POSTS_TB ");
+        sb.append("inner join IMAGES_TB ");
+        sb.append("on POSTS_TB.IMAGE_NO = IMAGES_TB.IMAGE_NO ");
+        sb.append("where POSTS_TB.POST_NO IN (");
+        for(int i=0 ; i<postNos.size() ; i++) {
+            if(i != postNos.size()-1) {
+                sb.append("?, ");
+            } else {
+                sb.append("?");
+            }
+        }
+        sb.append(")");
+        String sql = sb.toString();
+
+        try {
+            postSearchListResponseDTO = template.query(sql, postSearchListResponseDTOMapper(), postNos.toArray());
+        } catch(EmptyResultDataAccessException e) {
+            return null;
+        }
+
+        return postSearchListResponseDTO;
     }
 
     /**
      * version - v2.1
      * jdbcTemplate
      * */
-    public List<PostEntity> findByUserNo(int userNo){
-        List<PostEntity> postDTOList = null;
-        String sql = "select * from POSTS_TB " +
-                "where USER_NO = ?" +
-                "order by CREATE_AT";
+    public List<PostSearchListResponseDTO> findByUserNo(int userNo){
+        List<PostSearchListResponseDTO> postSearchListResponseDTO = null;
+        String sql = "select POSTS_TB.POST_NO, POSTS_TB.IS_SELL, IMAGES_TB.LOCATION, POSTS_TB.LIKE_NUM " +
+                "from POSTS_TB " +
+                "inner join IMAGES_TB " +
+                "on POSTS_TB.IMAGE_NO = IMAGES_TB.IMAGE_NO " +
+                "where POSTS_TB.USER_NO = ?";
 
         try {
-            postDTOList = template.query(sql, postRowMapper(), userNo);
+            postSearchListResponseDTO = template.query(sql, postSearchListResponseDTOMapper(), userNo);
         } catch(EmptyResultDataAccessException e) {
             return null;
         }
 
-        return postDTOList;
+        return postSearchListResponseDTO;
     }
 
     /**

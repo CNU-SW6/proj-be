@@ -55,7 +55,7 @@ public class LikeRepository {
      * */
     public LikeEntity findByPostNoAndUserNo(int postNo, int userNo) {
         LikeEntity like = null;
-        String sql = "select * from LIKES_TB where POST_NO and USER_NO = ?";
+        String sql = "select * from LIKES_TB where POST_NO = ? and USER_NO = ?";
 
         try {
             like = template.queryForObject(sql, likeRowMapper(), postNo ,userNo);

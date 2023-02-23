@@ -5,7 +5,9 @@ import cnu.swabe.v2.domain.image.ImageEntity;
 import cnu.swabe.v2.domain.image.dto.ImageSaveDTO;
 import cnu.swabe.v2.domain.post.PostEntity;
 import cnu.swabe.v2.domain.post.dto.*;
-import cnu.swabe.v2.dto.StyleRequestDTO;
+import cnu.swabe.v2.dto.PostSearchListResponseDTO;
+import cnu.swabe.v2.dto.PostAndUserDetailDTO;
+import cnu.swabe.v2.dto.StyleSearchRequestDTO;
 import cnu.swabe.v2.exception.ExceptionCode;
 import cnu.swabe.v2.exception.custom.CannotBeDeletedException;
 import cnu.swabe.v2.exception.custom.NotExistException;
@@ -67,16 +69,10 @@ public class PostService {
     /**
      * version - v2.1
      * */
-    public List<PostSearchListResponseDTO> getPosts(StyleRequestDTO styleRequestDTO) {
-        List<PostEntity> posts = postRepository.findByImageStyle(styleRequestDTO);
-        List<PostSearchListResponseDTO> postSearchListResponse = new ArrayList<>();
+    public List<PostSearchListResponseDTO> getPosts(StyleSearchRequestDTO styleSearchRequestDTO) {
+        List<PostSearchListResponseDTO> posts = postRepository.findByImageStyle(styleSearchRequestDTO);
 
-        for(PostEntity postEntity : posts) {
-            PostSearchListResponseDTO postSearchListDTO = modelMapper.map(postEntity, PostSearchListResponseDTO.class);
-            postSearchListResponse.add(postSearchListDTO);
-        }
-
-        return postSearchListResponse;
+        return posts;
     }
 
     /**
@@ -99,13 +95,13 @@ public class PostService {
     /**
      * version - v2.1
      * */
-    public PostUserDetailDTO getPostDetail(int postNo) {
-        PostUserDetailDTO postUserDetailDTO = postRepository.findPostAndUserByPostNo(postNo);
-        if(postUserDetailDTO == null) {
+    public PostAndUserDetailDTO getPostDetail(int postNo) {
+        PostAndUserDetailDTO postAndUserDetailDTO = postRepository.findPostAndUserByPostNo(postNo);
+        if(postAndUserDetailDTO == null) {
             throw new NotExistException(ExceptionCode.NO_EXIST_POST);
         }
 
-        return postUserDetailDTO;
+        return postAndUserDetailDTO;
     }
 
     /**

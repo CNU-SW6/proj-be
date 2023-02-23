@@ -25,13 +25,11 @@ public class ImageRepository {
     /**
      * version - v2.1
      * jdbcTemplate
-     * problem1. 모든 옵션 다 선택 후 저장 가정
-     * problem2. 객체 생성 or 파라미터에 바인딩
      * */
     public void save(ImageEntity image) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into IMAGES_TB(USER_NO, LOCATION, HAT_COLOR, TOP_COLOR, PANTS_COLOR, SHOES_COLOR) " +
-                "values (?, ?, ?, ?, ?, ?)";
+        String sql = "insert into IMAGES_TB(USER_NO, LOCATION, HAT_COLOR, TOP_COLOR, PANTS_COLOR, SHOES_COLOR, FILE_NAME) " +
+                "values (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, image.getUserNo());
@@ -40,6 +38,7 @@ public class ImageRepository {
             preparedStatement.setString(4, image.getTopColor());
             preparedStatement.setString(5, image.getPantsColor());
             preparedStatement.setString(6, image.getShoesColor());
+            preparedStatement.setString(7, image.getFileName());
             return preparedStatement;
         };
 

@@ -31,7 +31,6 @@ public class UserRepository {
         String sql = "insert into USERS_TB(USER_ID, USER_PW, USER_NICKNAME, USER_ISMALE) values(?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
             preparedStatement.setString(1, user.getId());
             preparedStatement.setString(2, user.getPw());
             preparedStatement.setString(3, user.getNickname());

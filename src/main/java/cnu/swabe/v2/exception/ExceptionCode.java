@@ -4,7 +4,6 @@ public enum ExceptionCode {
     WRONG_LENGTH_USER_ID(true, "잘못된 아이디 양식"),
     WRONG_LENGTH_USER_NICKNAME(true, "잘못된 닉네임 양식"),
     WRONG_LENGTH_USER_PW(true, "잘못된 비밀번호 양식"),
-    EXIST_VALUE(true, "존재하는 값"),
     NO_EXIST_POST(true, "존재하지 않는 게시물"),
     WRONG_USER_INFO(true, "잘못된 ID, PW 값 입력"),
     EXIST_USER_NICKNAME(true, "존재하는 닉네임"),
@@ -12,8 +11,8 @@ public enum ExceptionCode {
     NO_EXIST_POST_URL(true, "판매주소 없음"),
     NO_EXIST_COLOR(true, "색상 선택 안 됨"),
     DIFFERENCE_USER_NO_AND_POST_USER_NO(true, "삭제할 수 없음"),
-    CANNOT_UPLOAD_S3(true, "이미지를 업로드할 수 없음"),
-    CANNOT_DELETE_S3(true, "이미지를 삭제할 수 없음");
+    PROBLEM_BY_S3_SERVER(true, "S3 서버 문제"),
+    PROBLEM_BY_S3_CLIENT(true, "S3 사용자 정보 문제");
 
 
     private boolean error;

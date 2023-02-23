@@ -21,31 +21,23 @@ public class ShareController {
     private final ImageService imageService;
     private final PostService postService;
 
-    /*
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/v2.1/images")
-    public SuccessResponse<ImageSaveDTO.Request> RequestSaveImage(@RequestBody ImageSaveDTO.Request imageSaveRequestDTO) {
-        log.info("SaveImage::: userNo={}, location={}, hatColor={}, topColor={}, pantsColor={}, shoesColor={}",
-                imageSaveRequestDTO.getUserNo(),
-                imageSaveRequestDTO.getLocation(),
-                imageSaveRequestDTO.getHatColor(),
-                imageSaveRequestDTO.getTopColor(),
-                imageSaveRequestDTO.getPantsColor(),
-                imageSaveRequestDTO.getShoesColor()
-        );
+    @PostMapping("/api/images")
+    public SuccessResponse<String> RequestSaveImage(int userNo, MultipartFile image) {
+        log.info("SaveImage::: userNo={}, fileName={}", userNo, image.getOriginalFilename());
 
-        ImageSaveDTO.Response imageSaveResponseDTO = imageService.saveImage(imageSaveRequestDTO);
+        String imageS3Url = imageService.saveImageToS3(userNo, image);
 
-        return new SuccessResponse(imageSaveResponseDTO);
+        return new SuccessResponse(imageS3Url);
     }
-    */
+
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/v2.1/posts")
-    public SuccessResponse<PostSaveDTO.Response> RequestSavePost(@RequestBody PostSaveDTO.Request postSaveRequestDTO) throws IOException {
-        log.info("SavePost::: userNo={}, imageFile={}, hatColor={}, topColor={}, pantsColor={}, shoesColor={}, isMale={}, description={}, isSell={}, sellUrl={}",
+    @PostMapping("/api/posts")
+    public SuccessResponse<PostSaveDTO.Response> RequestSavePost(@RequestBody PostSaveDTO.Request postSaveRequestDTO) {
+        log.info("SavePost::: userNo={}, location={}, hatColor={}, topColor={}, pantsColor={}, shoesColor={}, isMale={}, description={}, isSell={}",
                 postSaveRequestDTO.getUserNo(),
-                postSaveRequestDTO.getImageFile().getOriginalFilename(),
+                postSaveRequestDTO.getLocation(),
                 postSaveRequestDTO.getHatColor(),
                 postSaveRequestDTO.getTopColor(),
                 postSaveRequestDTO.getPantsColor(),

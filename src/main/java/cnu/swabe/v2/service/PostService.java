@@ -9,14 +9,13 @@ import cnu.swabe.v2.dto.StyleRequestDTO;
 import cnu.swabe.v2.exception.ExceptionCode;
 import cnu.swabe.v2.exception.custom.CannotBeDeletedException;
 import cnu.swabe.v2.exception.custom.NotExistException;
-import cnu.swabe.v2.exception.custom.S3Exception;
 import cnu.swabe.v2.exception.custom.WrongPostFormException;
-import cnu.swabe.v2.repository.ImageRepository;
 import cnu.swabe.v2.repository.PostRepository;
 import cnu.swabe.v2.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.config.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +30,11 @@ public class PostService {
     private final ImageService imageService;
     private final LikeService likeService;
     private final S3Service s3Service;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper = new ModelMapper() {{
+        getConfiguration()
+            .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE)
+            .setFieldMatchingEnabled(true);
+    }};
 
     /**
      * version - v2.1
@@ -51,15 +54,7 @@ public class PostService {
             throw new WrongPostFormException(ExceptionCode.NO_EXIST_COLOR);
         }
 
-        String imageS3Url;
-        try {
-            imageS3Url = s3Service.upload(postSaveRequestDTO.getImageFile());
-        } catch(Exception e) {
-            throw new S3Exception(ExceptionCode.CANNOT_UPLOAD_S3);
-        }
-
         ImageSaveDTO.Request imageSaveRequestDTO = modelMapper.map(postSaveRequestDTO, ImageSaveDTO.Request.class);
-        imageSaveRequestDTO.setLocation(imageS3Url);
         ImageSaveDTO.Response imageSaveResponseDTO = imageService.saveImage(imageSaveRequestDTO);
         PostEntity post = modelMapper.map(postSaveRequestDTO, PostEntity.class);
         post.setImageNo(imageSaveResponseDTO.getImageNo());

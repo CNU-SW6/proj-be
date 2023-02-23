@@ -33,13 +33,14 @@ public class PostRepository {
      * */
     public void save(PostEntity post) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, SELL_URL, USER_NO, IMAGE_NO) values (?, ?, ?, ?, ?)";
+        String sql = "insert into POSTS_TB(DESCRIPTION, IS_SELL, USER_NO, IMAGE_NO, POST_ISMALE) values (?, ?, ?, ?, ?)";
         PreparedStatementCreator preparedStatementCreator = (connection) -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, post.getDescription());
             preparedStatement.setBoolean(2, post.isSell());
             preparedStatement.setInt(3, post.getUserNo());
             preparedStatement.setInt(4, post.getImageNo());
+            preparedStatement.setBoolean(5, post.isMale());
             return preparedStatement;
         };
 
@@ -168,7 +169,7 @@ public class PostRepository {
             postEntity.setLikeNum(rs.getInt("LIKE_NUM"));
             postEntity.setSell(rs.getBoolean("IS_SELL"));
             postEntity.setMale(rs.getBoolean("POST_ISMALE"));
-            postEntity.setCreatedAt(rs.getDate("CREATE_AT").toLocalDate());
+            postEntity.setCreatedAt(rs.getDate("CREATE_AT").toString());
             return postEntity;
         };
     }

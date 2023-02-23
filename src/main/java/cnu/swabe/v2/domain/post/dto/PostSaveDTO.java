@@ -1,10 +1,7 @@
 package cnu.swabe.v2.domain.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 public class PostSaveDTO {
@@ -12,9 +9,10 @@ public class PostSaveDTO {
     @Getter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Request {
         private int userNo;
-        private MultipartFile imageFile;
+        private String location;
         private String hatColor;
         private String topColor;
         private String pantsColor;
@@ -29,6 +27,7 @@ public class PostSaveDTO {
     @Getter
     @Builder
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Response {
         private int postNo;
         private int likeNum;

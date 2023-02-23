@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -21,9 +22,9 @@ public class PostEntity {
     private boolean isSell;
     @JsonProperty(value = "isMale")
     private boolean male;
-    private LocalDate createdAt;
+    private String createdAt;
 
-    public PostEntity(int userNo, int imageNo, String description, int likeNum, boolean isSell, boolean male, LocalDate createdAt) {
+    public PostEntity(int userNo, int imageNo, String description, int likeNum, boolean isSell, boolean male, String createdAt) {
         this.userNo = userNo;
         this.imageNo = imageNo;
         this.description = description;

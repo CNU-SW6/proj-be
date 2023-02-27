@@ -150,12 +150,14 @@ public class PostRepository {
         sb.append("from POSTS_TB ");
         sb.append("inner join IMAGES_TB ");
         sb.append("on POSTS_TB.IMAGE_NO = IMAGES_TB.IMAGE_NO ");
-        sb.append("where POSTS_TB.POST_NO IN (");
-        for(int i=0 ; i<postNos.size() ; i++) {
-            if(i != postNos.size()-1) {
-                sb.append("?, ");
-            } else {
-                sb.append("?");
+        if(postNos.size() != 0) {
+            sb.append("where POSTS_TB.POST_NO IN (");
+            for (int i = 0; i < postNos.size(); i++) {
+                if (i != postNos.size() - 1) {
+                    sb.append("?, ");
+                } else {
+                    sb.append("?");
+                }
             }
         }
         sb.append(")");

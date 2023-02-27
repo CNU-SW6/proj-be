@@ -74,11 +74,19 @@ public class PostRepository {
             params.add(styleSearchRequestDTO.getTopColor());
         }
         if(styleSearchRequestDTO.getPantsColor() != null) {
-            sb.append("and PANTS_COLOR=? ");
+            if(styleSearchRequestDTO.getTopColor() == null) {
+                sb.append("PANTS_COLOR=? ");
+            } else {
+                sb.append("and PANTS_COLOR=? ");
+            }
             params.add(styleSearchRequestDTO.getPantsColor());
         }
         if(styleSearchRequestDTO.getShoesColor() != null) {
-            sb.append("and SHOES_COLOR=? ");
+            if(styleSearchRequestDTO.getPantsColor() == null) {
+                sb.append("SHOES_COLOR=? ");
+            } else {
+                sb.append("and SHOES_COLOR=? ");
+            }
             params.add(styleSearchRequestDTO.getShoesColor());
         }
         if(styleSearchRequestDTO.getGender().equals("male")) sb.append("and POST_ISMALE=true ");

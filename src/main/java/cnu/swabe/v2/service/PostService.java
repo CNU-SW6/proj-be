@@ -122,6 +122,9 @@ public class PostService {
      * */
     public List<PostSearchListResponseDTO> getLikePosts(int userNo) {
         List<Integer> postNos = likeService.findPostNosByUserNo(userNo);
+        if(postNos.size() == 0) {
+            return new ArrayList<>();
+        }
         List<PostSearchListResponseDTO> postSearchListResponseDTO = postRepository.findByPostNos(postNos);
 
         return postSearchListResponseDTO;

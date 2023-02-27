@@ -159,12 +159,17 @@ public class PostRepository {
                     sb.append("?");
                 }
             }
+            sb.append(")");
         }
-        sb.append(")");
+
         String sql = sb.toString();
 
         try {
-            postSearchListResponseDTO = template.query(sql, postSearchListResponseDTOMapper(), postNos.toArray());
+            if(postNos.size() != 0) {
+                postSearchListResponseDTO = template.query(sql, postSearchListResponseDTOMapper(), postNos.toArray());
+            } else {
+                postSearchListResponseDTO = template.query(sql, postSearchListResponseDTOMapper());
+            }
         } catch(EmptyResultDataAccessException e) {
             return null;
         }

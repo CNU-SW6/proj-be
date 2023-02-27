@@ -39,11 +39,13 @@ public class SearchController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/api/posts/{postNo}")
-    public SuccessResponse<PostAndUserDetailDTO> requestPostDetail(@PathVariable int postNo) {
-        log.info("PostDetail::: postNo={}", postNo);
+    @GetMapping("/api/posts/{postNo}/{userNo}")
+    public SuccessResponse<PostAndUserDetailDTO> requestPostDetail(@PathVariable(value = "postNo") int postNo, @PathVariable(value = "userNo") int userNo) {
+        log.info("PostDetail::: postNo={}, userNo={}", postNo, userNo);
 
         PostAndUserDetailDTO postAndUserDetailDTO = postService.getPostDetail(postNo);
+
+        postAndUserDetailDTO.setLike(likeService.inquireLikeRelation(postNo, userNo));
 
         return new SuccessResponse(postAndUserDetailDTO);
     }

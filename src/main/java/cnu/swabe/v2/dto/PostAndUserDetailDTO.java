@@ -11,4 +11,5 @@ public class PostAndUserDetailDTO {
     @JsonProperty(value = "isSell")
     private boolean sell;
     private String nickname;
+    private boolean isLike;
 }

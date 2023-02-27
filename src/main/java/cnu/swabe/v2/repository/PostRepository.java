@@ -63,34 +63,29 @@ public class PostRepository {
         if(styleSearchRequestDTO.getHatColor() != null) {
             sb.append("HAT_COLOR=? ");
             params.add(styleSearchRequestDTO.getHatColor());
+            sb.append("and ");
         }
 
         if(styleSearchRequestDTO.getTopColor() != null) {
-            if(styleSearchRequestDTO.getHatColor() == null) {
-                sb.append("TOP_COLOR=? ");
-            } else {
-                sb.append("and TOP_COLOR=? ");
-            }
+            sb.append("TOP_COLOR=? ");
             params.add(styleSearchRequestDTO.getTopColor());
+            sb.append("and ");
         }
+
         if(styleSearchRequestDTO.getPantsColor() != null) {
-            if(styleSearchRequestDTO.getTopColor() == null) {
-                sb.append("PANTS_COLOR=? ");
-            } else {
-                sb.append("and PANTS_COLOR=? ");
-            }
+            sb.append("PANTS_COLOR=? ");
             params.add(styleSearchRequestDTO.getPantsColor());
+            sb.append("and ");
         }
+
         if(styleSearchRequestDTO.getShoesColor() != null) {
-            if(styleSearchRequestDTO.getPantsColor() == null) {
-                sb.append("SHOES_COLOR=? ");
-            } else {
-                sb.append("and SHOES_COLOR=? ");
-            }
+            sb.append("SHOES_COLOR=? ");
             params.add(styleSearchRequestDTO.getShoesColor());
+            sb.append("and ");
         }
-        if(styleSearchRequestDTO.getGender().equals("male")) sb.append("and POST_ISMALE=true ");
-        if(styleSearchRequestDTO.getGender().equals("female")) sb.append("and POST_ISMALE=false ");
+
+        if(styleSearchRequestDTO.getGender().equals("male")) sb.append("POST_ISMALE=true ");
+        if(styleSearchRequestDTO.getGender().equals("female")) sb.append("POST_ISMALE=false ");
         sb.append("order by ");
         if(styleSearchRequestDTO.getSort().equals("like")) sb.append("LIKE_NUM DESC");
         if(styleSearchRequestDTO.getSort().equals("newest")) sb.append("CREATED_AT DESC");
